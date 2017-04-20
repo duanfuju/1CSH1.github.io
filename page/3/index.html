@@ -225,6 +225,147 @@
             
               
                 
+                <a class="post-title-link" href="/2017/02/21/Thrift 入门介绍/" itemprop="url">
+                  Thrift 入门技术
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-02-21T19:50:00+08:00" content="2017-02-21">
+              2017-02-21
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Thrift/" itemprop="url" rel="index">
+                    <span itemprop="name">Thrift</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2017/02/21/Thrift 入门介绍/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/02/21/Thrift 入门介绍/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2017/02/21/Thrift 入门介绍/" class="leancloud_visitors" data-flag-title="Thrift 入门技术">
+               &nbsp; | &nbsp;
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote>
+<p>摘要：本文讲述Thrift的一些基本知识，以及概念。</p>
+</blockquote>
+<h1 id="u4ECB_u7ECD"><a href="#u4ECB_u7ECD" class="headerlink" title="介绍"></a>介绍</h1><p>&emsp;&emsp;Thrift作为Facebook开源的RPC框架, 通过IDL中间语言, 并借助代码生成引擎生成各种主流语言的rpc框架服务端/客户端代码，主要特点：</p>
+<h2 id="u5F00_u53D1_u901F_u5EA6_u5FEB_uFF1A"><a href="#u5F00_u53D1_u901F_u5EA6_u5FEB_uFF1A" class="headerlink" title="开发速度快："></a>开发速度快：</h2><p>&emsp;&emsp;通过编写RPC接口IDL文件，利用编译生成器自动生成Server端骨架(Skeletons)和客户端Stubs，省去开发者自定义和维护接口编解码、消息传输、服务器多线程模型等基础工作；Server端开发者只需按照服务骨架，写好自己的业务处理程序(Handlers)即可，Client端程序只需创建IDL中定义的服务对象，然后就像调用本地对象的方法一样调用远端服务。</p>
+<h2 id="u63A5_u53E3_u7EF4_u62A4_u7B80_u5355_u9AD8_u6548_uFF1A"><a href="#u63A5_u53E3_u7EF4_u62A4_u7B80_u5355_u9AD8_u6548_uFF1A" class="headerlink" title="接口维护简单高效："></a>接口维护简单高效：</h2><p>&emsp;&emsp;通过维护Thrift格式的IDL(Interface Description Language)文件（注意写好注释），即可作为给Clients使用的接口文档使用，也自动生成接口代码，始终保持代码和文档的一致性。且Thrift协议可灵活支持接口的可扩展性。</p>
+<h2 id="u5B66_u4E60_u6210_u672C_u4F4E_uFF1A"><a href="#u5B66_u4E60_u6210_u672C_u4F4E_uFF1A" class="headerlink" title="学习成本低："></a>学习成本低：</h2><p>&emsp;&emsp;因为其来自Google Protocol Buffers开发团队，所以其IDL文件风格类似Google Protocol Buffers，且更加易读易懂；特别是RPC服务接口的风格就像写一个一般的面向对象的Class一样简单。<br>&emsp;&emsp;初学者只需参照<a href="http://thrift.apache.org/几个小时即可理解和使用Thrift。" target="_blank" rel="external">http://thrift.apache.org/几个小时即可理解和使用Thrift。</a></p>
+<h2 id="u591A_u8BED_u8A00/_u8DE8_u8BED_u8A00_u652F_u6301_uFF1A"><a href="#u591A_u8BED_u8A00/_u8DE8_u8BED_u8A00_u652F_u6301_uFF1A" class="headerlink" title="多语言/跨语言支持："></a>多语言/跨语言支持：</h2><p>&emsp;&emsp;Thrift支持C++, Java, Python, PHP, Ruby, Erlang, Perl, Haskell, C#, Cocoa, JavaScript, Node.js, Smalltalk, OCaml and Delphi等多种语言，即可生成上述语言的服务器端和客户端程序。<br>对于我们经常使用的Java、PHP、Python、C++支持良好，虽然对iOS环境的Objective-C(Cocoa)支持稍逊，但也完全满足我们的使用要求。</p>
+<h2 id="u5DF2_u9A8C_u8BC1_u6210_u719F_u7A33_u5B9A_uFF1A"><a href="#u5DF2_u9A8C_u8BC1_u6210_u719F_u7A33_u5B9A_uFF1A" class="headerlink" title="已验证成熟稳定："></a>已验证成熟稳定：</h2><p>&emsp;&emsp;Thrift在很多开源项目中已经被验证是稳定和高效的，例如Cassandra、Evernode等；在Facebook、Baidu等后台产品中也有使用。</p>
+<h1 id="u57FA_u7840_u77E5_u8BC6"><a href="#u57FA_u7840_u77E5_u8BC6" class="headerlink" title="基础知识"></a>基础知识</h1><h2 id="Thrift__u8F6F_u4EF6_u6808"><a href="#Thrift__u8F6F_u4EF6_u6808" class="headerlink" title="Thrift 软件栈"></a>Thrift 软件栈</h2><p>&emsp;&emsp; Thrift对软件栈的定义非常的清晰, 使得各个组件能够松散的耦合, 针对不同的应用场景, 选择不同是方式去搭建服务.<br>&emsp;&emsp; Transport: 传输层，定义数据传输方式，可以为TCP/IP传输，内存共享或者文件共享等<br>&emsp;&emsp; Protocol: 协议层, 定义数据传输格式，可以为二进制或者XML等<br>&emsp;&emsp; Processor: 处理层, 这部分由定义的idl来生成, 封装了协议输入输出流, 并委托给用户实现的handler进行处理.<br>&emsp;&emsp; Server: 服务层, 整合上述组件, 提供网络模型(单线程/多线程/事件驱动), 最终形成真正的服务.</p>
+<h2 id="Thrift__u5BF9_u8BED_u8A00_u7684_u652F_u6301"><a href="#Thrift__u5BF9_u8BED_u8A00_u7684_u652F_u6301" class="headerlink" title="Thrift 对语言的支持"></a>Thrift 对语言的支持</h2><p>&emsp;&emsp;Thrift和Google Protobuf相比, 都提供了可扩展序列化机制, 不但兼容性好而且压缩率高. 两者在这块各有长短, 性能上PB稍有优势. 但在语言的支持度上, Protobuf只支持c++/java/python这三种主流的语言, Thrift则几乎覆盖了大部分的语言, 从这点上来说, Thrift的优势非常的明显.</p>
+<h2 id="u534F_u8BAE"><a href="#u534F_u8BAE" class="headerlink" title="协议"></a>协议</h2><p>&emsp;&emsp;Thrift可以让你选择客户端与服务端之间传输通信协议的类别，在传输协议上总体上划分为文本(text)和二进制(binary)传输协议, 为节约带宽，提供传输效率，一般情况下使用二进制类型的传输协议为多数，但有时会还是会使用基于文本类型的协议，这需要根据项目/产品中的实际需求：<br>&emsp;&emsp; TBinaryProtocol – 二进制编码格式进行数据传输。<br>&emsp;&emsp; TCompactProtocol – 这种协议非常有效的，使用Variable-Length Quantity (VLQ) 编码对数据进行压缩。<br>&emsp;&emsp; TJSONProtocol – 使用JSON的数据编码协议进行数据传输。<br>&emsp;&emsp; TSimpleJSONProtocol – 这种节约只提供JSON只写的协议，适用于通过脚本语言解析<br>&emsp;&emsp; TDebugProtocol – 在开发的过程中帮助开发人员调试用的，以文本的形式展现方便阅读。</p>
+<h2 id="u4F20_u8F93_u5C42"><a href="#u4F20_u8F93_u5C42" class="headerlink" title="传输层"></a>传输层</h2><p>&emsp;&emsp; TSocket- 使用堵塞式I/O进行传输，也是最常见的模式。<br>&emsp;&emsp; TFramedTransport- 使用非阻塞方式，按块的大小，进行传输，类似于Java中的NIO。<br>&emsp;&emsp; TFileTransport- 顾名思义按照文件的方式进程传输，虽然这种方式不提供Java的实现，但是实现起来非常简单。<br>&emsp;&emsp; TMemoryTransport- 使用内存I/O，就好比Java中的ByteArrayOutputStream实现。<br>&emsp;&emsp; TZlibTransport- 使用执行zlib压缩，不提供Java的实现。</p>
+<h2 id="u670D_u52A1_u7AEF_u7C7B_u578B"><a href="#u670D_u52A1_u7AEF_u7C7B_u578B" class="headerlink" title="服务端类型"></a>服务端类型</h2><p>&emsp;&emsp; TSimpleServer -  单线程服务器端使用标准的堵塞式I/O。<br>&emsp;&emsp; TThreadPoolServer -  多线程服务器端使用标准的堵塞式I/O。<br>&emsp;&emsp; TNonblockingServer – 多线程服务器端使用非堵塞式I/O，并且实现了Java中的NIO通道。</p>
+<h1 id="Thrift__u67B6_u6784"><a href="#Thrift__u67B6_u6784" class="headerlink" title="Thrift 架构"></a>Thrift 架构</h1><center><br><img src="https://1csh1.github.io/img/Thrift入门介绍/Thrift架构图.jpg" alt="Thrift架构图"><br></center>
+
+<p>&emsp;&emsp;如图所示，图中黄色部分是用户实现的业务逻辑，褐色部分是根据 Thrift 定义的服务接口描述文件生成的客户端和服务器端代码框架，红色部分是根据 Thrift 文件生成代码实现数据的读写操作。红色部分以下是 Thrift 的传输体系、协议以及底层 I/O 通信，使用 Thrift 可以很方便的定义一个服务并且选择不同的传输协议和传输层而不用重新生成代码。<br>&emsp;&emsp;Thrift 服务器包含用于绑定协议和传输层的基础架构，它提供阻塞、非阻塞、单线程和多线程的模式运行在服务器上，可以配合服务器 / 容器一起运行，可以和现有的 J2EE 服务器 /Web 容器无缝的结合。</p>
+<h1 id="u53C2_u8003_u6587_u7AE0"><a href="#u53C2_u8003_u6587_u7AE0" class="headerlink" title="参考文章"></a>参考文章</h1><p><a href="http://www.jianshu.com/p/bfd514fd0d6d" target="_blank" rel="external">Thrift RPC实战(一) 初次体验Thrift</a><br><a href="https://www.ibm.com/developerworks/cn/java/j-lo-apachethrift/" target="_blank" rel="external">Apache Thrift - 可伸缩的跨语言服务开发框架</a></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2017/02/20/Java的静态代理和动态代理/" itemprop="url">
                   Java的静态代理和动态代理
                 </a>
@@ -519,136 +660,6 @@
             
               
                 
-                <a class="post-title-link" href="/2017/01/24/用Haproxy来做RabbitMQ集群的负载均衡/" itemprop="url">
-                  用Haproxy来做RabbitMQ集群的负载均衡
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-01-24T21:32:00+08:00" content="2017-01-24">
-              2017-01-24
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/RabbitMQ/" itemprop="url" rel="index">
-                    <span itemprop="name">RabbitMQ</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2017/01/24/用Haproxy来做RabbitMQ集群的负载均衡/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/01/24/用Haproxy来做RabbitMQ集群的负载均衡/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-             <span id="/2017/01/24/用Haproxy来做RabbitMQ集群的负载均衡/" class="leancloud_visitors" data-flag-title="用Haproxy来做RabbitMQ集群的负载均衡">
-               &nbsp; | &nbsp;
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               <span class="post-meta-item-text">阅读次数 </span>
-               <span class="leancloud-visitors-count"></span>
-              </span>
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h3 id="u95F2_u8BDD"><a href="#u95F2_u8BDD" class="headerlink" title="闲话"></a>闲话</h3><p>&emsp;&emsp;本文讲述在RabbitMQ集群的基础下，用Haproxy来做负载均衡，node6,node7,node8这3台机器已经组成一个RabbitMQ集群了,在node9机器上配置Haproxy来做负载均衡。</p>
-<h3 id="u914D_u7F6EHAProxy"><a href="#u914D_u7F6EHAProxy" class="headerlink" title="配置HAProxy"></a>配置HAProxy</h3><h4 id="u4E0B_u8F7D"><a href="#u4E0B_u8F7D" class="headerlink" title="下载"></a>下载</h4><p><a href="http://download.csdn.net/detail/u011642663/9743582" target="_blank" rel="external">haproxy-1.7.1.tar.gz</a></p>
-<h4 id="u89E3_u538B"><a href="#u89E3_u538B" class="headerlink" title="解压"></a>解压</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar -xzvf haproxy-1.7.1.tar.gz</span><br></pre></td></tr></table></figure>
-<h4 id="u7F16_u8BD1"><a href="#u7F16_u8BD1" class="headerlink" title="编译"></a>编译</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cd haproxy-1.7.1&#10;make TARGET=generic</span><br></pre></td></tr></table></figure>
-<p>编译完目录下有haproxy可执行文件<br>将haproxy复制到/usr/local/sbin<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cp haproxy /usr/local/sbin</span><br></pre></td></tr></table></figure></p>
-<h4 id="u914D_u7F6E_u6587_u4EF6"><a href="#u914D_u7F6E_u6587_u4EF6" class="headerlink" title="配置文件"></a>配置文件</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vi config_file&#10;//&#36755;&#20837;&#20197;&#19979;&#37197;&#32622;&#10;listen rabbitmq_cluster&#10;    bind node9:5670&#10;&#9;mode tcp &#10;&#9;timeout client 3h&#10;&#9;timeout server 3h&#10;&#9;timeout connect 3h&#10;&#9;balance roundrobin&#10;&#9;server rabbit6 node6:5672 check inter 5000 rise 2 fall 3&#10;&#9;server rabbit7 node7:5672 check inter 5000 rise 2 fall 3&#10;&#9;server rabbit8 node8:5672 check inter 5000 rise 2 fall 3&#10;&#9;&#10;listen private_monitoring &#10;    bind node9:8100&#10;&#9;mode http&#10;&#9;option httplog&#10;&#9;timeout client 3h&#10;    timeout server 3h&#10;    timeout connect 3h&#10;&#9;stats enable&#10;&#9;stats uri /stats&#10;&#9;stats refresh 5s</span><br></pre></td></tr></table></figure>
-<h4 id="u542F_u52A8Haproxy"><a href="#u542F_u52A8Haproxy" class="headerlink" title="启动Haproxy"></a>启动Haproxy</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">haproxy -f config_file</span><br></pre></td></tr></table></figure>
-<h4 id="Haproxy_u81EA_u5E26_u7684_u914D_u7F6E_u6587_u4EF6"><a href="#Haproxy_u81EA_u5E26_u7684_u914D_u7F6E_u6587_u4EF6" class="headerlink" title="Haproxy自带的配置文件"></a>Haproxy自带的配置文件</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">haproxy-1.7.1/doc/configuration.txt</span><br></pre></td></tr></table></figure>
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
                 <a class="post-title-link" href="/2017/01/24/搭建RabbitMQ集群/" itemprop="url">
                   搭建RabbitMQ集群
                 </a>
@@ -784,8 +795,8 @@
             
               
                 
-                <a class="post-title-link" href="/2017/01/24/RabbitMQ无法访问Web管理页面/" itemprop="url">
-                  RabbitMQ无法访问Web管理页面
+                <a class="post-title-link" href="/2017/01/24/用Haproxy来做RabbitMQ集群的负载均衡/" itemprop="url">
+                  用Haproxy来做RabbitMQ集群的负载均衡
                 </a>
               
             
@@ -798,7 +809,7 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-01-24T21:28:00+08:00" content="2017-01-24">
+            <time itemprop="dateCreated" datetime="2017-01-24T21:32:00+08:00" content="2017-01-24">
               2017-01-24
             </time>
           </span>
@@ -828,8 +839,8 @@
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2017/01/24/RabbitMQ无法访问Web管理页面/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/01/24/RabbitMQ无法访问Web管理页面/" itemprop="commentsCount"></span>
+                <a href="/2017/01/24/用Haproxy来做RabbitMQ集群的负载均衡/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/01/24/用Haproxy来做RabbitMQ集群的负载均衡/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -839,7 +850,7 @@
 
           
           
-             <span id="/2017/01/24/RabbitMQ无法访问Web管理页面/" class="leancloud_visitors" data-flag-title="RabbitMQ无法访问Web管理页面">
+             <span id="/2017/01/24/用Haproxy来做RabbitMQ集群的负载均衡/" class="leancloud_visitors" data-flag-title="用Haproxy来做RabbitMQ集群的负载均衡">
                &nbsp; | &nbsp;
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -862,11 +873,14 @@
       
         
           
-            <h3 id="u95F2_u8BDD"><a href="#u95F2_u8BDD" class="headerlink" title="闲话"></a>闲话</h3><p>&emsp;&emsp;本文讲述解决RabbitMQ启动后没法访问Web管理页面的问题。</p>
-<h3 id="u95EE_u9898"><a href="#u95EE_u9898" class="headerlink" title="问题"></a>问题</h3><p>启动RabbitMQ后，没法访问Web管理页面</p>
-<h3 id="u89E3_u51B3"><a href="#u89E3_u51B3" class="headerlink" title="解决"></a>解决</h3><p>RabbitMQ安装后默认是不启动管理模块的，所以需要配置将管理模块启动<br>启动管理模块命令如下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rabbitmqctl start_app&#10;rabbitmq-plugins enable rabbitmq_management&#10;rabbitmqctl stop</span><br></pre></td></tr></table></figure></p>
-<h3 id="u9A8C_u8BC1"><a href="#u9A8C_u8BC1" class="headerlink" title="验证"></a>验证</h3><p>如果你是安装在本机器则访问<a href="http://localhost:15672/，发现可以访问Web管理页面了" target="_blank" rel="external">http://localhost:15672/，发现可以访问Web管理页面了</a></p>
-
+            <h3 id="u95F2_u8BDD"><a href="#u95F2_u8BDD" class="headerlink" title="闲话"></a>闲话</h3><p>&emsp;&emsp;本文讲述在RabbitMQ集群的基础下，用Haproxy来做负载均衡，node6,node7,node8这3台机器已经组成一个RabbitMQ集群了,在node9机器上配置Haproxy来做负载均衡。</p>
+<h3 id="u914D_u7F6EHAProxy"><a href="#u914D_u7F6EHAProxy" class="headerlink" title="配置HAProxy"></a>配置HAProxy</h3><h4 id="u4E0B_u8F7D"><a href="#u4E0B_u8F7D" class="headerlink" title="下载"></a>下载</h4><p><a href="http://download.csdn.net/detail/u011642663/9743582" target="_blank" rel="external">haproxy-1.7.1.tar.gz</a></p>
+<h4 id="u89E3_u538B"><a href="#u89E3_u538B" class="headerlink" title="解压"></a>解压</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar -xzvf haproxy-1.7.1.tar.gz</span><br></pre></td></tr></table></figure>
+<h4 id="u7F16_u8BD1"><a href="#u7F16_u8BD1" class="headerlink" title="编译"></a>编译</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cd haproxy-1.7.1&#10;make TARGET=generic</span><br></pre></td></tr></table></figure>
+<p>编译完目录下有haproxy可执行文件<br>将haproxy复制到/usr/local/sbin<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cp haproxy /usr/local/sbin</span><br></pre></td></tr></table></figure></p>
+<h4 id="u914D_u7F6E_u6587_u4EF6"><a href="#u914D_u7F6E_u6587_u4EF6" class="headerlink" title="配置文件"></a>配置文件</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vi config_file&#10;//&#36755;&#20837;&#20197;&#19979;&#37197;&#32622;&#10;listen rabbitmq_cluster&#10;    bind node9:5670&#10;&#9;mode tcp &#10;&#9;timeout client 3h&#10;&#9;timeout server 3h&#10;&#9;timeout connect 3h&#10;&#9;balance roundrobin&#10;&#9;server rabbit6 node6:5672 check inter 5000 rise 2 fall 3&#10;&#9;server rabbit7 node7:5672 check inter 5000 rise 2 fall 3&#10;&#9;server rabbit8 node8:5672 check inter 5000 rise 2 fall 3&#10;&#9;&#10;listen private_monitoring &#10;    bind node9:8100&#10;&#9;mode http&#10;&#9;option httplog&#10;&#9;timeout client 3h&#10;    timeout server 3h&#10;    timeout connect 3h&#10;&#9;stats enable&#10;&#9;stats uri /stats&#10;&#9;stats refresh 5s</span><br></pre></td></tr></table></figure>
+<h4 id="u542F_u52A8Haproxy"><a href="#u542F_u52A8Haproxy" class="headerlink" title="启动Haproxy"></a>启动Haproxy</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">haproxy -f config_file</span><br></pre></td></tr></table></figure>
+<h4 id="Haproxy_u81EA_u5E26_u7684_u914D_u7F6E_u6587_u4EF6"><a href="#Haproxy_u81EA_u5E26_u7684_u914D_u7F6E_u6587_u4EF6" class="headerlink" title="Haproxy自带的配置文件"></a>Haproxy自带的配置文件</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">haproxy-1.7.1/doc/configuration.txt</span><br></pre></td></tr></table></figure>
           
         
       
@@ -935,7 +949,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">48</span>
+              <span class="site-state-item-count">49</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -943,7 +957,7 @@
           
             <div class="site-state-item site-state-categories">
               <a href="/categories">
-                <span class="site-state-item-count">27</span>
+                <span class="site-state-item-count">28</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -952,7 +966,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">43</span>
+                <span class="site-state-item-count">44</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
