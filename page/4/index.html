@@ -225,6 +225,141 @@
             
               
                 
+                <a class="post-title-link" href="/2017/01/24/搭建RabbitMQ集群/" itemprop="url">
+                  搭建RabbitMQ集群
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-01-24T21:32:00+08:00" content="2017-01-24">
+              2017-01-24
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/RabbitMQ/" itemprop="url" rel="index">
+                    <span itemprop="name">RabbitMQ</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2017/01/24/搭建RabbitMQ集群/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/01/24/搭建RabbitMQ集群/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2017/01/24/搭建RabbitMQ集群/" class="leancloud_visitors" data-flag-title="搭建RabbitMQ集群">
+               &nbsp; | &nbsp;
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="u95F2_u8BDD"><a href="#u95F2_u8BDD" class="headerlink" title="闲话"></a>闲话</h3><p>&emsp;&emsp;本文讲述搭建RabbitMQ集群，文中总共用了3个节点node6,node7,node8。</p>
+<h3 id="u73AF_u5883_u51C6_u5907"><a href="#u73AF_u5883_u51C6_u5907" class="headerlink" title="环境准备"></a>环境准备</h3><p>将node6,node7,node8的.erlang.cookie文件内容设置为一样的<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">//&#22312;node6&#33410;&#28857;&#19978;&#10;cat /var/lib/rabbitmq/.erlang.cookie&#10;//&#23558;&#20869;&#23481;&#22797;&#21046;&#21040;node7,node8&#33410;&#28857;&#19978;&#65292;&#21487;&#33021;&#38656;&#35201;&#20462;&#25913;&#25991;&#20214;&#30340;&#26435;&#38480;&#10;&#10;//&#32467;&#26524;&#65306;&#27604;&#22914;&#25105;&#33258;&#24049;&#30340;&#26426;&#22120;&#19978;&#30340;.erlang.cookie&#25991;&#20214;&#20869;&#23481;&#10;rabbit6  ETIEGPLEHVXLJDVZGLMF&#10;rabbit7  ETIEGPLEHVXLJDVZGLMF&#10;rabbit8  ETIEGPLEHVXLJDVZGLMF</span><br></pre></td></tr></table></figure></p>
+<h3 id="u542F_u52A8RabbitMQ"><a href="#u542F_u52A8RabbitMQ" class="headerlink" title="启动RabbitMQ"></a>启动RabbitMQ</h3><p>在node6上运行<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">RABBITMQ_NODE_PORT=5672 RABBITMQ_NODENAME=rabbit6 \rabbitmq-server -detached</span><br></pre></td></tr></table></figure></p>
+<p>在node7上运行<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">RABBITMQ_NODE_PORT=5672 RABBITMQ_NODENAME=rabbit7 \rabbitmq-server -detached</span><br></pre></td></tr></table></figure></p>
+<p>在node8上运行<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">RABBITMQ_NODE_PORT=5672 RABBITMQ_NODENAME=rabbit8 \rabbitmq-server -detached</span><br></pre></td></tr></table></figure></p>
+<h3 id="u5C06node7_u8282_u70B9_u52A0_u5165_u5230_u96C6_u7FA4_u4E2D"><a href="#u5C06node7_u8282_u70B9_u52A0_u5165_u5230_u96C6_u7FA4_u4E2D" class="headerlink" title="将node7节点加入到集群中"></a>将node7节点加入到集群中</h3><p>在node7机器上运行如下命令<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">//&#20572;&#27490;rabbit7&#33410;&#28857;&#19978;&#30340;RabbitMQ&#24212;&#29992;&#31243;&#24207;&#10;rabbitmqctl -n rabbit7@csh07 stop_app&#10;&#10;//&#37325;&#35774;rabbit7&#33410;&#28857;&#30340;&#20803;&#25968;&#25454;&#21644;&#29366;&#24577;&#20026;&#28165;&#31354;&#10;rabbitmqctl -n rabbit7@csh07 reset&#10;&#10;//&#23558;rabbit7&#21152;&#20837;&#21040;rabbit6&#38598;&#32676;&#20013;&#10;rabbitmqctl -n rabbit7@csh07 join_cluster rabbit6@csh06 \ rabbit7@csh07&#10;&#10;//&#37325;&#26032;&#21551;&#21160;rabbit7&#33410;&#28857;&#30340;&#24212;&#29992;&#31243;&#24207;&#10;rabbitmqctl -n rabbit7@csh07 start_app</span><br></pre></td></tr></table></figure></p>
+<h3 id="u5C06node8_u8282_u70B9_u52A0_u5165_u5230_u96C6_u7FA4_u4E2D"><a href="#u5C06node8_u8282_u70B9_u52A0_u5165_u5230_u96C6_u7FA4_u4E2D" class="headerlink" title="将node8节点加入到集群中"></a>将node8节点加入到集群中</h3><p>在node8机器上运行如下命令<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rabbitmqctl -n rabbit8@csh08 stop_app&#10;rabbitmqctl -n rabbit8@csh08 reset&#10;rabbitmqctl -n rabbit8@csh08 join_cluster rabbit6@csh06&#10;rabbitmqctl -n rabbit8@csh08 start_app</span><br></pre></td></tr></table></figure></p>
+<h3 id="u67E5_u770B_u96C6_u7FA4_u72B6_u6001"><a href="#u67E5_u770B_u96C6_u7FA4_u72B6_u6001" class="headerlink" title="查看集群状态"></a>查看集群状态</h3><p>命令如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rabbitmqctl cluster_status</span><br></pre></td></tr></table></figure></p>
+<p>结果：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@csh08 ~]# rabbitmqctl -n rabbit8@csh08 cluster_status&#10;Cluster status of node &#39;rabbit8@csh08&#39; ...&#10;[&#123;nodes,[&#123;disc,[&#39;rabbit7@csh07&#39;,&#39;rabbit6@csh06&#39;]&#125;,&#10;         &#123;ram,[&#39;rabbit8@csh08&#39;]&#125;]&#125;,&#10; &#123;running_nodes,[&#39;rabbit6@csh06&#39;,&#39;rabbit7@csh07&#39;,&#10;                 &#39;rabbit8@csh08&#39;]&#125;,&#10; &#123;cluster_name,&#60;&#60;&#34;rabbit6@csh06.itc.cmbchina.cn&#34;&#62;&#62;&#125;,&#10; &#123;partitions,[]&#125;,&#10; &#123;alarms,[&#123;&#39;rabbit6@csh06&#39;,[]&#125;,&#10;          &#123;&#39;rabbit7@csh07&#39;,[]&#125;,&#10;          &#123;&#39;rabbit8@csh08&#39;,[]&#125;]&#125;]</span><br></pre></td></tr></table></figure></p>
+<h3 id="u5C06_u8282_u70B9_u4ECE_u96C6_u7FA4_u4E2D_u79FB_u9664"><a href="#u5C06_u8282_u70B9_u4ECE_u96C6_u7FA4_u4E2D_u79FB_u9664" class="headerlink" title="将节点从集群中移除"></a>将节点从集群中移除</h3><p>命令如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rabbitmqctl -n rabbit8@csh08 stop_app&#10;rabbitmqctl -n rabbit8@csh08 reset&#10;rabbitmqctl -n rabbit8@csh08 start_app</span><br></pre></td></tr></table></figure></p>
+<h3 id="u53EF_u80FD_u9047_u5230_u95EE_u9898"><a href="#u53EF_u80FD_u9047_u5230_u95EE_u9898" class="headerlink" title="可能遇到问题"></a>可能遇到问题</h3><p>在添加节点node7到node6上时，遇到连接不上node6节点机器<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@csh07 ~]# rabbitmqctl -n rabbit7@csh07 join_cluster rabbit6@csh06&#10;Clustering node &#39;rabbit7@csh07&#39; with &#39;rabbit6@csh06&#39; ...&#10;Error: unable to connect to nodes [&#39;rabbit6@csh06&#39;]: nodedown&#10;&#10;DIAGNOSTICS&#10;===========&#10;&#10;attempted to contact: [&#39;rabbit6@csh06&#39;]&#10;&#10;rabbit6@csh06:&#10;  * unable to connect to epmd (port 4369) on csh06: nxdomain (non-existing domain)&#10;&#10;&#10;current node details:&#10;- node name: &#39;rabbitmq-cli-45@csh07&#39;&#10;- home dir: /var/lib/rabbitmq&#10;- cookie hash: a5xQrcy5rMqVgP/ZCwWUPA==</span><br></pre></td></tr></table></figure></p>
+<p>解决：<br>在所有机器上的/etc/hosts文件加上如下配置，主要是添加csh06,csh07,csh08映射<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">192.168.1.6 node6 csh06&#10;192.168.1.7 node7 csh07&#10;192.168.1.8 node8 csh08</span><br></pre></td></tr></table></figure></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2017/01/24/用Haproxy来做RabbitMQ集群的负载均衡/" itemprop="url">
                   用Haproxy来做RabbitMQ集群的负载均衡
                 </a>
@@ -734,150 +869,11 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/01/19/Vim中配置默认属性/" itemprop="url">
-                  Vim中配置默认属性
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-01-19T21:53:14+08:00" content="2017-01-19">
-              2017-01-19
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/Vim/" itemprop="url" rel="index">
-                    <span itemprop="name">Vim</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/Vim/Linux/" itemprop="url" rel="index">
-                    <span itemprop="name">Linux</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2017/01/19/Vim中配置默认属性/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/01/19/Vim中配置默认属性/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-             <span id="/2017/01/19/Vim中配置默认属性/" class="leancloud_visitors" data-flag-title="Vim中配置默认属性">
-               &nbsp; | &nbsp;
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               <span class="post-meta-item-text">阅读次数 </span>
-               <span class="leancloud-visitors-count"></span>
-              </span>
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h3 id="u7F16_u8F91_u8BBE_u7F6E_u6587_u4EF6vimrc"><a href="#u7F16_u8F91_u8BBE_u7F6E_u6587_u4EF6vimrc" class="headerlink" title="编辑设置文件vimrc"></a>编辑设置文件vimrc</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo vim /etc/vim/vimrc</span><br></pre></td></tr></table></figure>
-<h3 id="u914D_u7F6E_u884C_u53F7"><a href="#u914D_u7F6E_u884C_u53F7" class="headerlink" title="配置行号"></a>配置行号</h3><p>在vimrc文件末尾添加<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">set number</span><br></pre></td></tr></table></figure></p>
-<h3 id="u8BBE_u7F6E_u7F29_u8FDB"><a href="#u8BBE_u7F6E_u7F29_u8FDB" class="headerlink" title="设置缩进"></a>设置缩进</h3><p>在vimrc文件末尾添加<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">set cindent shiftwidth=4</span><br></pre></td></tr></table></figure></p>
-<h3 id="u8BBE_u7F6ETab_u952E_u7684_u7A7A_u683C_u6570_u91CF"><a href="#u8BBE_u7F6ETab_u952E_u7684_u7A7A_u683C_u6570_u91CF" class="headerlink" title="设置Tab键的空格数量"></a>设置Tab键的空格数量</h3><p>在vimrc文件末尾添加<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">set tabstop=4</span><br></pre></td></tr></table></figure></p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/3/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><span class="space">&hellip;</span><a class="page-number" href="/page/10/">10</a><a class="extend next" rel="next" href="/page/5/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/3/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><span class="space">&hellip;</span><a class="page-number" href="/page/11/">11</a><a class="extend next" rel="next" href="/page/5/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -918,7 +914,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">50</span>
+              <span class="site-state-item-count">51</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -935,7 +931,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">46</span>
+                <span class="site-state-item-count">47</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
