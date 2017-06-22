@@ -225,6 +225,134 @@
             
               
                 
+                <a class="post-title-link" href="/2017/01/24/RabbitMQ不能远程访问问题/" itemprop="url">
+                  RabbitMQ不能远程访问问题
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-01-24T21:25:00+08:00" content="2017-01-24">
+              2017-01-24
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/RabbitMQ/" itemprop="url" rel="index">
+                    <span itemprop="name">RabbitMQ</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2017/01/24/RabbitMQ不能远程访问问题/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/01/24/RabbitMQ不能远程访问问题/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2017/01/24/RabbitMQ不能远程访问问题/" class="leancloud_visitors" data-flag-title="RabbitMQ不能远程访问问题">
+               &nbsp; | &nbsp;
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="u95F2_u8BDD"><a href="#u95F2_u8BDD" class="headerlink" title="闲话"></a>闲话</h3><p>&emsp;&emsp;本文讲述RabbitMQ不能远程访问的解决方法。</p>
+<h3 id="u95EE_u9898"><a href="#u95EE_u9898" class="headerlink" title="问题"></a>问题</h3><p>RabbitMQ不能远程访问，比如在node1机器上安装并启动RabbitMQ，但是在node2机器上写连接node1机器的RabbitMQ的代码，却连接不上。</p>
+<h3 id="u89E3_u51B3"><a href="#u89E3_u51B3" class="headerlink" title="解决"></a>解决</h3><h4 id="u6DFB_u52A0_u7528_u6237_u5E76_u6388_u6743"><a href="#u6DFB_u52A0_u7528_u6237_u5E76_u6388_u6743" class="headerlink" title="添加用户并授权"></a>添加用户并授权</h4><p>rabbitmqctl add_user csh csh<br>rabbitmqctl set_user_tags csh administrator<br>rabbitmqctl set_permissions -p / csh “.<em>“ “.</em>“ “.*”</p>
+<h4 id="u914D_u7F6E"><a href="#u914D_u7F6E" class="headerlink" title="配置"></a>配置</h4><p>在/etc/rabbitmq/rabbitmq.config中配置<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[&#10;  &#123;rabbit,&#10;    [&#10;      &#123;tcp_listeners, [5672]&#125;,&#10;      &#123;loopback_users, [&#34;csh&#34;]&#125;&#10;    ]&#10;  &#125;&#10;].</span><br></pre></td></tr></table></figure></p>
+<h4 id="u9A8C_u8BC1"><a href="#u9A8C_u8BC1" class="headerlink" title="验证"></a>验证</h4><p>在node2中运行连接node1机器的RabbitMQ的代码</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2017/01/24/CentOS安装RabbitMQ/" itemprop="url">
                   CentOS安装RabbitMQ
                 </a>
@@ -772,144 +900,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/11/22/Ubuntu更新源/" itemprop="url">
-                  Ubuntu更新源
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-11-22T22:30:08+08:00" content="2016-11-22">
-              2016-11-22
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/Linux/" itemprop="url" rel="index">
-                    <span itemprop="name">Linux</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/Linux/Ubuntu/" itemprop="url" rel="index">
-                    <span itemprop="name">Ubuntu</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/11/22/Ubuntu更新源/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/11/22/Ubuntu更新源/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-             <span id="/2016/11/22/Ubuntu更新源/" class="leancloud_visitors" data-flag-title="Ubuntu更新源">
-               &nbsp; | &nbsp;
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               <span class="post-meta-item-text">阅读次数 </span>
-               <span class="leancloud-visitors-count"></span>
-              </span>
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h3 id="1-_u5907_u4EFD_u539F_u6765_u7684_u6E90"><a href="#1-_u5907_u4EFD_u539F_u6765_u7684_u6E90" class="headerlink" title="1.备份原来的源"></a>1.备份原来的源</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cp /etc/apt/sources.list /etc/apt/sources.list.bak</span><br></pre></td></tr></table></figure>
-<h3 id="2-_u7F16_u8F91_u6E90_u6587_u4EF6"><a href="#2-_u7F16_u8F91_u6E90_u6587_u4EF6" class="headerlink" title="2.编辑源文件"></a>2.编辑源文件</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vi /etc/apt/sources.list</span><br></pre></td></tr></table></figure>
-<h3 id="u590D_u5236_u4EE5_u4E0B_u4EE3_u7801_u8FDB_u6587_u4EF6/etc/apt/sources-list"><a href="#u590D_u5236_u4EE5_u4E0B_u4EE3_u7801_u8FDB_u6587_u4EF6/etc/apt/sources-list" class="headerlink" title="复制以下代码进文件/etc/apt/sources.list"></a>复制以下代码进文件/etc/apt/sources.list</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">#163&#10;deb http://mirrors.163.com/ubuntu/ trusty main restricted universe multiverse&#10;deb http://mirrors.163.com/ubuntu/ trusty-security main restricted universe multiverse&#10;deb http://mirrors.163.com/ubuntu/ trusty-updates main restricted universe multiverse&#10;deb http://mirrors.163.com/ubuntu/ trusty-proposed main restricted universe multiverse&#10;deb http://mirrors.163.com/ubuntu/ trusty-backports main restricted universe multiverse&#10;deb-src http://mirrors.163.com/ubuntu/ trusty main restricted universe multiverse&#10;deb-src http://mirrors.163.com/ubuntu/ trusty-security main restricted universe multiverse&#10;deb-src http://mirrors.163.com/ubuntu/ trusty-updates main restricted universe multiverse&#10;deb-src http://mirrors.163.com/ubuntu/ trusty-proposed main restricted universe multiverse&#10;deb-src http://mirrors.163.com/ubuntu/ trusty-backports main restricted universe multiverse&#10;#&#20013;&#31185;&#22823;&#10;deb http://debian.ustc.edu.cn/ubuntu/ trusty main multiverse restricted universe&#10;deb http://debian.ustc.edu.cn/ubuntu/ trusty-backports main multiverse restricted universe&#10;deb http://debian.ustc.edu.cn/ubuntu/ trusty-proposed main multiverse restricted universe&#10;deb http://debian.ustc.edu.cn/ubuntu/ trusty-security main multiverse restricted universe&#10;deb http://debian.ustc.edu.cn/ubuntu/ trusty-updates main multiverse restricted universe&#10;deb-src http://debian.ustc.edu.cn/ubuntu/ trusty main multiverse restricted universe&#10;deb-src http://debian.ustc.edu.cn/ubuntu/ trusty-backports main multiverse restricted universe&#10;deb-src http://debian.ustc.edu.cn/ubuntu/ trusty-proposed main multiverse restricted universe&#10;deb-src http://debian.ustc.edu.cn/ubuntu/ trusty-security main multiverse restricted universe&#10;deb-src http://debian.ustc.edu.cn/ubuntu/ trusty-updates main multiverse restricted universe&#10;#sohu&#10;deb http://mirrors.sohu.com/ubuntu/ trusty main restricted universe multiverse&#10;deb http://mirrors.sohu.com/ubuntu/ trusty-security main restricted universe multiverse&#10;deb http://mirrors.sohu.com/ubuntu/ trusty-updates main restricted universe multiverse&#10;deb http://mirrors.sohu.com/ubuntu/ trusty-proposed main restricted universe multiverse&#10;deb http://mirrors.sohu.com/ubuntu/ trusty-backports main restricted universe multiverse&#10;deb-src http://mirrors.sohu.com/ubuntu/ trusty main restricted universe multiverse&#10;deb-src http://mirrors.sohu.com/ubuntu/ trusty-security main restricted universe multiverse&#10;deb-src http://mirrors.sohu.com/ubuntu/ trusty-updates main restricted universe multiverse&#10;deb-src http://mirrors.sohu.com/ubuntu/ trusty-proposed main restricted universe multiverse&#10;deb-src http://mirrors.sohu.com/ubuntu/ trusty-backports main restricted universe multiverse&#10;#oschina&#10;deb http://mirrors.oschina.net/ubuntu/ trusty main restricted universe multiverse&#10;deb http://mirrors.oschina.net/ubuntu/ trusty-backports main restricted universe multiverse&#10;deb http://mirrors.oschina.net/ubuntu/ trusty-proposed main restricted universe multiverse&#10;deb http://mirrors.oschina.net/ubuntu/ trusty-security main restricted universe multiverse&#10;deb http://mirrors.oschina.net/ubuntu/ trusty-updates main restricted universe multiverse&#10;deb-src http://mirrors.oschina.net/ubuntu/ trusty main restricted universe multiverse&#10;deb-src http://mirrors.oschina.net/ubuntu/ trusty-backports main restricted universe multiverse&#10;deb-src http://mirrors.oschina.net/ubuntu/ trusty-proposed main restricted universe multiverse&#10;deb-src http://mirrors.oschina.net/ubuntu/ trusty-security main restricted universe multiverse&#10;deb-src http://mirrors.oschina.net/ubuntu/ trusty-updates main restricted universe multiverse&#10;#&#21271;&#20140;&#20132;&#36890;&#22823;&#23398;&#10;deb http://mirror.bjtu.edu.cn/ubuntu/ trusty main multiverse restricted universe&#10;deb http://mirror.bjtu.edu.cn/ubuntu/ trusty-backports main multiverse restricted universe&#10;deb http://mirror.bjtu.edu.cn/ubuntu/ trusty-proposed main multiverse restricted universe&#10;deb http://mirror.bjtu.edu.cn/ubuntu/ trusty-security main multiverse restricted universe&#10;deb http://mirror.bjtu.edu.cn/ubuntu/ trusty-updates main multiverse restricted universe&#10;deb-src http://mirror.bjtu.edu.cn/ubuntu/ trusty main multiverse restricted universe&#10;deb-src http://mirror.bjtu.edu.cn/ubuntu/ trusty-backports main multiverse restricted universe&#10;deb-src http://mirror.bjtu.edu.cn/ubuntu/ trusty-proposed main multiverse restricted universe&#10;deb-src http://mirror.bjtu.edu.cn/ubuntu/ trusty-security main multiverse restricted universe&#10;deb-src http://mirror.bjtu.edu.cn/ubuntu/ trusty-updates main multiverse&#10;# &#21271;&#20140;&#29702;&#24037;&#10;deb http://mirror.bjtu.edu.cn/ubuntu/ precise main multiverse restricted universe&#10;deb http://mirror.bjtu.edu.cn/ubuntu/ precise-backports main multiverse restricted universe&#10;deb http://mirror.bjtu.edu.cn/ubuntu/ precise-proposed main multiverse restricted universe&#10;deb http://mirror.bjtu.edu.cn/ubuntu/ precise-security main multiverse restricted universe&#10;deb http://mirror.bjtu.edu.cn/ubuntu/ precise-updates main multiverse restricted universe&#10;deb-src http://mirror.bjtu.edu.cn/ubuntu/ precise main multiverse restricted universe&#10;deb-src http://mirror.bjtu.edu.cn/ubuntu/ precise-backports main multiverse restricted universe&#10;deb-src http://mirror.bjtu.edu.cn/ubuntu/ precise-proposed main multiverse restricted universe&#10;deb-src http://mirror.bjtu.edu.cn/ubuntu/ precise-security main multiverse restricted universe&#10;deb-src http://mirror.bjtu.edu.cn/ubuntu/ precise-updates main multiverse restricted universe&#10;&#10;#&#19978;&#28023;&#20132;&#22823;&#10;deb http://ftp.sjtu.edu.cn/ubuntu/ trusty universe restricted multiverse main&#10;deb http://ftp.sjtu.edu.cn/ubuntu/ trusty-security universe restricted multiverse main&#10;deb http://ftp.sjtu.edu.cn/ubuntu/ trusty-updates universe restricted multiverse main&#10;deb http://ftp.sjtu.edu.cn/ubuntu/ trusty-proposed universe restricted multiverse main&#10;deb http://ftp.sjtu.edu.cn/ubuntu/ trusty-backports universe restricted multiverse main&#10;&#10;#&#38463;&#37324;&#20113;&#26381;&#21153;&#22120;&#10;deb http://mirrors.aliyun.com/ubuntu/ trusty main restricted universe multiverse&#10;deb http://mirrors.aliyun.com/ubuntu/ trusty-security main restricted universe multiverse&#10;deb http://mirrors.aliyun.com/ubuntu/ trusty-updates main restricted universe multiverse&#10;deb http://mirrors.aliyun.com/ubuntu/ trusty-proposed main restricted universe multiverse&#10;deb http://mirrors.aliyun.com/ubuntu/ trusty-backports main restricted universe multiverse&#10;deb-src http://mirrors.aliyun.com/ubuntu/ trusty main restricted universe multiverse&#10;deb-src http://mirrors.aliyun.com/ubuntu/ trusty-security main restricted universe multiverse&#10;deb-src http://mirrors.aliyun.com/ubuntu/ trusty-updates main restricted universe multiverse&#10;deb-src http://mirrors.aliyun.com/ubuntu/ trusty-proposed main restricted universe multiverse&#10;deb-src http://mirrors.aliyun.com/ubuntu/ trusty-backports main restricted universe multiverse</span><br></pre></td></tr></table></figure>
-<h3 id="3-_u8FD0_u884C_u66F4_u65B0_u547D_u4EE4"><a href="#3-_u8FD0_u884C_u66F4_u65B0_u547D_u4EE4" class="headerlink" title="3.运行更新命令"></a>3.运行更新命令</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get update</span><br></pre></td></tr></table></figure>
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -955,7 +945,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">52</span>
+              <span class="site-state-item-count">53</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -972,7 +962,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">47</span>
+                <span class="site-state-item-count">48</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
