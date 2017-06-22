@@ -72,7 +72,7 @@
 创建好 Angular4 项目文中不介绍搭建 Angular 开发环境的过程，需要的可以参考官方提供的 快速入门
 创建项">
 <meta property="og:image" content="https://1csh1.github.io/img/angular-wijmo5/angular-wijmo5-result.png">
-<meta property="og:updated_time" content="2017-06-22T12:56:42.395Z">
+<meta property="og:updated_time" content="2017-06-22T13:16:00.487Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="在 Angular 项目中配置 Wijmo5">
 <meta name="twitter:description" content="摘要：本文将介绍在 Angular4 项目中配置 Wijmo5 UI控件，文中采用的 Angular 版本为 4.0.0，Wijmo 版本为 C1Wijmo-Eval_5.20171.300
@@ -332,21 +332,16 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#34;dependencies&#34;: &#123;&#10;    &#34;wijmo&#34;: &#34;^5.20171.300&#34;&#10;&#125;</span><br></pre></td></tr></table></figure>
 <p>将 “C1Wijmo-Eval_5.20171.300\Dist\styles” 拷贝到 Angular 项目的 src 目录下，并在 src/styles.css 文件中添加 wijmo 自带的样式文件</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">@import &#34;styles/wijmo.min.css&#34;;</span><br></pre></td></tr></table></figure>
-<h3 id="u7F16_u5199_u4EE3_u7801"><a href="#u7F16_u5199_u4EE3_u7801" class="headerlink" title="编写代码"></a>编写代码</h3><p> <strong>app/app.modules.ts</strong> 代码如下：</p>
+<h3 id="u7F16_u5199_u4EE3_u7801"><a href="#u7F16_u5199_u4EE3_u7801" class="headerlink" title="编写代码"></a>编写代码</h3><p><strong>app/app.modules.ts</strong> 代码如下：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">import &#123; BrowserModule &#125; from &#39;@angular/platform-browser&#39;;&#10;import &#123; NgModule &#125; from &#39;@angular/core&#39;;&#10;import &#123; WjInputModule &#125; from &#39;wijmo/wijmo.angular2.input&#39;;&#10;&#10;import &#123; AppComponent &#125; from &#39;./app.component&#39;;&#10;&#10;@NgModule(&#123;&#10;  declarations: [&#10;    AppComponent&#10;  ],&#10;  imports: [&#10;    BrowserModule,&#10;    WjInputModule&#10;  ],&#10;  providers: [],&#10;  bootstrap: [AppComponent]&#10;&#125;)&#10;export class AppModule &#123; &#125;</span><br></pre></td></tr></table></figure>
-<p>添加了 <figure class="highlight"><figcaption><span>&#123; WjInputModule &#125; from 'wijmo/wijmo.angular2.input'; ``` 和 ```  imports: [ WjInputModule ] ```</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#10;&#10;**app/component.ts** &#20195;&#30721;&#22914;&#19979;&#65306;</span><br></pre></td></tr></table></figure></p>
-<p>import { Component } from ‘@angular/core’;<br>import { WjInputModule } from ‘wijmo/wijmo.angular2.input’;</p>
-<p>@Component({<br>  selector: ‘app-root’,<br>  templateUrl: ‘./app.component.html’,<br>  styleUrls: [‘./app.component.css’]<br>})<br>export class AppComponent {<br>  title = ‘app’;</p>
-<p>  value: number = 123;</p>
-<p>  change() {<br>    alert(“my WjInputNumber value is “ + this.value);<br>  }<br>}<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#10;&#28155;&#21152;&#20102;</span><br></pre></td></tr></table></figure></p>
-<p>import { WjInputModule } from ‘wijmo/wijmo.angular2.input’;</p>
-<p>  value: number = 123;<br>  change() {<br>    alert(“my WjInputNumber value is “ + this.value);<br>  }</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#10;**app/app.component.html**&#28155;&#21152;&#20195;&#30721;&#22914;&#19979;&#65306;</span><br></pre></td></tr></table></figure>
-<p></p><h1>My First Wijmo Project</h1><p></p>
-<p>&lt;wj-input-number<br>  [(value)]=”value”<br>  (change)=”change()”</p>
-<blockquote>
-<p><br>```</p>
-</blockquote>
+<p>添加了  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">import &#123; WjInputModule &#125; from &#39;wijmo/wijmo.angular2.input&#39;; &#10;...&#10;imports: [ WjInputModule ]</span><br></pre></td></tr></table></figure>
+<p><strong>app/component.ts</strong> 代码如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">import &#123; Component &#125; from &#39;@angular/core&#39;;&#10;import &#123; WjInputModule &#125; from &#39;wijmo/wijmo.angular2.input&#39;;&#10;&#10;@Component(&#123;&#10;  selector: &#39;app-root&#39;,&#10;  templateUrl: &#39;./app.component.html&#39;,&#10;  styleUrls: [&#39;./app.component.css&#39;]&#10;&#125;)&#10;export class AppComponent &#123;&#10;  title = &#39;app&#39;;&#10;&#10;  value: number = 123;&#10;&#10;  change() &#123;&#10;    alert(&#34;my WjInputNumber value is &#34; + this.value);&#10;  &#125;&#10;&#125;</span><br></pre></td></tr></table></figure>
+<p>添加了</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">import &#123; WjInputModule &#125; from &#39;wijmo/wijmo.angular2.input&#39;;&#10;&#10;  value: number = 123;&#10;  change() &#123;&#10;    alert(&#34;my WjInputNumber value is &#34; + this.value);&#10;  &#125;</span><br></pre></td></tr></table></figure>
+<p><strong>app/app.component.html</strong>添加代码如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#60;h1&#62;My First Wijmo Project&#60;/h1&#62;&#10;&#60;wj-input-number&#10;  [(value)]=&#34;value&#34;&#10;  (change)=&#34;change()&#34;&#10;&#62;&#60;/wj-input-number&#62;</span><br></pre></td></tr></table></figure>
 <h3 id="u8FD0_u884C_u7ED3_u679C"><a href="#u8FD0_u884C_u7ED3_u679C" class="headerlink" title="运行结果"></a>运行结果</h3><p><img src="https://1csh1.github.io/img/angular-wijmo5/angular-wijmo5-result.png" alt="运行结果"></p>
 
       
@@ -502,7 +497,7 @@
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#u4E0B_u8F7D_Wijmo5__u5B98_u65B9_u6587_u4EF6"><span class="nav-number">1.</span> <span class="nav-text">下载 Wijmo5 官方文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u521B_u5EFA_u597D_Angular4__u9879_u76EE"><span class="nav-number">2.</span> <span class="nav-text">创建好 Angular4 项目</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u914D_u7F6E_Wijmo5"><span class="nav-number">3.</span> <span class="nav-text">配置 Wijmo5</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u7F16_u5199_u4EE3_u7801"><span class="nav-number">4.</span> <span class="nav-text">编写代码</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#undefined"><span class="nav-number"></span> <span class="nav-text">My First Wijmo Project</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#u8FD0_u884C_u7ED3_u679C"><span class="nav-number">1.</span> <span class="nav-text">运行结果</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#u4E0B_u8F7D_Wijmo5__u5B98_u65B9_u6587_u4EF6"><span class="nav-number">1.</span> <span class="nav-text">下载 Wijmo5 官方文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u521B_u5EFA_u597D_Angular4__u9879_u76EE"><span class="nav-number">2.</span> <span class="nav-text">创建好 Angular4 项目</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u914D_u7F6E_Wijmo5"><span class="nav-number">3.</span> <span class="nav-text">配置 Wijmo5</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u7F16_u5199_u4EE3_u7801"><span class="nav-number">4.</span> <span class="nav-text">编写代码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#u8FD0_u884C_u7ED3_u679C"><span class="nav-number">5.</span> <span class="nav-text">运行结果</span></a></li></ol></div>
             
           </div>
           <div class="post-toc-indicator-bottom post-toc-indicator">
