@@ -225,6 +225,162 @@
             
               
                 
+                <a class="post-title-link" href="/2017/06/18/angular-wijmo5/" itemprop="url">
+                  在 Angular 项目中配置 Wijmo5
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-06-18T22:00:00+08:00" content="2017-06-18">
+              2017-06-18
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Angular/" itemprop="url" rel="index">
+                    <span itemprop="name">Angular</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Angular/Wijmo5/" itemprop="url" rel="index">
+                    <span itemprop="name">Wijmo5</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2017/06/18/angular-wijmo5/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/06/18/angular-wijmo5/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2017/06/18/angular-wijmo5/" class="leancloud_visitors" data-flag-title="在 Angular 项目中配置 Wijmo5">
+               &nbsp; | &nbsp;
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote>
+<p>摘要：本文将介绍在 Angular4 项目中配置 Wijmo5 UI控件，文中采用的 Angular 版本为 4.0.0，Wijmo 版本为 C1Wijmo-Eval_5.20171.300</p>
+</blockquote>
+<h3 id="u4E0B_u8F7D_Wijmo5__u5B98_u65B9_u6587_u4EF6"><a href="#u4E0B_u8F7D_Wijmo5__u5B98_u65B9_u6587_u4EF6" class="headerlink" title="下载 Wijmo5 官方文件"></a>下载 Wijmo5 官方文件</h3><p><a href="https://1csh1.github.io/file/angular-wijmo5/C1Wijmo-Eval_5.20171.300.zip">C1Wijmo-Eval_5.20171.300.zip</a></p>
+<h3 id="u521B_u5EFA_u597D_Angular4__u9879_u76EE"><a href="#u521B_u5EFA_u597D_Angular4__u9879_u76EE" class="headerlink" title="创建好 Angular4 项目"></a>创建好 Angular4 项目</h3><p>文中不介绍搭建 Angular 开发环境的过程，需要的可以参考官方提供的 <a href="https://angular.io/guide/quickstart" target="_blank" rel="external">快速入门</a></p>
+<p>创建项目 <strong>ng new wijmo</strong> ，并测试 <strong>ng serve</strong> ，运行成功过后再进行接下来的配置。</p>
+<h3 id="u914D_u7F6E_Wijmo5"><a href="#u914D_u7F6E_Wijmo5" class="headerlink" title="配置 Wijmo5"></a>配置 Wijmo5</h3><p>解压文件后进入 NpmImages 文件夹，拷贝 wijmo-amd-min 到 Angular项目 wijmo 的 npm_modules 目录下且改名为 wijmo，并 wijmo 项目的 package.json 文件中的 dependencies 中添加配置如下 </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#34;dependencies&#34;: &#123;&#10;    &#34;wijmo&#34;: &#34;^5.20171.300&#34;&#10;&#125;</span><br></pre></td></tr></table></figure>
+<p>将 “C1Wijmo-Eval_5.20171.300\Dist\styles” 拷贝到 Angular 项目的 src 目录下，并在 src/styles.css 文件中添加 wijmo 自带的样式文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">@import &#34;styles/wijmo.min.css&#34;;</span><br></pre></td></tr></table></figure>
+<h3 id="u7F16_u5199_u4EE3_u7801"><a href="#u7F16_u5199_u4EE3_u7801" class="headerlink" title="编写代码"></a>编写代码</h3><p><strong>app/app.modules.ts</strong> 代码如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">import &#123; BrowserModule &#125; from &#39;@angular/platform-browser&#39;;&#10;import &#123; NgModule &#125; from &#39;@angular/core&#39;;&#10;import &#123; WjInputModule &#125; from &#39;wijmo/wijmo.angular2.input&#39;;&#10;&#10;import &#123; AppComponent &#125; from &#39;./app.component&#39;;&#10;&#10;@NgModule(&#123;&#10;  declarations: [&#10;    AppComponent&#10;  ],&#10;  imports: [&#10;    BrowserModule,&#10;    WjInputModule&#10;  ],&#10;  providers: [],&#10;  bootstrap: [AppComponent]&#10;&#125;)&#10;export class AppModule &#123; &#125;</span><br></pre></td></tr></table></figure>
+<p>添加了  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">import &#123; WjInputModule &#125; from &#39;wijmo/wijmo.angular2.input&#39;; &#10;...&#10;imports: [ WjInputModule ]</span><br></pre></td></tr></table></figure>
+<p><strong>app/component.ts</strong> 代码如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">import &#123; Component &#125; from &#39;@angular/core&#39;;&#10;import &#123; WjInputModule &#125; from &#39;wijmo/wijmo.angular2.input&#39;;&#10;&#10;@Component(&#123;&#10;  selector: &#39;app-root&#39;,&#10;  templateUrl: &#39;./app.component.html&#39;,&#10;  styleUrls: [&#39;./app.component.css&#39;]&#10;&#125;)&#10;export class AppComponent &#123;&#10;  title = &#39;app&#39;;&#10;&#10;  value: number = 123;&#10;&#10;  change() &#123;&#10;    alert(&#34;my WjInputNumber value is &#34; + this.value);&#10;  &#125;&#10;&#125;</span><br></pre></td></tr></table></figure>
+<p>添加了</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">import &#123; WjInputModule &#125; from &#39;wijmo/wijmo.angular2.input&#39;;&#10;&#10;  value: number = 123;&#10;  change() &#123;&#10;    alert(&#34;my WjInputNumber value is &#34; + this.value);&#10;  &#125;</span><br></pre></td></tr></table></figure>
+<p><strong>app/app.component.html</strong>添加代码如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#60;h1&#62;My First Wijmo Project&#60;/h1&#62;&#10;&#60;wj-input-number&#10;  [(value)]=&#34;value&#34;&#10;  (change)=&#34;change()&#34;&#10;&#62;&#60;/wj-input-number&#62;</span><br></pre></td></tr></table></figure>
+<h3 id="u8FD0_u884C_u7ED3_u679C"><a href="#u8FD0_u884C_u7ED3_u679C" class="headerlink" title="运行结果"></a>运行结果</h3><p><img src="https://1csh1.github.io/img/angular-wijmo5/angular-wijmo5-result.png" alt="运行结果"></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2017/04/20/how-to-install-wine-in-ubuntu/" itemprop="url">
                   在 Ubuntu 中安装 Wine
                 </a>
@@ -758,137 +914,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/03/21/HTTP工具类/" itemprop="url">
-                  HTTP工具类
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-03-21T08:00:00+08:00" content="2017-03-21">
-              2017-03-21
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/HTTP/" itemprop="url" rel="index">
-                    <span itemprop="name">HTTP</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2017/03/21/HTTP工具类/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/03/21/HTTP工具类/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-             <span id="/2017/03/21/HTTP工具类/" class="leancloud_visitors" data-flag-title="HTTP工具类">
-               &nbsp; | &nbsp;
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               <span class="post-meta-item-text">阅读次数 </span>
-               <span class="leancloud-visitors-count"></span>
-              </span>
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>GitHub代码：<a href="https://github.com/1CSH1/util/tree/master/src/main/java/com/example/util/http/HttpUtil.java" target="_blank" rel="external">HttpUtil.java</a></p>
-<blockquote>
-<p>摘要：本文介绍在项目中用HttpClient来发送HTTP请求时，对HtttpClient进行的封装，使得我们在项目中使用HttpClient时可以更简单易用。</p>
-</blockquote>
-<h1 id="Maven_u9879_u76EE_u4E2D_u7684pom-xml"><a href="#Maven_u9879_u76EE_u4E2D_u7684pom-xml" class="headerlink" title="Maven项目中的pom.xml"></a>Maven项目中的pom.xml</h1><p>添加HttpClient依赖</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#60;dependency&#62;&#10;    &#60;groupId&#62;org.apache.httpcomponents&#60;/groupId&#62;&#10;    &#60;artifactId&#62;httpclient&#60;/artifactId&#62;&#10;    &#60;version&#62;4.5.2&#60;/version&#62;&#10;&#60;/dependency&#62;</span><br></pre></td></tr></table></figure>
-<h1 id="HttpUtil-java"><a href="#HttpUtil-java" class="headerlink" title="HttpUtil.java"></a>HttpUtil.java</h1><p>实现了对HttpClient的封装，代码如下</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">package com.csh.util.http;&#10;&#10;&#10;&#10;import org.apache.http.Header;&#10;import org.apache.http.HttpEntity;&#10;import org.apache.http.NameValuePair;&#10;import org.apache.http.client.ClientProtocolException;&#10;import org.apache.http.client.entity.UrlEncodedFormEntity;&#10;import org.apache.http.client.methods.*;&#10;import org.apache.http.client.utils.URIBuilder;&#10;import org.apache.http.impl.client.CloseableHttpClient;&#10;import org.apache.http.impl.client.HttpClients;&#10;import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;&#10;import org.apache.http.message.BasicNameValuePair;&#10;import org.apache.http.util.EntityUtils;&#10;&#10;import java.io.IOException;&#10;import java.io.UnsupportedEncodingException;&#10;import java.net.URISyntaxException;&#10;import java.util.ArrayList;&#10;import java.util.Map;&#10;&#10;/**&#10; * @author James-CSH&#10; * @since 3/14/2017 08:00 AM&#10; */&#10;public class HttpUtil &#123;&#10;    private PoolingHttpClientConnectionManager cm;&#10;    private String EMPTY_STR = &#34;&#34;;&#10;    private String UTF_8 = &#34;UTF-8&#34;;&#10;&#10;    public HttpUtil() &#123;&#10;        init(20, 5);&#10;    &#125;&#10;&#10;    public HttpUtil(int maxTotal, int maxPerRoute) &#123;&#10;        init(maxTotal, maxPerRoute);&#10;    &#125;&#10;&#10;    /**&#10;     * &#21021;&#22987;&#21270;&#10;     * @param maxTotal      &#26368;&#22823;&#36830;&#25509;&#25968;&#10;     * @param maxPerRoute   &#27599;&#20010;&#36335;&#30001;&#26368;&#22823;&#36830;&#25509;&#25968;&#10;     */&#10;    private synchronized void init(int maxTotal, int maxPerRoute) &#123;&#10;        if (null == cm) &#123;&#10;            cm = new PoolingHttpClientConnectionManager();&#10;            cm.setMaxTotal(maxTotal);// &#25972;&#20010;&#36830;&#25509;&#27744;&#26368;&#22823;&#36830;&#25509;&#25968;&#10;            cm.setDefaultMaxPerRoute(maxPerRoute);// &#27599;&#36335;&#30001;&#26368;&#22823;&#36830;&#25509;&#25968;&#65292;&#40664;&#35748;&#20540;&#26159;2&#10;        &#125;&#10;    &#125;&#10;&#10;    private CloseableHttpClient getHttpClient() &#123;&#10;        return HttpClients.custom().setConnectionManager(cm).build();&#10;    &#125;&#10;&#10;    /**&#10;     * &#35774;&#32622;&#35831;&#27714;&#22836;&#10;     * @param http      &#21457;&#36865;&#30340;HTTP&#35831;&#27714;&#10;     * @param headers   &#35831;&#27714;&#22836;&#10;     * @return          &#21457;&#36865;&#30340;HTTP&#35831;&#27714;&#10;     */&#10;    private HttpRequestBase setHeaders(HttpRequestBase http, Map&#60;String, Object&#62; headers) &#123;&#10;        if (null != headers) &#123;&#10;            for (Map.Entry&#60;String, Object&#62; param : headers.entrySet()) &#123;&#10;                http.addHeader(param.getKey(), String.valueOf(param.getValue()));&#10;            &#125;&#10;        &#125;&#10;        return http;&#10;    &#125;&#10;&#10;    /**&#10;     * &#23558;&#21442;&#25968;&#36716;&#20026;&#29305;&#23450;&#26684;&#24335;&#10;     * @param params    &#21442;&#25968;&#10;     * @return&#10;     */&#10;    private ArrayList&#60;NameValuePair&#62; covertParams2NVPS(Map&#60;String, Object&#62; params) &#123;&#10;        ArrayList&#60;NameValuePair&#62; pairs = new ArrayList&#60;NameValuePair&#62;();&#10;        if (null != params) &#123;&#10;            for (Map.Entry&#60;String, Object&#62; param : params.entrySet()) &#123;&#10;                pairs.add(new BasicNameValuePair(param.getKey(), String.valueOf(param.getValue())));&#10;            &#125;&#10;        &#125;&#10;        return pairs;&#10;    &#125;&#10;&#10;    /**&#10;     * &#22788;&#29702;Http&#35831;&#27714;&#10;     *&#10;     * @param request&#10;     * @return&#10;     */&#10;    private String getResult(HttpRequestBase request) &#123;&#10;        CloseableHttpClient httpClient = getHttpClient();&#10;        CloseableHttpResponse response = null;&#10;        try &#123;&#10;            response = httpClient.execute(request);&#10;            HttpEntity entity = response.getEntity();&#10;            if (entity != null) &#123;&#10;                String result = EntityUtils.toString(entity);&#10;                response.close();&#10;                return result;&#10;            &#125;&#10;        &#125; catch (ClientProtocolException e) &#123;&#10;            e.printStackTrace();&#10;        &#125; catch (IOException e) &#123;&#10;            e.printStackTrace();&#10;        &#125; finally &#123;&#10;            try &#123;&#10;                response.close();&#10;            &#125; catch (IOException e) &#123;&#10;                e.printStackTrace();&#10;            &#125;&#10;        &#125;&#10;&#10;        return EMPTY_STR;&#10;    &#125;&#10;&#10;    /**&#10;     * some http request just return the headers. such as head&#10;     * @param request   &#10;     * @return&#10;     */&#10;    private Header[] getHeaders(HttpRequestBase request) &#123;&#10;        CloseableHttpClient httpClient = getHttpClient();&#10;        CloseableHttpResponse response = null;&#10;        try &#123;&#10;            response = httpClient.execute(request);&#10;            return response.getAllHeaders();&#10;        &#125; catch (ClientProtocolException e) &#123;&#10;            e.printStackTrace();&#10;        &#125; catch (IOException e) &#123;&#10;            e.printStackTrace();&#10;        &#125; finally &#123;&#10;            try &#123;&#10;                response.close();&#10;            &#125; catch (IOException e) &#123;&#10;                e.printStackTrace();&#10;            &#125;&#10;        &#125;&#10;        return null;&#10;    &#125;&#10;&#10;    /**&#10;     *  &#21457;&#36865;GET&#35831;&#27714;&#10;     * @param url  &#35831;&#27714;&#36335;&#24452;&#10;     * @return      &#35831;&#27714;&#32467;&#26524;&#10;     * @throws URISyntaxException&#10;     */&#10;    public String get(String url) throws URISyntaxException &#123;&#10;        return get(url, null);&#10;    &#125;&#10;&#10;    /**&#10;     *  &#21457;&#36865;GET&#35831;&#27714;&#10;     * @param url       &#35831;&#27714;&#36335;&#24452;&#10;     * @param params    &#35831;&#27714;&#21442;&#25968;&#10;     * @return          &#35831;&#27714;&#32467;&#26524;&#10;     * @throws URISyntaxException&#10;     */&#10;    public String get(String url, Map&#60;String, Object&#62; params) throws URISyntaxException &#123;&#10;        return get(url, null, params);&#10;    &#125;&#10;&#10;    /**&#10;     *  &#21457;&#36865;GET&#35831;&#27714;&#10;     * @param url       &#35831;&#27714;&#36335;&#24452;&#10;     * @param headers   &#35831;&#27714;&#22836;&#10;     * @param params    &#35831;&#27714;&#21442;&#25968;&#10;     * @return          &#35831;&#27714;&#32467;&#26524;&#10;     * @throws URISyntaxException&#10;     */&#10;    public String get(String url, Map&#60;String, Object&#62; headers, Map&#60;String, Object&#62; params) throws URISyntaxException &#123;&#10;        URIBuilder ub = new URIBuilder();&#10;        ub.setPath(url);&#10;        //&#35774;&#32622;&#21442;&#25968;&#10;        ub.setParameters(covertParams2NVPS(params));&#10;        HttpGet httpGet = new HttpGet(ub.build());&#10;        //&#35774;&#32622;&#35831;&#27714;&#22836;&#10;        httpGet = (HttpGet) setHeaders(httpGet, headers);&#10;&#10;        return getResult(httpGet);&#10;    &#125;&#10;&#10;    /**&#10;     * &#21457;&#36865;POST&#35831;&#27714;&#10;     * @param url   &#35831;&#27714;&#36335;&#24452;&#10;     * @return      &#35831;&#27714;&#32467;&#26524;&#10;     * @throws UnsupportedEncodingException&#10;     */&#10;    public String post(String url) throws UnsupportedEncodingException &#123;&#10;        return post(url, null);&#10;    &#125;&#10;&#10;    /**&#10;     * &#21457;&#36865;POST&#35831;&#27714;&#10;     * @param url       &#35831;&#27714;&#36335;&#24452;&#10;     * @param params    &#35831;&#27714;&#21442;&#25968;&#10;     * @return          &#35831;&#27714;&#32467;&#26524;&#10;     * @throws UnsupportedEncodingException&#10;     */&#10;    public String post(String url, Map&#60;String, Object&#62; params) throws UnsupportedEncodingException &#123;&#10;        return post(url, null, params);&#10;    &#125;&#10;&#10;    /**&#10;     * &#21457;&#36865;POST&#35831;&#27714;&#10;     * @param url       &#35831;&#27714;&#36335;&#24452;&#10;     * @param headers   &#35831;&#27714;&#22836;&#10;     * @param params    &#35831;&#27714;&#21442;&#25968;&#10;     * @return          &#35831;&#27714;&#32467;&#26524;&#10;     * @throws UnsupportedEncodingException&#10;     */&#10;    public String post(String url, Map&#60;String, Object&#62; headers, Map&#60;String, Object&#62; params) throws UnsupportedEncodingException &#123;&#10;        HttpPost httpPost = new HttpPost(url);&#10;        //&#35774;&#32622;&#21442;&#25968;&#10;        ArrayList&#60;NameValuePair&#62; pairs = covertParams2NVPS(params);&#10;        httpPost.setEntity(new UrlEncodedFormEntity(pairs, UTF_8));&#10;        //&#35774;&#32622;&#35831;&#27714;&#22836;&#10;        httpPost = (HttpPost) setHeaders(httpPost, headers);&#10;        return getResult(httpPost);&#10;    &#125;&#10;&#10;    /**&#10;     * &#21457;&#36865;PUT&#35831;&#27714;&#10;     * @param url   &#35831;&#27714;&#36335;&#24452;&#10;     * @return      &#35831;&#27714;&#32467;&#26524;&#10;     * @throws UnsupportedEncodingException&#10;     */&#10;    public String put(String url) throws UnsupportedEncodingException &#123;&#10;        return put(url, null);&#10;    &#125;&#10;&#10;    /**&#10;     * &#21457;&#36865;PUT&#35831;&#27714;&#10;     * @param url       &#35831;&#27714;&#36335;&#24452;&#10;     * @param params    &#35831;&#27714;&#21442;&#25968;&#10;     * @return          &#35831;&#27714;&#32467;&#26524;&#10;     * @throws UnsupportedEncodingException&#10;     */&#10;    public String put(String url, Map&#60;String, Object&#62; params) throws UnsupportedEncodingException &#123;&#10;        return put(url, null, params);&#10;    &#125;&#10;&#10;    /**&#10;     * &#21457;&#36865;PUT&#35831;&#27714;&#10;     * @param url       &#35831;&#27714;&#36335;&#24452;&#10;     * @param headers   &#35831;&#27714;&#22836;&#10;     * @param params    &#35831;&#27714;&#21442;&#25968;&#10;     * @return          &#35831;&#27714;&#32467;&#26524;&#10;     * @throws UnsupportedEncodingException&#10;     */&#10;    public String put(String url, Map&#60;String, Object&#62; headers, Map&#60;String, Object&#62; params) throws UnsupportedEncodingException &#123;&#10;        HttpPut httpPut = new HttpPut(url);&#10;        //&#35774;&#32622;&#35831;&#27714;&#21442;&#25968;&#10;        ArrayList&#60;NameValuePair&#62; pairs = covertParams2NVPS(params);&#10;        httpPut.setEntity(new UrlEncodedFormEntity(pairs, UTF_8));&#10;        //&#35774;&#32622;&#35831;&#27714;&#22836;&#10;        httpPut = (HttpPut) setHeaders(httpPut, headers);&#10;&#10;        return getResult(httpPut);&#10;    &#125;&#10;&#10;    /**&#10;     * &#21457;&#36865;PATCH&#35831;&#27714;&#10;     * @param url   &#35831;&#27714;&#36335;&#24452;&#10;     * @return      &#35831;&#27714;&#32467;&#26524;&#10;     * @throws UnsupportedEncodingException&#10;     */&#10;    public String patch(String url) throws UnsupportedEncodingException &#123;&#10;        return patch(url, null);&#10;    &#125;&#10;&#10;    /**&#10;     * &#21457;&#36865;PATCH&#35831;&#27714;&#10;     * @param url       &#35831;&#27714;&#36335;&#24452;&#10;     * @param params    &#35831;&#27714;&#21442;&#25968;&#10;     * @return          &#35831;&#27714;&#32467;&#26524;&#10;     * @throws UnsupportedEncodingException&#10;     */&#10;    public String patch(String url, Map&#60;String, Object&#62; params) throws UnsupportedEncodingException &#123;&#10;        return patch(url, null, params);&#10;    &#125;&#10;&#10;    /**&#10;     * &#21457;&#36865;PATCH&#35831;&#27714;&#10;     * @param url       &#35831;&#27714;&#36335;&#24452;&#10;     * @param headers   &#35831;&#27714;&#22836;&#10;     * @param params    &#35831;&#27714;&#21442;&#25968;&#10;     * @return          &#35831;&#27714;&#32467;&#26524;&#10;     * @throws UnsupportedEncodingException&#10;     */&#10;    public String patch(String url, Map&#60;String, Object&#62; headers, Map&#60;String, Object&#62; params) throws UnsupportedEncodingException &#123;&#10;        HttpPatch httpPatch = new HttpPatch(url);&#10;        //&#35774;&#32622;&#35831;&#27714;&#21442;&#25968;&#10;        ArrayList&#60;NameValuePair&#62; pairs = covertParams2NVPS(params);&#10;        httpPatch.setEntity(new UrlEncodedFormEntity(pairs, UTF_8));&#10;        //&#35774;&#32622;&#35831;&#27714;&#22836;&#10;        httpPatch = (HttpPatch) setHeaders(httpPatch, headers);&#10;&#10;        return getResult(httpPatch);&#10;    &#125;&#10;&#10;    /**&#10;     * &#21457;&#36865;DELETE&#35831;&#27714;&#10;     * @param url   &#35831;&#27714;&#36335;&#24452;&#10;     * @return      &#35831;&#27714;&#32467;&#26524;&#10;     * @throws UnsupportedEncodingException&#10;     */&#10;    public String delete(String url) throws UnsupportedEncodingException, URISyntaxException &#123;&#10;        return delete(url, null);&#10;    &#125;&#10;&#10;    /**&#10;     * &#21457;&#36865;DELETE&#35831;&#27714;&#10;     * @param url       &#35831;&#27714;&#36335;&#24452;&#10;     * @param params    &#35831;&#27714;&#21442;&#25968;&#10;     * @return          &#35831;&#27714;&#32467;&#26524;&#10;     * @throws UnsupportedEncodingException&#10;     * @throws URISyntaxException&#10;     */&#10;    public String delete(String url, Map&#60;String, Object&#62; params) throws UnsupportedEncodingException, URISyntaxException &#123;&#10;        return delete(url, null, params);&#10;    &#125;&#10;&#10;    /**&#10;     * &#21457;&#36865;DELETE&#35831;&#27714;&#10;     * @param url       &#35831;&#27714;&#36335;&#24452;&#10;     * @param headers   &#35831;&#27714;&#22836;&#10;     * @param params    &#35831;&#27714;&#21442;&#25968;&#10;     * @return          &#35831;&#27714;&#32467;&#26524;&#10;     * @throws UnsupportedEncodingException&#10;     */&#10;    public String delete(String url, Map&#60;String, Object&#62; headers, Map&#60;String, Object&#62; params) throws UnsupportedEncodingException, URISyntaxException &#123;&#10;        URIBuilder ub = new URIBuilder();&#10;        ub.setPath(url);&#10;        //&#35774;&#32622;&#35831;&#27714;&#21442;&#25968;&#10;        ub.addParameters(covertParams2NVPS(params));&#10;        HttpDelete httpDelete = new HttpDelete(ub.build());&#10;        //&#35774;&#32622;&#35831;&#27714;&#22836;&#10;        httpDelete = (HttpDelete) setHeaders(httpDelete, headers);&#10;&#10;        return getResult(httpDelete);&#10;    &#125;&#10;&#10;    /**&#10;     * &#21457;&#36865;TRACE&#35831;&#27714;&#10;     * &#22238;&#26174;&#26381;&#21153;&#22120;&#25910;&#21040;&#30340;&#35831;&#27714;&#65292;&#20027;&#35201;&#29992;&#20110;&#27979;&#35797;&#25110;&#35786;&#26029;&#12290;&#10;     * @param url       &#35831;&#27714;&#36335;&#24452;&#10;     * @return          &#35831;&#27714;&#32467;&#26524;&#10;     * @throws UnsupportedEncodingException&#10;     */&#10;    public String trace(String url) throws UnsupportedEncodingException, URISyntaxException &#123;&#10;        return trace(url, null);&#10;    &#125;&#10;&#10;    /**&#10;     * &#21457;&#36865;TRACE&#35831;&#27714;&#10;     * &#22238;&#26174;&#26381;&#21153;&#22120;&#25910;&#21040;&#30340;&#35831;&#27714;&#65292;&#20027;&#35201;&#29992;&#20110;&#27979;&#35797;&#25110;&#35786;&#26029;&#10;     * @param url       &#35831;&#27714;&#36335;&#24452;&#10;     * @param params    &#35831;&#27714;&#21442;&#25968;&#10;     * @return          &#35831;&#27714;&#32467;&#26524;&#10;     * @throws UnsupportedEncodingException&#10;     */&#10;    public String trace(String url, Map&#60;String, Object&#62; params) throws UnsupportedEncodingException, URISyntaxException &#123;&#10;        return trace(url, null, params);&#10;    &#125;&#10;&#10;    /**&#10;     * &#21457;&#36865;TRACE&#35831;&#27714;&#10;     * &#22238;&#26174;&#26381;&#21153;&#22120;&#25910;&#21040;&#30340;&#35831;&#27714;&#65292;&#20027;&#35201;&#29992;&#20110;&#27979;&#35797;&#25110;&#35786;&#26029;&#10;     * @param url       &#35831;&#27714;&#36335;&#24452;&#10;     * @param headers   &#35831;&#27714;&#22836;&#10;     * @param params    &#35831;&#27714;&#21442;&#25968;&#10;     * @return          &#35831;&#27714;&#32467;&#26524;&#10;     * @throws UnsupportedEncodingException&#10;     */&#10;    public String trace(String url, Map&#60;String, Object&#62; headers, Map&#60;String, Object&#62; params) throws UnsupportedEncodingException, URISyntaxException &#123;&#10;        URIBuilder ub = new URIBuilder();&#10;        ub.setPath(url);&#10;        //&#35774;&#32622;&#35831;&#27714;&#21442;&#25968;&#10;        ub.setParameters(covertParams2NVPS(params));&#10;        HttpTrace httpTrace = new HttpTrace(ub.build());&#10;        //&#35774;&#32622;&#35831;&#27714;&#22836;&#10;        httpTrace = (HttpTrace) setHeaders(httpTrace, headers);&#10;&#10;        return getResult(httpTrace);&#10;    &#125;&#10;&#10;    /**&#10;     * &#21457;&#36865;HEAD&#35831;&#27714;&#10;     * &#31867;&#20284;&#20110;get&#35831;&#27714;&#65292;&#21482;&#19981;&#36807;&#36820;&#22238;&#30340;&#21709;&#24212;&#20013;&#27809;&#26377;&#20855;&#20307;&#30340;&#20869;&#23481;&#65292;&#29992;&#20110;&#33719;&#21462;&#25253;&#22836;&#10;     * @param url   &#35831;&#27714;&#36335;&#24452;&#10;     * @return      &#35831;&#27714;&#32467;&#26524;&#10;     * @throws UnsupportedEncodingException&#10;     * @throws URISyntaxException&#10;     */&#10;    public Header[] head(String url) throws UnsupportedEncodingException, URISyntaxException &#123;&#10;        return head(url, null);&#10;    &#125;&#10;&#10;    /**&#10;     * &#21457;&#36865;HEAD&#35831;&#27714;&#10;     * &#31867;&#20284;&#20110;get&#35831;&#27714;&#65292;&#21482;&#19981;&#36807;&#36820;&#22238;&#30340;&#21709;&#24212;&#20013;&#27809;&#26377;&#20855;&#20307;&#30340;&#20869;&#23481;&#65292;&#29992;&#20110;&#33719;&#21462;&#25253;&#22836;&#10;     * @param url       &#35831;&#27714;&#36335;&#24452;&#10;     * @param params    &#35831;&#27714;&#21442;&#25968;&#10;     * @return          &#35831;&#27714;&#32467;&#26524;&#10;     * @throws UnsupportedEncodingException&#10;     * @throws URISyntaxException&#10;     */&#10;    public Header[] head(String url, Map&#60;String, Object&#62; params) throws UnsupportedEncodingException, URISyntaxException &#123;&#10;        return head(url, null, params);&#10;    &#125;&#10;&#10;    /**&#10;     * &#21457;&#36865;HEAD&#35831;&#27714;&#10;     * &#31867;&#20284;&#20110;get&#35831;&#27714;&#65292;&#21482;&#19981;&#36807;&#36820;&#22238;&#30340;&#21709;&#24212;&#20013;&#27809;&#26377;&#20855;&#20307;&#30340;&#20869;&#23481;&#65292;&#29992;&#20110;&#33719;&#21462;&#25253;&#22836;&#10;     * @param url       &#35831;&#27714;&#36335;&#24452;&#10;     * @param headers   &#35831;&#27714;&#22836;&#10;     * @param params    &#35831;&#27714;&#21442;&#25968;&#10;     * @return          &#35831;&#27714;&#32467;&#26524;&#10;     * @throws UnsupportedEncodingException&#10;     * @throws URISyntaxException&#10;     */&#10;    public Header[] head(String url, Map&#60;String, Object&#62; headers, Map&#60;String, Object&#62; params) throws UnsupportedEncodingException, URISyntaxException &#123;&#10;        URIBuilder ub = new URIBuilder();&#10;        ub.setPath(url);&#10;        //&#35774;&#32622;&#35831;&#27714;&#21442;&#25968;&#10;        ub.setParameters(covertParams2NVPS(params));&#10;        HttpHead httpHead = new HttpHead(ub.build());&#10;        //&#35774;&#32622;&#35831;&#27714;&#22836;&#10;        httpHead = (HttpHead) setHeaders(httpHead, headers);&#10;&#10;        return getHeaders(httpHead);&#10;    &#125;&#10;&#10;    /**&#10;     * &#21457;&#36865;OPTIONS&#35831;&#27714;&#10;     * &#20801;&#35768;&#23458;&#25143;&#31471;&#26597;&#30475;&#26381;&#21153;&#22120;&#30340;&#24615;&#33021;&#10;     * @param url   &#35831;&#27714;&#36335;&#24452;&#10;     * @return      &#35831;&#27714;&#32467;&#26524;&#10;     * @throws UnsupportedEncodingException&#10;     * @throws URISyntaxException&#10;     */&#10;    public String options(String url) throws UnsupportedEncodingException, URISyntaxException &#123;&#10;        return options(url, null);&#10;    &#125;&#10;&#10;    /**&#10;     * &#21457;&#36865;OPTIONS&#35831;&#27714;&#10;     * &#20801;&#35768;&#23458;&#25143;&#31471;&#26597;&#30475;&#26381;&#21153;&#22120;&#30340;&#24615;&#33021;&#10;     * @param url       &#35831;&#27714;&#36335;&#24452;&#10;     * @param params    &#35831;&#27714;&#21442;&#25968;&#10;     * @return          &#35831;&#27714;&#32467;&#26524;&#10;     * @throws UnsupportedEncodingException&#10;     * @throws URISyntaxException&#10;     */&#10;    public String options(String url, Map&#60;String, Object&#62; params) throws UnsupportedEncodingException, URISyntaxException &#123;&#10;        return options(url, null, params);&#10;    &#125;&#10;&#10;    /**&#10;     * &#21457;&#36865;OPTIONS&#35831;&#27714;&#10;     * &#20801;&#35768;&#23458;&#25143;&#31471;&#26597;&#30475;&#26381;&#21153;&#22120;&#30340;&#24615;&#33021;&#10;     * @param url       &#35831;&#27714;&#36335;&#24452;&#10;     * @param headers   &#35831;&#27714;&#22836;&#10;     * @param params    &#35831;&#27714;&#21442;&#25968;&#10;     * @return          &#35831;&#27714;&#32467;&#26524;&#10;     * @throws UnsupportedEncodingException&#10;     * @throws URISyntaxException&#10;     */&#10;    public String options(String url, Map&#60;String, Object&#62; headers, Map&#60;String, Object&#62; params) throws UnsupportedEncodingException, URISyntaxException &#123;&#10;        URIBuilder ub = new URIBuilder();&#10;        ub.setPath(url);&#10;        //&#35774;&#32622;&#21442;&#25968;&#10;        ub.setParameters(covertParams2NVPS(params));&#10;        HttpOptions httpOptions = new HttpOptions(ub.build());&#10;        //&#35774;&#32622;&#35831;&#27714;&#22836;&#10;        httpOptions = (HttpOptions) setHeaders(httpOptions, headers);&#10;&#10;        return getResult(httpOptions);&#10;    &#125;&#10;&#10;&#125;</span><br></pre></td></tr></table></figure>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -934,7 +959,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">54</span>
+              <span class="site-state-item-count">55</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -942,7 +967,7 @@
           
             <div class="site-state-item site-state-categories">
               <a href="/categories">
-                <span class="site-state-item-count">31</span>
+                <span class="site-state-item-count">32</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -951,7 +976,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">48</span>
+                <span class="site-state-item-count">50</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

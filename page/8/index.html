@@ -225,6 +225,133 @@
             
               
                 
+                <a class="post-title-link" href="/2016/04/19/Sqoop安装与配置/" itemprop="url">
+                  Sqoop安装与配置
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-04-19T18:59:25+08:00" content="2016-04-19">
+              2016-04-19
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Sqoop/" itemprop="url" rel="index">
+                    <span itemprop="name">Sqoop</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/04/19/Sqoop安装与配置/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/04/19/Sqoop安装与配置/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2016/04/19/Sqoop安装与配置/" class="leancloud_visitors" data-flag-title="Sqoop安装与配置">
+               &nbsp; | &nbsp;
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="u4E0B_u8F7D"><a href="#u4E0B_u8F7D" class="headerlink" title="下载"></a>下载</h3><p><a href="https://1csh1.github.io/file/Sqoop安装与配置/sqoop-1.4.6.bin__hadoop-2.0.4-alpha.tar.gz">sqoop-1.4.6 安装包</a></p>
+<h3 id="u914D_u7F6E"><a href="#u914D_u7F6E" class="headerlink" title="配置"></a>配置</h3><p>sqoop-env.sh</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">#Set path to where bin/hadoop is available &#37197;&#32622;Hadoop&#10;export HADOOP_COMMON_HOME=/csh/link/hadoop&#10;#Set path to where hadoop-*-core.jar is available&#10;export HADOOP_MAPRED_HOME=/csh/link/hadoop&#10;#set the path to where bin/hbase is available &#37197;&#32622;HBase&#10;export HBASE_HOME=/csh/link/hbase&#10;#Set the path to where bin/hive is available &#37197;&#32622;Hive&#10;export HIVE_HOME=/csh/link/hive&#10;#Set the path for where zookeper config dir is &#37197;&#32622;Zookeeper&#10;export ZOOCFGDIR=/csh/link/zookeeper/conf</span><br></pre></td></tr></table></figure>
+<h3 id="u6DFB_u52A0MySQL_u8FDE_u63A5jar_u5305_u5230_24SQOOP_HOME/lib_u76EE_u5F55_u4E2D"><a href="#u6DFB_u52A0MySQL_u8FDE_u63A5jar_u5305_u5230_24SQOOP_HOME/lib_u76EE_u5F55_u4E2D" class="headerlink" title="添加MySQL连接jar包到$SQOOP_HOME/lib目录中"></a>添加MySQL连接jar包到$SQOOP_HOME/lib目录中</h3><p><a href="https://1csh1.github.io/file/Sqoop安装与配置/mysql-connector-java-5.1.31-bin.jar">mysql-connector-java-5.1.31-bin.jar</a></p>
+<h3 id="u9A8C_u8BC1"><a href="#u9A8C_u8BC1" class="headerlink" title="验证"></a>验证</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@node1 sqoop]# bin/sqoop-version&#10;Warning: /csh/link/sqoop/../hcatalog does not exist! HCatalog jobs will fail.&#10;Please set $HCAT_HOME to the root of your HCatalog installation.&#10;Warning: /csh/link/sqoop/../accumulo does not exist! Accumulo imports will fail.&#10;Please set $ACCUMULO_HOME to the root of your Accumulo installation.&#10;16/04/10 05:31:47 INFO sqoop.Sqoop: Running Sqoop version: 1.4.6&#10;Sqoop 1.4.6&#10;git commit id c0c5a81723759fa575844a0a1eae8f510fa32c25&#10;Compiled by root on Mon Apr 27 14:38:36 CST 2015</span><br></pre></td></tr></table></figure>
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/04/10/Linux下MySQL导入导出数据/" itemprop="url">
                   Linux下MySQL导入导出数据
                 </a>
@@ -752,137 +879,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/04/02/HBase单机模式配置/" itemprop="url">
-                  HBase单机模式配置
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-04-02T22:43:26+08:00" content="2016-04-02">
-              2016-04-02
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/HBase/" itemprop="url" rel="index">
-                    <span itemprop="name">HBase</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/04/02/HBase单机模式配置/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/04/02/HBase单机模式配置/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-             <span id="/2016/04/02/HBase单机模式配置/" class="leancloud_visitors" data-flag-title="HBase单机模式配置">
-               &nbsp; | &nbsp;
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               <span class="post-meta-item-text">阅读次数 </span>
-               <span class="leancloud-visitors-count"></span>
-              </span>
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>1.在hbase-env.sh中修改Java路径</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">export JAVA_HOME=/csh/link/jdk&#10;export HBASE_PID_DIR=/csh/hadoop/hbase/pids</span><br></pre></td></tr></table></figure>
-<p>2.在hbase-site.xml中修改</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#60;property&#62;&#10;    &#60;name&#62;hbase.rootdir&#60;/name&#62;&#10;    &#60;value&#62;file:///csh/hadoop/hbase&#60;/value&#62;&#10;&#60;/property&#62;&#10;&#60;property&#62;&#10;    &#60;name&#62;hbase.zookeeper.property.dataDir&#60;/name&#62;&#10;    &#60;value&#62;/csh/hadoop/zookeeper&#60;/value&#62;&#10;&#60;/property&#62;</span><br></pre></td></tr></table></figure>
-<p>3.启动HBase</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bin/start-hbase.sh</span><br></pre></td></tr></table></figure>
-<p>4.连接HBase</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bin/hbase shell</span><br></pre></td></tr></table></figure>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -928,7 +924,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">54</span>
+              <span class="site-state-item-count">55</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -936,7 +932,7 @@
           
             <div class="site-state-item site-state-categories">
               <a href="/categories">
-                <span class="site-state-item-count">31</span>
+                <span class="site-state-item-count">32</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -945,7 +941,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">48</span>
+                <span class="site-state-item-count">50</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
