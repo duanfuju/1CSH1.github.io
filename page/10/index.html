@@ -225,6 +225,144 @@
             
               
                 
+                <a class="post-title-link" href="/2016/03/27/Zookeeper安装以及集群搭建/" itemprop="url">
+                  Zookeeper安装以及集群搭建
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-03-27T08:24:42+08:00" content="2016-03-27">
+              2016-03-27
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/ZooKeeper/" itemprop="url" rel="index">
+                    <span itemprop="name">ZooKeeper</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/03/27/Zookeeper安装以及集群搭建/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/03/27/Zookeeper安装以及集群搭建/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2016/03/27/Zookeeper安装以及集群搭建/" class="leancloud_visitors" data-flag-title="Zookeeper安装以及集群搭建">
+               &nbsp; | &nbsp;
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>本文中配置3个节点的zookeeper集群，主机分别是node1，node2，node3<br>到官网下载压缩包，也可以在下面链接下载<br><a href="https://1csh1.github.io/file/Zookeeper安装以及集群搭建/zookeeper-3.4.8.tar.gz">zookeeper-3.4.8.tar.gz</a></p>
+<p>1.解压压缩包</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar -xvf zookeeper-3.4.8.tar.gz</span><br></pre></td></tr></table></figure>
+<p>2.修改配置<br>到conf文件目录下，有个zoo_sample.cfg文件，将文件拷贝一份改名为zoo.cfg</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cp zoo_sample.cfg zoo.cfg</span><br></pre></td></tr></table></figure>
+<p>修改配置文件zoo.cfg</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tickTime=2000&#10;initLimit=10&#10;syncLimit=5&#10;#&#37197;&#32622;zookeeper&#30340;&#25968;&#25454;&#23384;&#25918;&#30446;&#24405;&#10;dataDir=/csh/hadoop/zookeeper/data&#10;#&#37197;&#32622;zookeeper&#30340;&#26085;&#24535;&#35760;&#24405;&#10;dataLogDir=/csh/hadoop/zookeeper/datalog&#10;clientPort=2181&#10;#&#37197;&#32622;&#38598;&#32676;&#10;server.1=node1:2888:3888&#10;server.2=node2:2888:3888&#10;server.3=node3:2888:3888</span><br></pre></td></tr></table></figure>
+<p>3.创建dataDir和dataLogDir目录</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mkdir -p /csh/hadoop/zookeeper/data&#10;mkdir -p /csh/hadoop/zookeeper/datalog</span><br></pre></td></tr></table></figure>
+<p>4.根据配置文件zoo.cfg中的集群，在dataDir中添加文件myid，并写入相应的数字</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">#&#22312;node1&#20013;&#25191;&#34892;&#10;echo &#34;1&#34; &#62; /csh/hadoop/zookeeper/data/myid&#10;#&#22312;node2&#20013;&#25191;&#34892;&#10;echo &#34;2&#34; &#62; /csh/hadoop/zookeeper/data/myid&#10;#&#22312;node3&#20013;&#25191;&#34892;&#10;echo &#34;3&#34; &#62; /csh/hadoop/zookeeper/data/myid</span><br></pre></td></tr></table></figure>
+<p>5.运行3个主机的zookeeper，通过以下命令</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">#&#22312;zookeeper/bin&#30446;&#24405;&#19979;&#10;./zkServer.sh start</span><br></pre></td></tr></table></figure>
+<p>6.检测是否成功</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">#&#32467;&#28857;node1&#10;[root@node1 bin]# ./zkServer.sh status&#10;ZooKeeper JMX enabled by default&#10;Using config: /csh/software/zookeeper-3.4.8/bin/../conf/zoo.cfg&#10;Mode: follower&#10;&#10;#&#32467;&#28857;node2&#10;[root@node2 bin]# ./zkServer.sh status&#10;ZooKeeper JMX enabled by default&#10;Using config: /csh/software/zookeeper-3.4.8/bin/../conf/zoo.cfg&#10;Mode: leader&#10;&#10;#&#32467;&#28857;node3&#10;[root@node3 bin]# ./zkServer.sh status&#10;ZooKeeper JMX enabled by default&#10;Using config: /csh/software/zookeeper-3.4.8/bin/../conf/zoo.cfg&#10;Mode: follower</span><br></pre></td></tr></table></figure>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/03/25/配置Hadoop2-x的HDFS、MapReduce来运行WordCount程序/" itemprop="url">
                   配置Hadoop2.x的HDFS、MapReduce来运行WordCount程序
                 </a>
@@ -907,135 +1045,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/03/22/DR（Direct-Routing）介绍/" itemprop="url">
-                  DR（Direct Routing）介绍
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-03-22T22:30:08+08:00" content="2016-03-22">
-              2016-03-22
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/LVS/" itemprop="url" rel="index">
-                    <span itemprop="name">LVS</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/03/22/DR（Direct-Routing）介绍/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/03/22/DR（Direct-Routing）介绍/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-             <span id="/2016/03/22/DR（Direct-Routing）介绍/" class="leancloud_visitors" data-flag-title="DR（Direct Routing）介绍">
-               &nbsp; | &nbsp;
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               <span class="post-meta-item-text">阅读次数 </span>
-               <span class="leancloud-visitors-count"></span>
-              </span>
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><strong>通过直接路由实现虚拟服务器（VS/DR）</strong><br>&emsp;&emsp;跟VS/TUN 方法相同，VS/DR利用大多数Internet服务的非对称特点，负载调度器中只负责调度请求，而服务器直接将响应返回给客户，可以极大地提高整个集群 系统的吞吐量。该方法与IBM的NetDispatcher产品中使用的方法类似（其中服务器上的IP地址配置方法是相似的），但IBM的 NetDispatcher是非常昂贵的商品化产品，我们也不知道它内部所使用的机制，其中有些是IBM的专利。<br>&emsp;&emsp;VS/DR的体系结构如下图所示：调度器和服务器组都必须在物理上有一个网卡通过不分断的局域网相连，如通过高速的交换机或者HUB相连。VIP地址为调度器和服务器组共享，调度 器配置的VIP地址是对外可见的，用于接收虚拟服务的请求报文；所有的服务器把VIP地址配置在各自的Non-ARP网络设备上，它对外面是不可见的，只是用于处理目标地址为VIP的网络请求。</p>
-<p><img src="https://1csh1.github.io/img/DR（Direct Routing）介绍/DR的体系结构.jpg" alt="DR的体系结构"></p>
-<p>&emsp;&emsp;VS/DR 的工作流程如下图所示：它的连接调度和管理与VS/NAT和VS/TUN中的一样，它的报文转发方法又有不同，将报文直接路由给目标服务器。在VS/DR 中，调度器根据各个服务器的负载情况，动态地选择一台服务器，不修改也不封装IP报文，而是将数据帧的MAC地址改为选出服务器的MAC地址，再将修改后 的数据帧在与服务器组的局域网上发送。因为数据帧的MAC地址是选出的服务器，所以服务器肯定可以收到这个数据帧，从中可以获得该IP报文。当服务器发现 报文的目标地址VIP是在本地的网络设备上，服务器处理这个报文，然后根据路由表将响应报文直接返回给客户。</p>
-<p><img src="https://1csh1.github.io/img/DR（Direct Routing）介绍/DR的工作流程.jpg" alt="DR的工作流程"></p>
-<p>&emsp;&emsp;在VS/DR中，根据缺省的TCP/IP协议栈处理，请求报文的目标地址为VIP，响应报文的源地址肯定也为VIP，所以响应报文不需要作任何修改，可以直接返回给客户，客户认为得到正常的服务，而不会知道是哪一台服务器处理的。<br>&emsp;&emsp;VS/DR负载调度器跟VS/TUN一样只处于从客户到服务器的半连接中，按照半连接的TCP有限状态机进行状态迁移。</p>
-<p>参考文章链接<br><a href="http://www.linuxvirtualserver.org/zh/lvs3.html" target="_blank" rel="external">Linux服务器集群系统（三）</a></p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1081,7 +1090,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">56</span>
+              <span class="site-state-item-count">57</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -1089,7 +1098,7 @@
           
             <div class="site-state-item site-state-categories">
               <a href="/categories">
-                <span class="site-state-item-count">33</span>
+                <span class="site-state-item-count">34</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -1098,7 +1107,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">51</span>
+                <span class="site-state-item-count">52</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

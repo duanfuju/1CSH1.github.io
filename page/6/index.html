@@ -225,6 +225,151 @@
             
               
                 
+                <a class="post-title-link" href="/2017/01/24/CentOS安装RabbitMQ/" itemprop="url">
+                  CentOS安装RabbitMQ
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-01-24T21:22:00+08:00" content="2017-01-24">
+              2017-01-24
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/RabbitMQ/" itemprop="url" rel="index">
+                    <span itemprop="name">RabbitMQ</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/RabbitMQ/Linux/" itemprop="url" rel="index">
+                    <span itemprop="name">Linux</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2017/01/24/CentOS安装RabbitMQ/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/01/24/CentOS安装RabbitMQ/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2017/01/24/CentOS安装RabbitMQ/" class="leancloud_visitors" data-flag-title="CentOS安装RabbitMQ">
+               &nbsp; | &nbsp;
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="u95F2_u8BDD"><a href="#u95F2_u8BDD" class="headerlink" title="闲话"></a>闲话</h3><p>&emsp;&emsp;本文讲述在CentOS操作系统安装RabbitMQ的过程。</p>
+<h3 id="Erlang"><a href="#Erlang" class="headerlink" title="Erlang"></a>Erlang</h3><p>下载Erlang：<br><a href="http://download.csdn.net/detail/u011642663/9743498" target="_blank" rel="external">erlang-18.1-1.el7.centos.x86_64.rpm</a></p>
+<p>安装Erlang：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rpm -ivh erlang-18.1-1.el7.centos.x86_64.rpm</span><br></pre></td></tr></table></figure></p>
+<h3 id="RabbitMQ"><a href="#RabbitMQ" class="headerlink" title="RabbitMQ"></a>RabbitMQ</h3><p>下载RabbitMQ：<br><a href="http://download.csdn.net/detail/u011642663/9743499" target="_blank" rel="external">rabbitmq-server-3.6.6-1.el7.noarch.rpm</a></p>
+<p>安装RabbitMQ：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rpm -ivh rabbitmq-server-3.6.6-1.el7.noarch.rpm</span><br></pre></td></tr></table></figure></p>
+<h3 id="/etc/profile"><a href="#/etc/profile" class="headerlink" title="/etc/profile"></a>/etc/profile</h3><p>在/etc/profile配置文件中设置<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ERLANG_HOME=/usr/lib64/erlang&#10;RABBITMQ_HOME=/usr/lib/rabbitmq&#10;&#10;PATH=$PATH:$ERLANG_HOME/bin:$RABBITMQ_HOME/bin&#10;&#10;export PATH ERLANG_HOME RABBITMQ_HOME</span><br></pre></td></tr></table></figure></p>
+<p>执行下面命令更新系统参数配置<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">source /etc/profile</span><br></pre></td></tr></table></figure></p>
+<h3 id="u9A8C_u8BC1"><a href="#u9A8C_u8BC1" class="headerlink" title="验证"></a>验证</h3><p>执行下面命令<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rabbitmq-server</span><br></pre></td></tr></table></figure></p>
+<p>在另一个终端中检查状态<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rabbitmqctl status</span><br></pre></td></tr></table></figure></p>
+<p>如果没问题说明安装成功</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2017/01/19/Vim中配置默认属性/" itemprop="url">
                   Vim中配置默认属性
                 </a>
@@ -765,132 +910,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/05/25/R-导入XML数据/" itemprop="url">
-                  R-导入XML数据
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-05-25T10:23:33+08:00" content="2016-05-25">
-              2016-05-25
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/R/" itemprop="url" rel="index">
-                    <span itemprop="name">R</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/05/25/R-导入XML数据/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/05/25/R-导入XML数据/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-             <span id="/2016/05/25/R-导入XML数据/" class="leancloud_visitors" data-flag-title="R-导入XML数据">
-               &nbsp; | &nbsp;
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               <span class="post-meta-item-text">阅读次数 </span>
-               <span class="leancloud-visitors-count"></span>
-              </span>
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h3 id="u5BFC_u5165XML"><a href="#u5BFC_u5165XML" class="headerlink" title="导入XML"></a>导入XML</h3><h4 id="u4E0B_u8F7D_u5B89_u88C5XML_u5305"><a href="#u4E0B_u8F7D_u5B89_u88C5XML_u5305" class="headerlink" title="下载安装XML包"></a>下载安装XML包</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">install.packages(&#34;XML&#34;)</span><br></pre></td></tr></table></figure>
-<h4 id="u5BFC_u5165_u6570_u636E"><a href="#u5BFC_u5165_u6570_u636E" class="headerlink" title="导入数据"></a>导入数据</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">library(XML)&#10;doc &#60;- xmlRoot(xmlTreeParse(&#34;abc.xml&#34;))&#10;doc #&#26174;&#31034;xml&#25968;&#25454;</span><br></pre></td></tr></table></figure>
-<h4 id="u663E_u793A_u5BFC_u5165_u6570_u636E"><a href="#u663E_u793A_u5BFC_u5165_u6570_u636E" class="headerlink" title="显示导入数据"></a>显示导入数据</h4><p><img src="https://1csh1.github.io/img/R-导入XML数据/显示数据.jpg" alt="显示数据"></p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -936,7 +955,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">56</span>
+              <span class="site-state-item-count">57</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -944,7 +963,7 @@
           
             <div class="site-state-item site-state-categories">
               <a href="/categories">
-                <span class="site-state-item-count">33</span>
+                <span class="site-state-item-count">34</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -953,7 +972,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">51</span>
+                <span class="site-state-item-count">52</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
