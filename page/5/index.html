@@ -225,6 +225,175 @@
             
               
                 
+                <a class="post-title-link" href="/2017/02/20/Java的静态代理和动态代理/" itemprop="url">
+                  Java的静态代理和动态代理
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-02-20T22:00:24+08:00" content="2017-02-20">
+              2017-02-20
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Java/" itemprop="url" rel="index">
+                    <span itemprop="name">Java</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2017/02/20/Java的静态代理和动态代理/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/02/20/Java的静态代理和动态代理/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2017/02/20/Java的静态代理和动态代理/" class="leancloud_visitors" data-flag-title="Java的静态代理和动态代理">
+               &nbsp; | &nbsp;
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote>
+<p>摘要：本文讲述Java中的静态代理和动态代理，动态代理的2种实现：Java自带的动态代理实现以及Cglib的动态代理实现。</p>
+</blockquote>
+<h1 id="u9759_u6001_u4EE3_u7406"><a href="#u9759_u6001_u4EE3_u7406" class="headerlink" title="静态代理"></a>静态代理</h1><blockquote>
+<p>由程序员创建或工具生成代理类的源码，再编译代理类。所谓静态也就是在程序运行前就已经存在代理类的字节码文件，代理类和委托类的关系在运行前就确定了。</p>
+</blockquote>
+<h2 id="u4F8B_u5B50"><a href="#u4F8B_u5B50" class="headerlink" title="例子"></a>例子</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">//User&#23454;&#20307;&#31867;&#10;public class User &#123;&#10;&#9;&#10;&#9;private int id;&#10;&#9;private String name;&#10;&#9;private int age;&#10;&#9;&#10;&#9;public int getId() &#123;&#10;&#9;&#9;return id;&#10;&#9;&#125;&#10;&#9;public void setId(int id) &#123;&#10;&#9;&#9;this.id = id;&#10;&#9;&#125;&#10;&#9;public String getName() &#123;&#10;&#9;&#9;return name;&#10;&#9;&#125;&#10;&#9;public void setName(String name) &#123;&#10;&#9;&#9;this.name = name;&#10;&#9;&#125;&#10;&#9;public int getAge() &#123;&#10;&#9;&#9;return age;&#10;&#9;&#125;&#10;&#9;public void setAge(int age) &#123;&#10;&#9;&#9;this.age = age;&#10;&#9;&#125;&#10;&#9;@Override&#10;&#9;public String toString() &#123;&#10;&#9;&#9;return &#34;User [id=&#34; + id + &#34;, name=&#34; + name + &#34;, age=&#34; + age + &#34;]&#34;;&#10;&#9;&#125;&#10;&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">//&#29992;&#25143;&#25805;&#20316;&#25509;&#21475;&#10;public interface UserService &#123;&#10;&#10;&#9;void add(User user);&#10;&#9;// &#12290;&#12290;&#12290;&#10;&#9;&#10;&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">//&#25509;&#21475;&#30495;&#23454;&#23454;&#29616;&#10;public class UserServiceImpl implements UserService &#123;&#10;&#10;&#9;@Override&#10;&#9;public void add(User user) &#123;&#10;&#9;&#9;System.out.println(&#34;UserServiceImpl : add user&#34; + user.toString() );&#10;&#9;&#125;&#10;&#10;&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">//&#20195;&#29702;&#31867;&#10;public class ProxyUserService implements UserService &#123;&#10;&#9;&#10;&#9;private UserService userService;&#10;&#10;&#9;public ProxyUserService(UserService userService) &#123;&#10;&#9;&#9;super();&#10;&#9;&#9;this.userService = userService;&#10;&#9;&#125;&#10;&#9;&#10;&#9;public void add(User user) &#123;&#10;&#9;&#9;System.out.println(&#34;Static Before add&#34;);&#10;&#9;&#9;userService.add(user);&#10;&#9;&#9;System.out.println(&#34;Static After add&#34;);&#10;&#9;&#125;&#10;&#10;&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">//&#20195;&#29702;&#24037;&#21378;&#31867;&#10;public class ProxyStaticFactory &#123;&#10;&#10;&#9;public static UserService getInstance() &#123;&#10;&#9;&#9;return new ProxyUserService(new UserServiceImpl());&#10;&#9;&#125;&#10;&#9;&#10;&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">//&#27979;&#35797;&#10;public class TestStaticProxy &#123;&#10;&#10;&#9;public static void main(String[] args) &#123;&#10;&#9;&#9;UserService userService = ProxyStaticFactory.getInstance();&#10;&#9;&#9;User user = new User();&#10;&#9;&#9;user.setId(12);&#10;&#9;&#9;user.setName(&#34;&#21704;&#21704;&#34;);&#10;&#9;&#9;user.setAge(23);&#10;&#9;&#9;userService.add(user);&#10;&#9;&#125;&#10;&#9;&#10;&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>结果：<br>Static Before add<br>UserServiceImpl : add userUser [id=12, name=哈哈, age=23]<br>Static After add</p>
+</blockquote>
+<h2 id="u9759_u6001_u4EE3_u7406_u7C7B_u4F18_u7F3A_u70B9"><a href="#u9759_u6001_u4EE3_u7406_u7C7B_u4F18_u7F3A_u70B9" class="headerlink" title="静态代理类优缺点"></a>静态代理类优缺点</h2><h3 id="u4F18_u70B9_uFF1A"><a href="#u4F18_u70B9_uFF1A" class="headerlink" title="优点："></a>优点：</h3><p>业务类只需要关注业务逻辑本身，保证了业务类的重用性。这是代理的共有优点。 </p>
+<h3 id="u7F3A_u70B9_uFF1A"><a href="#u7F3A_u70B9_uFF1A" class="headerlink" title="缺点："></a>缺点：</h3><p>1）代理对象的一个接口只服务于一种类型的对象，如果要代理的方法很多，势必要为每一种方法都进行代理，静态代理在程序规模稍大时就无法胜任了。<br>2）如果接口增加一个方法，除了所有实现类需要实现这个方法外，所有代理类也需要实现此方法。增加了代码维护的复杂度。 </p>
+<h1 id="u52A8_u6001_u4EE3_u7406"><a href="#u52A8_u6001_u4EE3_u7406" class="headerlink" title="动态代理"></a>动态代理</h1><blockquote>
+<p>动态代理类的源码是在程序运行期间由JVM根据反射等机制动态的生成，所以不存在代理类的字节码文件。代理类和委托类的关系是在程序运行时确定。 </p>
+</blockquote>
+<h2 id="u4F8B_u5B50-1"><a href="#u4F8B_u5B50-1" class="headerlink" title="例子"></a>例子</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">//&#20195;&#29702;&#31867;&#10;public class UserServiceInvocationHandler implements InvocationHandler &#123;&#10;&#10;&#9;private Object delegate;&#10;&#9;&#10;&#9;public UserServiceInvocationHandler(Object delegate) &#123;&#10;&#9;&#9;super();&#10;&#9;&#9;this.delegate = delegate;&#10;&#9;&#125;&#10;&#10;&#9;@Override&#10;&#9;public Object invoke(Object proxy, Method method, Object[] args) throws Throwable &#123;&#10;&#9;&#9;System.out.println(&#34;Dynamic Before add&#34;);&#10;&#9;&#9;Object object = method.invoke(delegate, args);&#10;&#9;&#9;System.out.println(&#34;Dynamic After add&#34;);&#10;&#9;&#9;return object;&#10;&#9;&#125;&#10;&#10;&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">//&#21160;&#24577;&#20195;&#29702;&#24037;&#21378;&#31867;&#10;public class ProxyDynamicFactory &#123;&#10;&#10;&#9;public static UserService getInstance() &#123;&#10;&#9;&#9;UserService userService = new UserServiceImpl();&#10;&#9;&#9;UserServiceInvocationHandler handler = new UserServiceInvocationHandler(userService);&#10;&#9;&#9;return (UserService) Proxy.newProxyInstance(userService.getClass().getClassLoader(), userService.getClass().getInterfaces(), handler);&#10;&#9;&#125;&#10;&#9;&#10;&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">//&#27979;&#35797;&#10;public class TestDynamicProxy &#123;&#10;&#9;&#10;&#9;public static void main(String[] args) &#123;&#10;&#9;&#9;UserService userService = ProxyDynamicFactory.getInstance();&#10;&#9;&#9;User user = new User();&#10;&#9;&#9;user.setId(12);&#10;&#9;&#9;user.setName(&#34;&#21704;&#21704;&#34;);&#10;&#9;&#9;user.setAge(23);&#10;&#9;&#9;userService.add(user);&#10;&#9;&#125;&#10;&#9;&#10;&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="u521B_u5EFA_u52A8_u6001_u4EE3_u7406_u8FC7_u7A0B_uFF1A"><a href="#u521B_u5EFA_u52A8_u6001_u4EE3_u7406_u8FC7_u7A0B_uFF1A" class="headerlink" title="创建动态代理过程："></a>创建动态代理过程：</h2><p>一个典型的动态代理创建对象过程可分为以下四个步骤：</p>
+<blockquote>
+<p>1、通过实现InvocationHandler接口创建自己的调用处理器 IvocationHandler handler = new InvocationHandlerImpl(…);<br>2、通过为Proxy类指定ClassLoader对象和一组interface创建动态代理类<br>Class clazz = Proxy.getProxyClass(classLoader,new Class[]{…});<br>3、通过反射机制获取动态代理类的构造函数，其参数类型是调用处理器接口类型<br>Constructor constructor = clazz.getConstructor(new Class[]{InvocationHandler.class});<br>4、通过构造函数创建代理类实例，此时需将调用处理器对象作为参数被传入<br>Interface Proxy = (Interface)constructor.newInstance(new Object[] (handler));<br>为了简化对象创建过程，Proxy类中的newInstance方法封装了2~4，只需两步即可完成代理对象的创建。<br>生成的ProxySubject继承Proxy类实现Subject接口，实现的Subject的方法实际调用处理器的invoke方法，而invoke方法利用反射调用的是被代理对象的的方法（Object result=method.invoke(proxied,args)）</p>
+</blockquote>
+<h2 id="u52A8_u6001_u4EE3_u7406_u7684_u4F18_u70B9_u548C_u7F3A_u70B9"><a href="#u52A8_u6001_u4EE3_u7406_u7684_u4F18_u70B9_u548C_u7F3A_u70B9" class="headerlink" title="动态代理的优点和缺点"></a>动态代理的优点和缺点</h2><h3 id="u4F18_u70B9_uFF1A-1"><a href="#u4F18_u70B9_uFF1A-1" class="headerlink" title="优点："></a>优点：</h3><p>动态代理与静态代理相比较，最大的好处是接口中声明的所有方法都被转移到调用处理器一个集中的方法中处理（InvocationHandler.invoke）。这样，在接口方法数量比较多的时候，我们可以进行灵活处理，而不需要像静态代理那样每一个方法进行中转。在本示例中看不出来，因为invoke方法体内嵌入了具体的外围业务（记录任务处理前后时间并计算时间差），实际中可以类似Spring AOP那样配置外围业务。 </p>
+<h3 id="u7F3A_u70B9_uFF1A-1"><a href="#u7F3A_u70B9_uFF1A-1" class="headerlink" title="缺点："></a>缺点：</h3><p>诚然，Proxy 已经设计得非常优美，但是还是有一点点小小的遗憾之处，那就是它始终无法摆脱仅支持 interface 代理的桎梏，因为它的设计注定了这个遗憾。回想一下那些动态生成的代理类的继承关系图，它们已经注定有一个共同的父类叫 Proxy。Java 的继承机制注定了这些动态代理类们无法实现对 class 的动态代理，原因是多继承在 Java 中本质上就行不通。<br>有很多条理由，人们可以否定对 class 代理的必要性，但是同样有一些理由，相信支持 class 动态代理会更美好。接口和类的划分，本就不是很明显，只是到了 Java 中才变得如此的细化。如果只从方法的声明及是否被定义来考量，有一种两者的混合体，它的名字叫抽象类。实现对抽象类的动态代理，相信也有其内在的价值。此外，还有一些历史遗留的类，它们将因为没有实现任何接口而从此与动态代理永世无缘。如此种种，不得不说是一个小小的遗憾。 </p>
+<h1 id="CGLib_u7684_u52A8_u6001_u4EE3_u7406"><a href="#CGLib_u7684_u52A8_u6001_u4EE3_u7406" class="headerlink" title="CGLib的动态代理"></a>CGLib的动态代理</h1><blockquote>
+<p>JDK实现动态代理需要实现类通过接口定义业务方法，对于没有接口的类，如何实现动态代理呢，这就需要CGLib了。CGLib采用了非常底层的字节码技术，其原理是通过字节码技术为一个类创建子类，并在子类中采用方法拦截的技术拦截所有父类方法的调用，顺势织入横切逻辑</p>
+</blockquote>
+<h2 id="u4F8B_u5B50-2"><a href="#u4F8B_u5B50-2" class="headerlink" title="例子"></a>例子</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">//pom.xml&#10;&#60;dependency&#62;&#10;&#9;&#60;groupId&#62;cglib&#60;/groupId&#62;&#10;&#9;&#60;artifactId&#62;cglib&#60;/artifactId&#62;&#10;&#9;&#60;version&#62;3.2.4&#60;/version&#62;&#10;&#60;/dependency&#62;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">//&#20195;&#29702;&#31867;&#10;public class UserServiceCglibMethodInterceptor implements MethodInterceptor &#123;&#10;&#10;&#9;@Override&#10;&#9;public Object intercept(Object object, Method method, Object[] objects, MethodProxy methodProxy) throws Throwable &#123;&#10;&#9;&#9;System.out.println(&#34;Cglib Before add&#34;);&#10;&#9;&#9;Object result = methodProxy.invokeSuper(object, objects);&#10;&#9;&#9;System.out.println(&#34;Cglib After add&#34;);&#10;&#9;&#9;return result;&#10;&#9;&#125;&#10;&#10;&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">//&#20195;&#29702;&#24037;&#21378;&#10;public class ProxyCglibFactory &#123;&#10;&#10;&#9;public static UserService getInstance() &#123;&#10;&#9;&#9;Enhancer enhancer = new Enhancer();  &#10;&#9;&#9;enhancer.setSuperclass(UserServiceImpl.class);  &#10;&#9;&#9;enhancer.setCallback(new UserServiceCglibMethodInterceptor());  &#10;&#9;&#9;return (UserServiceImpl)enhancer.create();&#10;&#9;&#125;&#10;&#9;&#10;&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">//&#27979;&#35797;&#10;public class TestCglibProxy &#123;&#10;&#10;&#9;public static void main(String[] args) &#123;&#10;&#9;&#9;UserService userService = ProxyCglibFactory.getInstance();&#10;&#9;&#9;User user = new User();&#10;&#9;&#9;user.setId(12);&#10;&#9;&#9;user.setName(&#34;&#21704;&#21704;&#34;);&#10;&#9;&#9;user.setAge(23);&#10;&#9;&#9;userService.add(user);&#10;&#9;&#125;&#10;&#9;&#10;&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>结果：<br>Cglib Before add<br>UserServiceImpl : add userUser [id=12, name=哈哈, age=23]<br>Cglib After add</p>
+</blockquote>
+<h2 id="u4EE3_u7406_u5BF9_u8C61_u7684_u751F_u6210_u8FC7_u7A0B_u7531Enhancer_u7C7B_u5B9E_u73B0_uFF0C_u5927_u6982_u6B65_u9AA4_u5982_u4E0B_uFF1A"><a href="#u4EE3_u7406_u5BF9_u8C61_u7684_u751F_u6210_u8FC7_u7A0B_u7531Enhancer_u7C7B_u5B9E_u73B0_uFF0C_u5927_u6982_u6B65_u9AA4_u5982_u4E0B_uFF1A" class="headerlink" title="代理对象的生成过程由Enhancer类实现，大概步骤如下："></a>代理对象的生成过程由Enhancer类实现，大概步骤如下：</h2><blockquote>
+<p>1、生成代理类Class的二进制字节码；<br>2、通过Class.forName加载二进制字节码，生成Class对象；<br>3、通过反射机制获取实例构造，并初始化代理类对象</p>
+</blockquote>
+<h1 id="Java_u81EA_u5E26_u7684_u52A8_u6001_u4EE3_u7406_u548CCGlib_u7684_u52A8_u6001_u4EE3_u7406_u5B9E_u73B0_u7684_u533A_u522B"><a href="#Java_u81EA_u5E26_u7684_u52A8_u6001_u4EE3_u7406_u548CCGlib_u7684_u52A8_u6001_u4EE3_u7406_u5B9E_u73B0_u7684_u533A_u522B" class="headerlink" title="Java自带的动态代理和CGlib的动态代理实现的区别"></a>Java自带的动态代理和CGlib的动态代理实现的区别</h1><blockquote>
+<p>1、jdk动态代理生成的代理类和委托类实现了相同的接口；<br>2、cglib动态代理中生成的字节码更加复杂，生成的代理类是委托类的子类，且不能处理被final关键字修饰的方法；<br>3、jdk采用反射机制调用委托类的方法，cglib采用类似索引的方式直接调用委托类方法；</p>
+</blockquote>
+<h1 id="u53C2_u8003_u6587_u7AE0"><a href="#u53C2_u8003_u6587_u7AE0" class="headerlink" title="参考文章"></a>参考文章</h1><p><a href="http://www.cnblogs.com/chinajava/p/5880887.html" target="_blank" rel="external">说说cglib动态代理 </a><br><a href="http://www.cnblogs.com/mengdd/archive/2013/01/30/2883468.html" target="_blank" rel="external">Java 代理模式（一） 静态代理</a><br><a href="http://blog.csdn.net/hejingyuan6/article/details/36203505" target="_blank" rel="external">JAVA学习篇–静态代理VS动态代理 </a><br><a href="http://layznet.iteye.com/blog/1182924" target="_blank" rel="external">java静态代理和动态代理 </a><br><a href="http://www.ibm.com/developerworks/cn/java/j-lo-proxy1/index.html" target="_blank" rel="external">Java 动态代理机制分析及扩展，第 1 部分</a><br><a href="http://rejoy.iteye.com/blog/1627405" target="_blank" rel="external">JDK动态代理实现原理</a><br><a href="http://www.cnblogs.com/flyoung2008/archive/2013/08/11/3251148.html" target="_blank" rel="external">彻底理解JAVA动态代理</a></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2017/02/19/生活如此/" itemprop="url">
                   生活如此
                 </a>
@@ -721,134 +890,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/01/24/RabbitMQ不能远程访问问题/" itemprop="url">
-                  RabbitMQ不能远程访问问题
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-01-24T21:25:00+08:00" content="2017-01-24">
-              2017-01-24
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/RabbitMQ/" itemprop="url" rel="index">
-                    <span itemprop="name">RabbitMQ</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2017/01/24/RabbitMQ不能远程访问问题/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/01/24/RabbitMQ不能远程访问问题/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-             <span id="/2017/01/24/RabbitMQ不能远程访问问题/" class="leancloud_visitors" data-flag-title="RabbitMQ不能远程访问问题">
-               &nbsp; | &nbsp;
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               <span class="post-meta-item-text">阅读次数 </span>
-               <span class="leancloud-visitors-count"></span>
-              </span>
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h3 id="u95F2_u8BDD"><a href="#u95F2_u8BDD" class="headerlink" title="闲话"></a>闲话</h3><p>&emsp;&emsp;本文讲述RabbitMQ不能远程访问的解决方法。</p>
-<h3 id="u95EE_u9898"><a href="#u95EE_u9898" class="headerlink" title="问题"></a>问题</h3><p>RabbitMQ不能远程访问，比如在node1机器上安装并启动RabbitMQ，但是在node2机器上写连接node1机器的RabbitMQ的代码，却连接不上。</p>
-<h3 id="u89E3_u51B3"><a href="#u89E3_u51B3" class="headerlink" title="解决"></a>解决</h3><h4 id="u6DFB_u52A0_u7528_u6237_u5E76_u6388_u6743"><a href="#u6DFB_u52A0_u7528_u6237_u5E76_u6388_u6743" class="headerlink" title="添加用户并授权"></a>添加用户并授权</h4><p>rabbitmqctl add_user csh csh<br>rabbitmqctl set_user_tags csh administrator<br>rabbitmqctl set_permissions -p / csh “.<em>“ “.</em>“ “.*”</p>
-<h4 id="u914D_u7F6E"><a href="#u914D_u7F6E" class="headerlink" title="配置"></a>配置</h4><p>在/etc/rabbitmq/rabbitmq.config中配置<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[&#10;  &#123;rabbit,&#10;    [&#10;      &#123;tcp_listeners, [5672]&#125;,&#10;      &#123;loopback_users, [&#34;csh&#34;]&#125;&#10;    ]&#10;  &#125;&#10;].</span><br></pre></td></tr></table></figure></p>
-<h4 id="u9A8C_u8BC1"><a href="#u9A8C_u8BC1" class="headerlink" title="验证"></a>验证</h4><p>在node2中运行连接node1机器的RabbitMQ的代码</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -894,7 +935,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">57</span>
+              <span class="site-state-item-count">58</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -911,7 +952,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">52</span>
+                <span class="site-state-item-count">54</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
