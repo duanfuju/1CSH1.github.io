@@ -68,7 +68,7 @@
 
 思路依据上一篇文章中的评论梯形显示，我们">
 <meta property="og:image" content="https://1csh1.github.io/img/angular-comment-recursive-event/angular-comment-recursive-event.png">
-<meta property="og:updated_time" content="2017-08-01T14:40:54.651Z">
+<meta property="og:updated_time" content="2017-08-01T14:44:00.455Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Angular 实现类似博客获取回复评论的数据">
 <meta name="twitter:description" content="摘要：本文继上一篇文章 Angular 实现类似博客评论的递归显示 讲述的内容，上篇文章里面只是说明了如何实现评论梯形显示，在博客评论中我们经常看到可以回复某一条评论，本文讲述如何实现点击某一条评论的回复按钮后，获取该条评论的内容并显示在输入框中。类似 CSDN 博客评论一样，点击回复后输入框自动添加了 [reply]u011642663[/reply]
@@ -317,7 +317,7 @@
 
       
         <blockquote>
-<p>摘要：本文继上一篇文章 <a href="http://blog.csdn.net/u011642663/article/details/76473542" target="_blank" rel="external">Angular 实现类似博客评论的递归显示</a> 讲述的内容，上篇文章里面只是说明了如何实现评论梯形显示，在博客评论中我们经常看到可以回复某一条评论，本文讲述如何实现点击某一条评论的回复按钮后，获取该条评论的内容并显示在输入框中。类似 CSDN 博客评论一样，点击回复后输入框自动添加了 [reply]u011642663[/reply]</p>
+<p>摘要：本文继上一篇文章 <a href="https://1csh1.github.io/2017/07/31/angular-comment-recursive-display/">Angular 实现类似博客评论的递归显示</a> 讲述的内容，上篇文章里面只是说明了如何实现评论梯形显示，在博客评论中我们经常看到可以回复某一条评论，本文讲述如何实现点击某一条评论的回复按钮后，获取该条评论的内容并显示在输入框中。类似 CSDN 博客评论一样，点击回复后输入框自动添加了 [reply]u011642663[/reply]</p>
 </blockquote>
 <h3 id="u601D_u8DEF"><a href="#u601D_u8DEF" class="headerlink" title="思路"></a>思路</h3><p>依据上一篇文章中的评论梯形显示，我们还需要实现点击回复后，屏幕自动到达输入框位置，并且获取了点击回复的评论的信息。首先分解一下这个功能点，在项目中我们也会经常分解功能点，这个功能点有 2 个小点：一是在每条评论中加上 [回复] 按钮，点击回复后跳到输入框位置；二是点击回复后，获取到点击回复的那条评论的信息。下面我们一一解决。</p>
 <h3 id="u8DF3_u8F6C_u5230_u8F93_u5165_u6846"><a href="#u8DF3_u8F6C_u5230_u8F93_u5165_u6846" class="headerlink" title="跳转到输入框"></a>跳转到输入框</h3><p>我们接触前段第一个语言便是 HTML，我们知道 HTML 中有一个 # 定位，下面代码简单解释一下。<br>假设这个 HTML 代码文件是 index.html<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#60;html&#62;&#10;  &#60;head&#62;&#10;  &#60;/head&#62;&#10;  &#60;body&#62;&#10;    &#60;a href=&#34;index.html#pointer&#34;&#62;Click me to pointer&#60;/a&#62;&#10;    &#60;div id=&#34;pointer&#34;&#62;&#10;      &#60;h1&#62;&#21704;&#21704;&#21704;&#21704;&#60;/h1&#62;&#10;    &#60;/div&#62;&#10;  &#60;/body&#62;&#10;&#60;/html&#62;</span><br></pre></td></tr></table></figure></p>
