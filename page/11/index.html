@@ -225,6 +225,176 @@
             
               
                 
+                <a class="post-title-link" href="/2016/03/22/LVS的3种负载均衡技术的测试/" itemprop="url">
+                  LVS的3种负载均衡技术的测试
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-03-22T22:58:37+08:00" content="2016-03-22">
+              2016-03-22
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/LVS/" itemprop="url" rel="index">
+                    <span itemprop="name">LVS</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/03/22/LVS的3种负载均衡技术的测试/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/03/22/LVS的3种负载均衡技术的测试/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2016/03/22/LVS的3种负载均衡技术的测试/" class="leancloud_visitors" data-flag-title="LVS的3种负载均衡技术的测试">
+               &nbsp; | &nbsp;
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>在测试之前安装ipvsadm<br>安装之前需要安装依赖：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install kernel-devel gcc openssl openssl-devel popt</span><br></pre></td></tr></table></figure>
+<p>到官网 【<a href="http://www.linuxvirtualserver.org" target="_blank" rel="external">http://www.linuxvirtualserver.org</a> 】下载ipvsadm时需要注意查看服务器内核版本</p>
+<p>查询你的服务器内核版本：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rpm -q kernel-devel</span><br></pre></td></tr></table></figure></p>
+<p>根据服务器内核版本选择ipvsadm<br>下载后安装</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar -xvf ipvsadm-x.xx.tar.gz&#10;&#10;cd ipvsadm-x.xx&#10;&#10;make &#38;&#38; make install</span><br></pre></td></tr></table></figure>
+<p>测试用的是3台CentOS7主机<br>node1    负载均衡服务器<br>node2    主机1<br>node3    主机2</p>
+<p><strong>第一种负载均衡：NAT</strong><br>根据下图配置<br><img src="https://1csh1.github.io/img/LVS的3种负载均衡技术的测试/NAT搭建图.jpg" alt="NAT搭建图"></p>
+<p>在node1中创建脚本：lvs-dr-node1.sh</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">#!/bin/sh&#10;#------mini-HOWTO-setup-LVS-NAT-director----------&#10; &#10;#set ip_forward ON for vs-nat director (1 on, 0 off).&#10;cat /proc/sys/net/ipv4/ip_forward&#10;echo &#34;1&#34; &#62;/proc/sys/net/ipv4/ip_forward&#10; &#10;#director is gw for realservers&#10;#turn OFF icmp redirects (1 on, 0 off)&#10;echo &#34;0&#34; &#62;/proc/sys/net/ipv4/conf/all/send_redirects&#10;cat       /proc/sys/net/ipv4/conf/all/send_redirects&#10;echo &#34;0&#34; &#62;/proc/sys/net/ipv4/conf/default/send_redirects&#10;cat       /proc/sys/net/ipv4/conf/default/send_redirects&#10;echo &#34;0&#34; &#62;/proc/sys/net/ipv4/conf/eno16777736/send_redirects&#10;cat       /proc/sys/net/ipv4/conf/eno16777736/send_redirects&#10; &#10;#setup DIP&#10;/sbin/ifconfig eno16777736 10.0.0.1 broadcast 10.0.0.255 netmask 255.255.255.0&#10; &#10;#setup VIP&#10;/sbin/ifconfig eno16777736:0 192.168.1.11 broadcast 192.168.1.255 netmask 255.255.255.0&#10; &#10;#set default gateway&#10;/sbin/route add default gw 192.168.1.1 netmask 0.0.0.0 metric 1&#10; &#10;#clear ipvsadm tables&#10;/sbin/ipvsadm -C&#10; &#10;#install LVS services with ipvsadm&#10;#add telnet to VIP with rr sheduling&#10;/sbin/ipvsadm -A -t 192.168.1.11:80 -s rr&#10; &#10;#first realserver&#10;#forward telnet to realserver 10.0.0.2 using LVS-NAT (-m), with weight=1&#10;/sbin/ipvsadm -a -t 192.168.1.11:80 -r 10.0.0.2:80 -m -w 1&#10;#check that realserver is reachable from director&#10;ping -c 1 10.0.0.2&#10;#second realserver&#10;#forward telnet to realserver 10.0.0.3 using LVS-NAT (-m), with weight=1&#10;/sbin/ipvsadm -a -t 192.168.1.11:80 -r 10.0.0.3:80 -m -w 1&#10;#checking if realserver is reachable from director&#10;ping -c 1 10.0.0.3&#10; &#10;#list ipvsadm table&#10;/sbin/ipvsadm&#10;#------mini-HOWTO-setup-LVS-NAT-director----------</span><br></pre></td></tr></table></figure>
+<p>在node2中创建脚本：lvs-dr-node2.sh</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">#!/bin/sh&#10;#---------mini-HOWTO-setup-LVS-NAT-realserver-------&#10;#setup IP&#10;/sbin/ifconfig eno16777736 10.0.0.2 broadcast 10.0.0.255 netmask 255.255.255.0&#10;#installing default gw 10.0.0.1 for vs-nat&#39;&#10;/sbin/route add default gw 10.0.0.1&#10;#show routing table&#10;/bin/netstat -rn&#10; &#10;#checking if DEFAULT_GW is reachable&#10;ping -c 1 10.0.0.1&#10; &#10;#looking for VIP on director from realserver&#10;ping -c 1 10.0.0.3&#10; &#10;#set_realserver_ip_forwarding to OFF (1 on, 0 off).&#10;echo &#34;0&#34; &#62;/proc/sys/net/ipv4/ip_forward&#10;cat       /proc/sys/net/ipv4/ip_forward&#10;#---------mini-HOWTO-setup-LVS-NAT-realserver-------</span><br></pre></td></tr></table></figure>
+<p>在node3中创建脚本：lvs-nat-node3.sh</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">#!/bin/sh&#10;#---------mini-HOWTO-setup-LVS-NAT-realserver-------&#10;#setup IP&#10;/sbin/ifconfig eno16777736 10.0.0.3 broadcast 10.0.0.255 netmask 255.255.255.0&#10;#installing default gw 10.0.0.1 for vs-nat&#39;&#10;/sbin/route add default gw 10.0.0.1&#10;#show routing table&#10;/bin/netstat -rn&#10; &#10;#checking if DEFAULT_GW is reachable&#10;ping -c 1 10.0.0.1&#10; &#10;#looking for VIP on director from realserver&#10;ping -c 1 10.0.0.2&#10; &#10;#set_realserver_ip_forwarding to OFF (1 on, 0 off).&#10;echo &#34;0&#34; &#62;/proc/sys/net/ipv4/ip_forward&#10;cat       /proc/sys/net/ipv4/ip_forward&#10;#---------mini-HOWTO-setup-LVS-NAT-realserver-------</span><br></pre></td></tr></table></figure>
+<p>分别给脚本附加执行权限</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">chmod -x lvs-nat-xxxxx.sh</span><br></pre></td></tr></table></figure>
+<p>分别运行3个脚本</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./lvs-nat-xxxx.sh</span><br></pre></td></tr></table></figure>
+<p>NAT测试结果<br><img src="https://1csh1.github.io/img/LVS的3种负载均衡技术的测试/NAT结果图.jpg" alt="NAT结果图"></p>
+<p>NAT脚本文件：<br><a href="https://1csh1.github.io/file/LVS的3种负载均衡技术的测试/nat.rar">NAT脚本文件</a></p>
+<p><strong>第二种负载均衡：TUN</strong><br>根据下图配置<br><img src="https://1csh1.github.io/img/LVS的3种负载均衡技术的测试/TUN搭建图.jpg" alt="TUN搭建图"><br>在node1中创建脚本：lvs-tun-node1.sh</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">#!/bin/bash&#10;#---------------mini-rc.lvs_dr-director------------------------&#10;#set ip_forward OFF for lvs-dr director (1 on, 0 off)&#10;#(there is no forwarding in the conventional sense for LVS-DR)&#10;cat       /proc/sys/net/ipv4/ip_forward&#10;echo &#34;0&#34; &#62;/proc/sys/net/ipv4/ip_forward&#10; &#10;#director is not gw for realservers: leave icmp redirects on&#10;echo &#39;setting icmp redirects (1 on, 0 off) &#39;&#10;echo &#34;1&#34; &#62;/proc/sys/net/ipv4/conf/all/send_redirects&#10;cat       /proc/sys/net/ipv4/conf/all/send_redirects&#10;echo &#34;1&#34; &#62;/proc/sys/net/ipv4/conf/default/send_redirects&#10;cat       /proc/sys/net/ipv4/conf/default/send_redirects&#10;echo &#34;1&#34; &#62;/proc/sys/net/ipv4/conf/eno16777736/send_redirects&#10;cat       /proc/sys/net/ipv4/conf/eno16777736/send_redirects&#10; &#10;#setup DIP&#10;/sbin/ifconfig eno16777736 192.168.1.101 broadcast 192.168.1.255 netmask 255.255.255.0&#10; &#10;#add ethernet device and routing for VIP 192.168.1.11&#10;/sbin/ifconfig tunl0 192.168.1.11 broadcast 192.168.1.11 netmask 255.255.255.255&#10;/sbin/route add -host 192.168.1.11 dev tunl0&#10;#listing ifconfig info for VIP 192.168.1.11&#10;/sbin/ifconfig tunl0&#10; &#10;#check VIP 192.168.1.11 is reachable from self (director)&#10;/bin/ping -c 1 192.168.1.11&#10;#listing routing info for VIP 192.168.1.11&#10;/bin/netstat -rn&#10; &#10;#setup_ipvsadm_table&#10;#clear ipvsadm table&#10;/sbin/ipvsadm -C&#10;#installing LVS services with ipvsadm&#10;#add telnet to VIP with round robin scheduling&#10;/sbin/ipvsadm -A -t 192.168.1.11:80 -s rr&#10; &#10;#forward telnet to realserver using direct routing with weight 1&#10;/sbin/ipvsadm -a -t 192.168.1.11:80 -r 192.168.1.102:80 -i -w 1&#10;#check realserver reachable from director&#10;ping -c 1 192.168.1.102&#10; &#10;#forward telnet to realserver using direct routing with weight 1&#10;/sbin/ipvsadm -a -t 192.168.1.11:80 -r 192.168.1.103:80 -i -w 1&#10;#check realserver reachable from director&#10;ping -c 1 192.168.1.103&#10; &#10;#displaying ipvsadm settings&#10;/sbin/ipvsadm&#10; &#10;#not installing a default gw for LVS_TYPE vs-dr&#10;#---------------mini-rc.lvs_dr-director------------------------</span><br></pre></td></tr></table></figure>
+<p>在node2中创建脚本：lvs-tun-node2.sh</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">#!/bin/bash&#10;#----------mini-rc.lvs_dr-realserver------------------&#10;#setup IP&#10;/sbin/ifconfig eno16777736 192.168.1.103 broadcast 192.168.1.255 netmask 255.255.255.0&#10;#installing default gw 192.168.1.1 for vs-dr&#10;/sbin/route add default gw 192.168.1.1&#10;#showing routing table&#10;/bin/netstat -rn&#10;#checking if DEFAULT_GW 192.168.1.1 is reachable&#10;ping -c 1 192.168.1.1&#10; &#10;#set_realserver_ip_forwarding to OFF (1 on, 0 off).&#10;echo &#34;0&#34; &#62;/proc/sys/net/ipv4/ip_forward&#10;cat       /proc/sys/net/ipv4/ip_forward&#10; &#10;#looking for DIP 192.168.1.101&#10;ping -c 1 192.168.1.101&#10; &#10;#looking for VIP (will be on director)&#10;ping -c 1 192.168.1.11&#10; &#10;#install_realserver_vip&#10;/sbin/ifconfig tunl0 192.168.1.11 broadcast 192.168.1.11 netmask 0xffffffff up&#10;#ifconfig output&#10;/sbin/ifconfig tunl0&#10;#installing route for VIP 192.168.1.11 on device tunl0&#10;/sbin/route add -host 192.168.1.11 dev tunl0&#10;#listing routing info for VIP 192.168.1.11&#10;/bin/netstat -rn&#10; &#10;#hiding interface tunl0, will not arp&#10;echo &#34;1&#34; &#62;/proc/sys/net/ipv4/conf/all/hidden&#10;cat       /proc/sys/net/ipv4/conf/all/hidden&#10;echo &#34;1&#34; &#62;/proc/sys/net/ipv4/conf/tunl0/hidden&#10;cat       /proc/sys/net/ipv4/conf/tunl0/hidden&#10; &#10;#----------mini-rc.lvs_dr-realserver------------------</span><br></pre></td></tr></table></figure>
+<p>在node3中创建脚本：lvs-tun-node3.sh</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">#!/bin/bash&#10;#----------mini-rc.lvs_dr-realserver------------------&#10;#setup IP&#10;/sbin/ifconfig eno16777736 192.168.1.102 broadcast 192.168.1.255 netmask 255.255.255.0&#10;#installing default gw 192.168.1.1 for vs-dr&#10;/sbin/route add default gw 192.168.1.1&#10;#showing routing table&#10;/bin/netstat -rn&#10;#checking if DEFAULT_GW 192.168.1.1 is reachable&#10;ping -c 1 192.168.1.1&#10; &#10;#set_realserver_ip_forwarding to OFF (1 on, 0 off).&#10;echo &#34;0&#34; &#62;/proc/sys/net/ipv4/ip_forward&#10;cat       /proc/sys/net/ipv4/ip_forward&#10; &#10;#looking for DIP 192.168.1.101&#10;ping -c 1 192.168.1.101&#10; &#10;#looking for VIP (will be on director)&#10;ping -c 1 192.168.1.11&#10; &#10;#install_realserver_vip&#10;/sbin/ifconfig tunl0 192.168.1.11 broadcast 192.168.1.11 netmask 0xffffffff up&#10;#ifconfig output&#10;/sbin/ifconfig tunl0&#10;#installing route for VIP 192.168.1.11 on device tunl0&#10;/sbin/route add -host 192.168.1.11 dev tunl0&#10;#listing routing info for VIP 192.168.1.11&#10;/bin/netstat -rn&#10; &#10;#hiding interface tunl0, will not arp&#10;echo &#34;1&#34; &#62;/proc/sys/net/ipv4/conf/all/hidden&#10;cat       /proc/sys/net/ipv4/conf/all/hidden&#10;echo &#34;1&#34; &#62;/proc/sys/net/ipv4/conf/tunl0/hidden&#10;cat       /proc/sys/net/ipv4/conf/tunl0/hidden&#10; &#10;#----------mini-rc.lvs_dr-realserver------------------</span><br></pre></td></tr></table></figure>
+<p>分别给脚本附加执行权限</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">chmod -x lvs-tun-xxxxx.sh</span><br></pre></td></tr></table></figure>
+<p>分别运行3个脚本</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./lvs-tun-xxxx.sh</span><br></pre></td></tr></table></figure>
+<p>TUN测试结果<br><img src="https://1csh1.github.io/img/LVS的3种负载均衡技术的测试/TUN结果图.jpg" alt="TUN结果图"></p>
+<p>TUN脚本文件：<br><a href="https://1csh1.github.io/file/LVS的3种负载均衡技术的测试/tun.rar">TUN脚本文件</a></p>
+<p><strong>第三种负载均衡：DR</strong><br><img src="https://1csh1.github.io/img/LVS的3种负载均衡技术的测试/DR搭建图.jpg" alt="DR搭建图"></p>
+<p>在node1中创建脚本：lvs-dr-node1.sh</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">#!/bin/bash&#10;#---------------mini-rc.lvs_dr-director------------------------&#10;#set ip_forward OFF for lvs-dr director (1 on, 0 off)&#10;#(there is no forwarding in the conventional sense for LVS-DR)&#10;cat       /proc/sys/net/ipv4/ip_forward&#10;echo &#34;0&#34; &#62;/proc/sys/net/ipv4/ip_forward&#10; &#10;#director is not gw for realservers: leave icmp redirects on&#10;echo &#39;setting icmp redirects (1 on, 0 off) &#39;&#10;echo &#34;1&#34; &#62;/proc/sys/net/ipv4/conf/all/send_redirects&#10;cat       /proc/sys/net/ipv4/conf/all/send_redirects&#10;echo &#34;1&#34; &#62;/proc/sys/net/ipv4/conf/default/send_redirects&#10;cat       /proc/sys/net/ipv4/conf/default/send_redirects&#10;echo &#34;1&#34; &#62;/proc/sys/net/ipv4/conf/eno16777736/send_redirects&#10;cat       /proc/sys/net/ipv4/conf/eno16777736/send_redirects&#10; &#10;#setup DIP&#10;/sbin/ifconfig eno16777736 192.168.1.101 broadcast 192.168.1.255 netmask 255.255.255.0&#10; &#10;#add ethernet device and routing for VIP 192.168.1.11&#10;/sbin/ifconfig eno16777736:0 192.168.1.11 broadcast 192.168.1.11 netmask 255.255.255.255&#10;/sbin/route add -host 192.168.1.11 dev eno16777736:0&#10;#listing ifconfig info for VIP 192.168.1.11&#10;/sbin/ifconfig eno16777736:0&#10; &#10;#check VIP 192.168.1.11 is reachable from self (director)&#10;/bin/ping -c 1 192.168.1.11&#10;#listing routing info for VIP 192.168.1.11&#10;/bin/netstat -rn&#10; &#10;#setup_ipvsadm_table&#10;#clear ipvsadm table&#10;/sbin/ipvsadm -C&#10;#installing LVS services with ipvsadm&#10;#add telnet to VIP with round robin scheduling&#10;/sbin/ipvsadm -A -t 192.168.1.11:80 -s rr&#10; &#10;#forward telnet to realserver using direct routing with weight 1&#10;/sbin/ipvsadm -a -t 192.168.1.11:80 -r 192.168.1.102:80 -g -w 1&#10;#check realserver reachable from director&#10;ping -c 1 192.168.1.102&#10; &#10;#forward telnet to realserver using direct routing with weight 1&#10;/sbin/ipvsadm -a -t 192.168.1.11:80 -r 192.168.1.103:80 -g -w 1&#10;#check realserver reachable from director&#10;ping -c 1 192.168.1.103&#10; &#10;#displaying ipvsadm settings&#10;/sbin/ipvsadm&#10; &#10;#not installing a default gw for LVS_TYPE vs-dr&#10;#---------------mini-rc.lvs_dr-director------------------------</span><br></pre></td></tr></table></figure>
+<p>在node2中创建脚本：lvs-dr-node2.sh</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">#!/bin/bash&#10;#----------mini-rc.lvs_dr-realserver------------------&#10;#setup IP&#10;/sbin/ifconfig eno16777736 192.168.1.102 broadcast 192.168.1.255 netmask 255.255.255.0&#10;#installing default gw 192.168.1.1 for vs-dr&#10;/sbin/route add default gw 192.168.1.1&#10;#showing routing table&#10;/bin/netstat -rn&#10;#checking if DEFAULT_GW 192.168.1.1 is reachable&#10;ping -c 1 192.168.1.1&#10; &#10;#set_realserver_ip_forwarding to OFF (1 on, 0 off).&#10;echo &#34;0&#34; &#62;/proc/sys/net/ipv4/ip_forward&#10;cat       /proc/sys/net/ipv4/ip_forward&#10; &#10;#looking for DIP 192.168.1.101&#10;ping -c 1 192.168.1.101&#10; &#10;#looking for VIP (will be on director)&#10;ping -c 1 192.168.1.11&#10; &#10;#install_realserver_vip&#10;/sbin/ifconfig lo:0 192.168.1.11 broadcast 192.168.1.11 netmask 0xffffffff up&#10;#ifconfig output&#10;/sbin/ifconfig lo:0&#10;#installing route for VIP 192.168.1.11 on device lo:0&#10;/sbin/route add -host 192.168.1.11 dev lo:0&#10;#listing routing info for VIP 192.168.1.11&#10;/bin/netstat -rn&#10; &#10;#hiding interface lo:0, will not arp&#10;echo &#34;1&#34; &#62;/proc/sys/net/ipv4/conf/all/hidden&#10;cat       /proc/sys/net/ipv4/conf/all/hidden&#10;echo &#34;1&#34; &#62;/proc/sys/net/ipv4/conf/lo/hidden&#10;cat       /proc/sys/net/ipv4/conf/lo/hidden&#10; &#10;#----------mini-rc.lvs_dr-realserver------------------</span><br></pre></td></tr></table></figure>
+<p>在node3中创建脚本：lvs-dr-node3.sh</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">#!/bin/bash&#10;#----------mini-rc.lvs_dr-realserver------------------&#10;#setup IP&#10;/sbin/ifconfig eno16777736 192.168.1.103 broadcast 192.168.1.255 netmask 255.255.255.0&#10;#installing default gw 192.168.1.1 for vs-dr&#10;/sbin/route add default gw 192.168.1.1&#10;#showing routing table&#10;/bin/netstat -rn&#10;#checking if DEFAULT_GW 192.168.1.1 is reachable&#10;ping -c 1 192.168.1.1&#10; &#10;#set_realserver_ip_forwarding to OFF (1 on, 0 off).&#10;echo &#34;0&#34; &#62;/proc/sys/net/ipv4/ip_forward&#10;cat       /proc/sys/net/ipv4/ip_forward&#10; &#10;#looking for DIP 192.168.1.101&#10;ping -c 1 192.168.1.101&#10; &#10;#looking for VIP (will be on director)&#10;ping -c 1 192.168.1.11&#10; &#10;#install_realserver_vip&#10;/sbin/ifconfig lo:0 192.168.1.11 broadcast 192.168.1.11 netmask 0xffffffff up&#10;#ifconfig output&#10;/sbin/ifconfig lo:0&#10;#installing route for VIP 192.168.1.11 on device lo:0&#10;/sbin/route add -host 192.168.1.11 dev lo:0&#10;#listing routing info for VIP 192.168.1.11&#10;/bin/netstat -rn&#10; &#10;#hiding interface lo:0, will not arp&#10;echo &#34;1&#34; &#62;/proc/sys/net/ipv4/conf/all/hidden&#10;cat       /proc/sys/net/ipv4/conf/all/hidden&#10;echo &#34;1&#34; &#62;/proc/sys/net/ipv4/conf/lo/hidden&#10;cat       /proc/sys/net/ipv4/conf/lo/hidden&#10; &#10;#----------mini-rc.lvs_dr-realserver------------------</span><br></pre></td></tr></table></figure>
+<p>分别给脚本附加执行权限</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">chmod -x lvs-dr-xxxxx.sh</span><br></pre></td></tr></table></figure>
+<p>分别运行3个脚本</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./lvs-dr-xxxx.sh</span><br></pre></td></tr></table></figure>
+<p>DR测试结果</p>
+<p><img src="https://1csh1.github.io/img/LVS的3种负载均衡技术的测试/DR结果图.jpg" alt="DR结果图"></p>
+<p>DR脚本文件：<br><a href="https://1csh1.github.io/file/LVS的3种负载均衡技术的测试/dr.rar">TUN脚本文件</a></p>
+<p>参考文章链接：<br><a href="https://www.cnblogs.com/oldjiang/archive/2013/02/01/LVS-Nat-Tun-Dr.html" target="_blank" rel="external">LVS配置教程</a></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/03/22/NAT、TUN、DR总结/" itemprop="url">
                   NAT、TUN、DR总结
                 </a>
@@ -856,160 +1026,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/03/21/LVS简单介绍/" itemprop="url">
-                  LVS简单介绍
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-03-21T20:54:22+08:00" content="2016-03-21">
-              2016-03-21
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/LVS/" itemprop="url" rel="index">
-                    <span itemprop="name">LVS</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/03/21/LVS简单介绍/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/03/21/LVS简单介绍/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-             <span id="/2016/03/21/LVS简单介绍/" class="leancloud_visitors" data-flag-title="LVS简单介绍">
-               &nbsp; | &nbsp;
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               <span class="post-meta-item-text">阅读次数 </span>
-               <span class="leancloud-visitors-count"></span>
-              </span>
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>&emsp;&emsp;LVS原意为 Linux Virtual Server，创始人是章文嵩，想了解LVS，最好就是查看章文嵩的LVS博客。这里简单描述LVS。</p>
-<p><strong>LVS体系结构</strong><br>&emsp;&emsp;虚拟服务器的体系结构如下图所示，一组服务器通过高速的局域网或者地理分布的广域网相互连接，在它们的前端有一个负载调度器（Load Balancer）。负载调度器能无缝地将网络请求调度到真实服务器上，从而使得服务器集群的结构对客户是透明的，客户访问集群系统提供的网络服务就像访 问一台高性能、高可用的服务器一样。客户程序不受服务器集群的影响不需作任何修改。系统的伸缩性通过在服务机群中透明地加入和删除一个节点来达到，通过检 测节点或服务进程故障和正确地重置系统达到高可用性。由于我们的负载调度技术是在Linux内核中实现的，我们称之为Linux虚拟服务器（Linux Virtual Server）。<br><img src="https://1csh1.github.io/img/LVS简单介绍/LVS体系结构.jpg" alt="LVS体系结构"></p>
-<p><strong>LVS项目目标</strong><br>&emsp;&emsp;Linux Virtual Server项目的目标 ：使用集群技术和Linux操作系统实现一个高性能、高可用的服务器，它具有很好的可伸缩性（Scalability）、可靠性（Reliability）和可管理性（Manageability）<br><strong>LVS实现的3中负载均衡技术</strong></p>
-<ul>
-<li><p>Virtual Server via Network Address Translation（VS/NAT）<br>&emsp;&emsp;通过网络地址转换，调度器重写请求报文的目标地址，根据预设的调度算法，将请求分派给后端的真实服务器；真实服务器的响应报文通过调度器时，报文的源地址被重写，再返回给客户，完成整个负载调度过程。</p>
-</li>
-<li><p>Virtual Server via IP Tunneling（VS/TUN）<br>&emsp;&emsp;采用NAT技术时，由于请求和响应报文都必须经过调度器地址重写，当客户请求越来越多时，调度器的处理能力将成为瓶颈。为了解决这个问题，调度器把请求报 文通过IP隧道转发至真实服务器，而真实服务器将响应直接返回给客户，所以调度器只处理请求报文。由于一般网络服务应答比请求报文大许多，采用 VS/TUN技术后，集群系统的最大吞吐量可以提高10倍。</p>
-</li>
-<li><p>Virtual Server via Direct Routing（VS/DR）<br>&emsp;&emsp;VS/DR通过改写请求报文的MAC地址，将请求发送到真实服务器，而真实服务器将响应直接返回给客户。同VS/TUN技术一样，VS/DR技术可极大地 提高集群系统的伸缩性。这种方法没有IP隧道的开销，对集群中的真实服务器也没有必须支持IP隧道协议的要求，但是要求调度器与真实服务器都有一块网卡连 在同一物理网段上。</p>
-</li>
-</ul>
-<p><strong>IPVS（IP虚拟服务器软件）调度器实现了如下八种负载调度算法：</strong></p>
-<ul>
-<li><p><strong>轮叫（Round Robin）</strong><br>&emsp;&emsp;调度器通过”轮叫”调度算法将外部请求按顺序轮流分配到集群中的真实服务器上，它均等地对待每一台服务器，而不管服务器上实际的连接数和系统负载。</p>
-</li>
-<li><p><strong>加权轮叫（Weighted Round Robin）</strong><br>&emsp;&emsp;调度器通过”加权轮叫”调度算法根据真实服务器的不同处理能力来调度访问请求。这样可以保证处理能力强的服务器处理更多的访问流量。调度器可以自动问询真实服务器的负载情况，并动态地调整其权值。</p>
-</li>
-<li><p><strong>最少链接（Least Connections）</strong><br>&emsp;&emsp;调度器通过”最少连接”调度算法动态地将网络请求调度到已建立的链接数最少的服务器上。如果集群系统的真实服务器具有相近的系统性能，采用”最小连接”调度算法可以较好地均衡负载。</p>
-</li>
-<li><p><strong>加权最少链接（Weighted Least Connections）</strong><br>&emsp;&emsp;在集群系统中的服务器性能差异较大的情况下，调度器采用”加权最少链接”调度算法优化负载均衡性能，具有较高权值的服务器将承受较大比例的活动连接负载。调度器可以自动问询真实服务器的负载情况，并动态地调整其权值。</p>
-</li>
-<li><p><strong>基于局部性的最少链接（Locality-Based Least Connections）</strong><br>&emsp;&emsp;”基于局部性的最少链接” 调度算法是针对目标IP地址的负载均衡，目前主要用于Cache集群系统。该算法根据请求的目标IP地址找出该目标IP地址最近使用的服务器，若该服务器 是可用的且没有超载，将请求发送到该服务器；若服务器不存在，或者该服务器超载且有服务器处于一半的工作负载，则用”最少链接”的原则选出一个可用的服务 器，将请求发送到该服务器。</p>
-</li>
-<li><p><strong>带复制的基于局部性最少链接（Locality-Based Least Connections with Replication）</strong><br>&emsp;&emsp;”带复制的基于局部性最少链接”调度算法也是针对目标IP地址的负载均衡，目前主要用于Cache集群系统。它与LBLC算法的不同之处是它要维护从一个 目标IP地址到一组服务器的映射，而LBLC算法维护从一个目标IP地址到一台服务器的映射。该算法根据请求的目标IP地址找出该目标IP地址对应的服务 器组，按”最小连接”原则从服务器组中选出一台服务器，若服务器没有超载，将请求发送到该服务器，若服务器超载；则按”最小连接”原则从这个集群中选出一 台服务器，将该服务器加入到服务器组中，将请求发送到该服务器。同时，当该服务器组有一段时间没有被修改，将最忙的服务器从服务器组中删除，以降低复制的 程度。</p>
-</li>
-<li><p><strong>目标地址散列（Destination Hashing）</strong><br>&emsp;&emsp;”目标地址散列”调度算法根据请求的目标IP地址，作为散列键（Hash Key）从静态分配的散列表找出对应的服务器，若该服务器是可用的且未超载，将请求发送到该服务器，否则返回空。</p>
-</li>
-<li><p><strong>源地址散列（Source Hashing）</strong><br>&emsp;&emsp;”源地址散列”调度算法根据请求的源IP地址，作为散列键（Hash Key）从静态分配的散列表找出对应的服务器，若该服务器是可用的且未超载，将请求发送到该服务器，否则返回空。</p>
-</li>
-</ul>
-<p>参考文章链接<br><a href="http://www.linuxvirtualserver.org/zh/lvs1.html" target="_blank" rel="external">Linux服务器集群系统（一）</a></p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1055,7 +1071,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">58</span>
+              <span class="site-state-item-count">59</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
