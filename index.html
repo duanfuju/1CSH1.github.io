@@ -225,6 +225,158 @@
             
               
                 
+                <a class="post-title-link" href="/2017/08/03/angular-reactive-forms/" itemprop="url">
+                  Angular 的响应式表单
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-08-03T22:30:00+08:00" content="2017-08-03">
+              2017-08-03
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Angular/" itemprop="url" rel="index">
+                    <span itemprop="name">Angular</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Angular/James-Blog/" itemprop="url" rel="index">
+                    <span itemprop="name">James-Blog</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2017/08/03/angular-reactive-forms/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/08/03/angular-reactive-forms/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2017/08/03/angular-reactive-forms/" class="leancloud_visitors" data-flag-title="Angular 的响应式表单">
+               &nbsp; | &nbsp;
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote>
+<p>摘要：本文简单介绍 Angular 的响应式表单，还是以之前的评论模块为例</p>
+</blockquote>
+<h3 id="u4ECB_u7ECD"><a href="#u4ECB_u7ECD" class="headerlink" title="介绍"></a>介绍</h3><p>Angular 总共提供了 3 中表单实现方式，分别是：<a href="https://angular.io/guide/forms" target="_blank" rel="external">Template-driven Forms （模板驱动表单）</a>、 <a href="https://angular.io/guide/reactive-forms" target="_blank" rel="external">Reactive Forms （响应式表单）</a>、<a href="https://angular.io/guide/dynamic-form" target="_blank" rel="external">Dynamic Forms （动态表单）</a>。本文只介绍响应式表单。</p>
+<p>响应式表单是什么呢？其实跟我们以前用 JQuery 或者其他框架实现的思路差不多，就是使用 HTML 显示数据，然后通过定义一定的校验器、校验规则以及校验提示语，通过事件触发校验后校验不通过的显示提示语，只不过用了 Angular，我们就使用 Angular 提供的语法来实现这个校验过程。</p>
+<h3 id="u4F7F_u7528"><a href="#u4F7F_u7528" class="headerlink" title="使用"></a>使用</h3><p>接下来我们通过代码例子来介绍如何使用响应式表单。</p>
+<h4 id="u5F15_u5165_u54CD_u5E94_u5F0F_u8868_u5355_u6A21_u5757"><a href="#u5F15_u5165_u54CD_u5E94_u5F0F_u8868_u5355_u6A21_u5757" class="headerlink" title="引入响应式表单模块"></a>引入响应式表单模块</h4><p>在我们要使用响应式表单的那个模块里面引入响应式表单模块，比如我们在文章模块中使用响应式表单，我们就要在 imports 中添加 ReactiveFormsModule。代码如下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">@NgModule(&#123;&#10;  imports: [&#10;    RouterModule,&#10;    RouterModule.forChild(articleRoutes),&#10;    SharedModule,&#10;    ReactiveFormsModule,&#10;    NgbModule.forRoot()&#10;  ],&#10;  declarations: [&#10;    HomeComponent,&#10;    DetailComponent,&#10;    CommentComponent,&#10;    CommentViewComponent&#10;  ],&#10;  providers: [&#10;    HomeService,&#10;    DetailService,&#10;    CommentService&#10;  ]&#10;&#125;)&#10;export class ArticleModule &#123; &#125;</span><br></pre></td></tr></table></figure></p>
+<h4 id="u7F16_u5199_u6821_u9A8C_u5668_u4EE3_u7801"><a href="#u7F16_u5199_u6821_u9A8C_u5668_u4EE3_u7801" class="headerlink" title="编写校验器代码"></a>编写校验器代码</h4><p>首先我们这里的表单有 3 个字段，分别是 nickname、email、content； nickname 添加必填校验器，email 添加必填和邮箱格式校验器，content添加必填校验器。</p>
+<p>首先在 CommentComponent 中注入 FormBuilder 对象，并添加 commentForm 表单组以及创建一个评论对象 comment。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">public commentForm: FormGroup;&#10;public comment: Comment = new Comment();&#10;&#10;constructor(private formBuilder: FormBuilder)&#123;&#125;</span><br></pre></td></tr></table></figure></p>
+<p>定义校验器的提示语 validationMessages， formErrors 是在模板中显示的提示语，提示语来自 validationMessages<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">public formErrors = &#123;&#10;  &#34;nickname&#34;: &#34;&#34;,&#10;  &#34;email&#34;: &#34;&#34;,&#10;  &#34;content&#34;: &#34;&#34;,&#10;  &#34;formError&#34;: &#34;&#34;&#10;&#125;&#10;&#10;public validationMessages = &#123;&#10;  &#34;nickname&#34;: &#123;&#10;    &#34;required&#34;: &#34;&#26165;&#31216;&#19981;&#33021;&#20026;&#31354;&#34;,&#10;  &#125;,&#10;  &#34;email&#34;: &#123;&#10;    &#34;required&#34;: &#34;&#37038;&#31665;&#19981;&#33021;&#20026;&#31354;&#34;,&#10;    &#34;pattern&#34;: &#34;&#35831;&#36755;&#20837;&#27491;&#30830;&#30340;&#37038;&#31665;&#22320;&#22336;&#34;&#10;  &#125;,&#10;  &#34;content&#34;: &#123;&#10;    &#34;required&#34;: &#34;&#20869;&#23481;&#19981;&#33021;&#20026;&#31354;&#34;&#10;  &#125;&#10;&#125;</span><br></pre></td></tr></table></figure></p>
+<p>在组件启动的函数中构造表单，这时候为每个字段添加了校验器，并且绑定在什么时候触发校验，这里我们在每个值改变的时候触发。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ngOnInit(): void &#123;&#10;  this.buildForm();&#10;&#125;&#10;&#10;private buildForm() &#123;&#10;  this.commentForm = this.formBuilder.group(&#123;&#10;    &#34;nickname&#34;:[&#10;      this.comment.nickname,&#10;      [&#10;        Validators.required&#10;      ]&#10;    ],&#10;    &#34;email&#34;: [&#10;      this.comment.email,&#10;      [&#10;        Validators.required,&#10;        Validators.pattern(&#34;^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+((\.[a-zA-Z0-9_-]&#123;2,3&#125;)&#123;1,2&#125;)$&#34;)&#10;      ]&#10;    ],&#10;    &#34;content&#34;: [&#10;      this.comment.content,&#10;      [&#10;        Validators.required&#10;      ]&#10;    ]&#10;  &#125;);&#10;  this.commentForm.valueChanges.subscribe(data =&#62; this.onValueChanged(data));&#10;  this.onValueChanged();&#10;&#125;</span><br></pre></td></tr></table></figure></p>
+<p>onValueChanged() 方法实现了判断是那个字段校验不通过，然后将该字段的 validationMessages 提示语赋值给 formErrors，在模板那里有判断如果 formErrors.email 等等字段不为空则显示改内容，也即是校验器的提示语<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">onValueChanged(data?: any) &#123;&#10;  if (!this.commentForm) &#123;&#10;    return;&#10;  &#125;&#10;  const form = this.commentForm;&#10;  for (const field in this.formErrors) &#123;&#10;    this.formErrors[field] = &#39;&#39;;&#10;    const control = form.get(field);&#10;    if (control &#38;&#38; control.dirty &#38;&#38; !control.valid) &#123;&#10;      const messages = this.validationMessages[field];&#10;      for (const key in control.errors) &#123;&#10;        this.formErrors[field] += messages[key] + &#39; &#39;;&#10;      &#125;&#10;    &#125;&#10;  &#125;&#10;&#10;&#125;</span><br></pre></td></tr></table></figure></p>
+<h4 id="HTML__u6A21_u677F_u4EE3_u7801"><a href="#HTML__u6A21_u677F_u4EE3_u7801" class="headerlink" title="HTML 模板代码"></a>HTML 模板代码</h4><p>我们要关注的是 [formGroup]=”commentForm”、novalidate、formControlName=”nickname”、以及 *ngIf=”formErrors.nickname” 这几个点，并不是指具体的点，而是着重看这些语法的每一个地方，在你自己实现的时候需要根据你的代码修改的。<br>还有一个是 (ngSubmit)=”sendComment()” 定义了该表单点击提交时调用的函数。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#60;form [formGroup]=&#34;commentForm&#34; (ngSubmit)=&#34;sendComment()&#34; role=&#34;form&#34; novalidate&#62;&#10;  &#60;div class=&#34;control-group&#34;&#62;&#10;    &#60;div class=&#34;form-group floating-label-form-group controls&#34; [ngClass]=&#34;&#123;&#39;has-error&#39;: formErrors.nickname&#125;&#34;&#62;&#10;      &#60;label&#62;&#123;&#123; &#39;comment.nickname&#39; | translate &#125;&#125;&#60;/label&#62;&#10;      &#60;input formControlName=&#34;nickname&#34; type=&#34;text&#34; class=&#34;form-control&#34; placeholder=&#34;&#123;&#123; &#39;comment.nickname&#39; | translate &#125;&#125;&#34;&#62;&#10;      &#60;p *ngIf=&#34;formErrors.nickname&#34; class=&#34;help-block text-danger&#34;&#62;&#10;        &#123;&#123; formErrors.nickname &#125;&#125;&#10;      &#60;/p&#62;&#10;    &#60;/div&#62;&#10;  &#60;/div&#62;&#10;  &#60;div class=&#34;control-group&#34; &#62;&#10;    &#60;div class=&#34;form-group floating-label-form-group controls&#34; [ngClass]=&#34;&#123;&#39;has-error&#39;: formErrors.email&#125;&#34;&#62;&#10;      &#60;label&#62;&#123;&#123; &#39;comment.email&#39; | translate &#125;&#125;&#60;/label&#62;&#10;      &#60;input formControlName=&#34;email&#34; type=&#34;email&#34;   class=&#34;form-control&#34; placeholder=&#34;&#123;&#123; &#39;comment.email&#39; | translate &#125;&#125;&#34;&#62;&#10;      &#60;p *ngIf=&#34;formErrors.email&#34; class=&#34;help-block text-danger&#34;&#62;&#10;        &#123;&#123; formErrors.email &#125;&#125;&#10;      &#60;/p&#62;&#10;    &#60;/div&#62;&#10;  &#60;/div&#62;&#10;  &#60;div class=&#34;control-group&#34;&#62;&#10;    &#60;div class=&#34;form-group floating-label-form-group controls&#34;  [ngClass]=&#34;&#123;&#39;has-error&#39;: formErrors.content&#125;&#34;&#62;&#10;      &#60;label&#62;&#123;&#123; &#39;comment.content&#39; | translate &#125;&#125;&#60;/label&#62;&#10;      &#60;textarea formControlName=&#34;content&#34; rows=&#34;5&#34; class=&#34;form-control&#34; placeholder=&#34;&#123;&#123; &#39;comment.content&#39; | translate &#125;&#125;&#34;&#62;&#60;/textarea&#62;&#10;      &#60;p *ngIf=&#34;formErrors.content&#34;  class=&#34;help-block text-danger&#34;&#62;&#10;        &#123;&#123; formErrors.content &#125;&#125;&#10;      &#60;/p&#62;&#10;    &#60;/div&#62;&#10;  &#60;/div&#62;&#10;  &#60;p *ngIf=&#34;formErrors.formError&#34;  class=&#34;help-block text-danger&#34;&#62;&#10;    &#123;&#123; formErrors.formError &#125;&#125;&#10;  &#60;/p&#62;&#10;  &#60;br&#62;&#10;  &#60;div id=&#34;success&#34;&#62;&#60;/div&#62;&#10;  &#60;div class=&#34;form-group&#34;&#62;&#10;    &#60;button [disabled]=&#34;commentForm.invalid&#34; type=&#34;submit&#34; class=&#34;btn btn-secondary&#34; &#62;&#123;&#123; &#39;comment.submit&#39; | translate &#125;&#125;&#60;/button&#62;&#10;  &#60;/div&#62;&#10;&#60;/form&#62;</span><br></pre></td></tr></table></figure>
+<h3 id="GitHub__u4EE3_u7801"><a href="#GitHub__u4EE3_u7801" class="headerlink" title="GitHub 代码"></a>GitHub 代码</h3><p><a href="https://github.com/1CSH1/james-blog-ui/tree/f96a6af5f10261ba484ddb93cc52a9dae5c5dc03" target="_blank" rel="external">James-Blog 中的 comment.component.ts 文件</a></p>
+<h3 id="u53C2_u8003_u6587_u7AE0"><a href="#u53C2_u8003_u6587_u7AE0" class="headerlink" title="参考文章"></a>参考文章</h3><p><a href="https://angular.io/guide/reactive-forms" target="_blank" rel="external">Reactive Forms</a></p>
+<h3 id="u6548_u679C_u56FE"><a href="#u6548_u679C_u56FE" class="headerlink" title="效果图"></a>效果图</h3><p><img src="https://1csh1.github.io/img/angular-reactive-forms/angular-reactive-forms.png" alt="angular-reactive-forms.png"></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2017/08/01/angular-comment-recursive-event/" itemprop="url">
                   Angular 实现类似博客获取回复评论的数据
                 </a>
@@ -825,172 +977,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/07/01/angular-add-ngx-translate/" itemprop="url">
-                  在 Angular 项目中添加 i18n 插件 ngx-translate
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-07-01T18:00:00+08:00" content="2017-07-01">
-              2017-07-01
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/Angular/" itemprop="url" rel="index">
-                    <span itemprop="name">Angular</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/Angular/James-Blog/" itemprop="url" rel="index">
-                    <span itemprop="name">James-Blog</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/Angular/James-Blog/ngx-translate/" itemprop="url" rel="index">
-                    <span itemprop="name">ngx-translate</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2017/07/01/angular-add-ngx-translate/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/07/01/angular-add-ngx-translate/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-             <span id="/2017/07/01/angular-add-ngx-translate/" class="leancloud_visitors" data-flag-title="在 Angular 项目中添加 i18n 插件 ngx-translate">
-               &nbsp; | &nbsp;
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               <span class="post-meta-item-text">阅读次数 </span>
-               <span class="leancloud-visitors-count"></span>
-              </span>
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote>
-<p>摘要：本文将介绍在 Angular4 项目中配置 ngx-translate i18n 国际化组件</p>
-</blockquote>
-<h3 id="npm__u5B89_u88C5_ngx-translate__u6A21_u5757"><a href="#npm__u5B89_u88C5_ngx-translate__u6A21_u5757" class="headerlink" title="npm 安装 ngx-translate 模块"></a>npm 安装 ngx-translate 模块</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install @ngx-translate/core --save&#10;npm install @ngx-translate/http-loader --save</span><br></pre></td></tr></table></figure>
-<h3 id="u5728_Angular__u9879_u76EE_u914D_u7F6E"><a href="#u5728_Angular__u9879_u76EE_u914D_u7F6E" class="headerlink" title="在 Angular 项目配置"></a>在 Angular 项目配置</h3><h4 id="app-module-ts"><a href="#app-module-ts" class="headerlink" title="app.module.ts"></a>app.module.ts</h4><p>添加<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">import &#123; TranslateLoader, TranslateModule&#125; from &#39;@ngx-translate/core&#39;;&#10;import &#123; TranslateHttpLoader &#125; from &#39;@ngx-translate/http-loader&#39;;&#10;&#10;  imports: [&#10;    TranslateModule.forRoot(&#123;&#10;      loader: &#123;&#10;        provide: TranslateLoader,&#10;        useFactory: (createTranslateHttpLoader),&#10;        deps: [Http]&#10;      &#125;&#10;    &#125;)&#10;  ]</span><br></pre></td></tr></table></figure></p>
-<p>结果如下： </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">import &#123; BrowserModule &#125; from &#39;@angular/platform-browser&#39;;&#10;import &#123; NgModule &#125; from &#39;@angular/core&#39;;&#10;import &#123; HttpModule, Http &#125; from &#39;@angular/http&#39;;&#10;import &#123; TranslateLoader, TranslateModule&#125; from &#39;@ngx-translate/core&#39;;&#10;import &#123; TranslateHttpLoader &#125; from &#39;@ngx-translate/http-loader&#39;;&#10;&#10;import &#123; AppComponent &#125; from &#39;./app.component&#39;;&#10;&#10;export function createTranslateHttpLoader(http: Http) &#123;&#10;  return new TranslateHttpLoader(http, &#39;./assets/i18n/&#39;, &#39;.json&#39;);&#10;&#125;&#10;&#10;@NgModule(&#123;&#10;  declarations: [&#10;    AppComponent&#10;  ],&#10;  imports: [&#10;    BrowserModule,&#10;    HttpModule,&#10;    TranslateModule.forRoot(&#123;&#10;      loader: &#123;&#10;        provide: TranslateLoader,&#10;        useFactory: (createTranslateHttpLoader),&#10;        deps: [Http]&#10;      &#125;&#10;    &#125;)&#10;  ],&#10;  providers: [],&#10;  bootstrap: [AppComponent]&#10;&#125;)&#10;export class AppModule &#123; &#125;</span><br></pre></td></tr></table></figure>
-<h4 id="app-component-ts"><a href="#app-component-ts" class="headerlink" title="app.component.ts"></a>app.component.ts</h4><p>添加</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">import &#123; TranslateService &#125; from &#34;@ngx-translate/core&#34;;&#10;&#10;  constructor(public translateService: TranslateService) &#123;&#10;&#10;  &#125;&#10;  &#10;  ngOnInit() &#123;&#10;    // --- set i18n begin ---&#10;    this.translateService.addLangs([&#34;zh&#34;, &#34;en&#34;]);&#10;    this.translateService.setDefaultLang(&#34;zh&#34;);&#10;    const browserLang = this.translateService.getBrowserLang();&#10;    this.translateService.use(browserLang.match(/zh|en/) ? browserLang : &#39;zh&#39;);&#10;    // --- set i18n end ---&#10;  &#125;</span><br></pre></td></tr></table></figure>
-<p>结果如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">import &#123; Component &#125; from &#39;@angular/core&#39;;&#10;import &#123; TranslateService &#125; from &#34;@ngx-translate/core&#34;;&#10;&#10;@Component(&#123;&#10;  selector: &#39;app-root&#39;,&#10;  templateUrl: &#39;./app.component.html&#39;,&#10;  styleUrls: [&#39;./app.component.css&#39;]&#10;&#125;)&#10;export class AppComponent &#123;&#10;  title = &#39;app&#39;;&#10;&#10;  constructor(public translateService: TranslateService) &#123;&#10;&#10;  &#125;&#10;&#10;  ngOnInit() &#123;&#10;    // --- set i18n begin ---&#10;    this.translateService.addLangs([&#34;zh&#34;, &#34;en&#34;]);&#10;    this.translateService.setDefaultLang(&#34;zh&#34;);&#10;    const browserLang = this.translateService.getBrowserLang();&#10;    this.translateService.use(browserLang.match(/zh|en/) ? browserLang : &#39;zh&#39;);&#10;    // --- set i18n end ---&#10;  &#125;&#10;&#125;</span><br></pre></td></tr></table></figure>
-<h4 id="u6DFB_u52A0_u591A_u8BED_u8A00_u6587_u4EF6"><a href="#u6DFB_u52A0_u591A_u8BED_u8A00_u6587_u4EF6" class="headerlink" title="添加多语言文件"></a>添加多语言文件</h4><p>在 <strong> src/app/assets/ </strong> 下创建 <strong> i18n </strong> 文件夹，并在文件夹内创建 <strong> en.json </strong> 和 <strong> zh.json </strong> 文件<br><img src="https://1csh1.github.io/img/angular-add-ngx-translate/angular-i18n-folder.png" alt="angular-i18n-folder"></p>
-<h3 id="u6D4B_u8BD5"><a href="#u6D4B_u8BD5" class="headerlink" title="测试"></a>测试</h3><h4 id="app-component-html"><a href="#app-component-html" class="headerlink" title="app.component.html"></a>app.component.html</h4><p>添加代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#60;div&#62;&#10;  &#60;span&#62; test the i18n module: ngx-translate&#60;/span&#62;&#10;  &#60;h1&#62;&#123;&#123; &#39;hello&#39; | translate &#125;&#125;&#60;/h1&#62;&#10;&#60;/div&#62;</span><br></pre></td></tr></table></figure></p>
-<h4 id="u5728_en-json__u548C_zh-json__u6587_u4EF6_u4E2D_u6DFB_u52A0_u914D_u7F6E"><a href="#u5728_en-json__u548C_zh-json__u6587_u4EF6_u4E2D_u6DFB_u52A0_u914D_u7F6E" class="headerlink" title="在 en.json 和 zh.json 文件中添加配置"></a>在 en.json 和 zh.json 文件中添加配置</h4><p><strong> en.json </strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;&#10;  &#34;hello&#34;: &#34;the word is hello&#34;&#10;&#125;</span><br></pre></td></tr></table></figure></p>
-<p><strong> zh.json </strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;&#10;  &#34;hello&#34;: &#34;&#20320;&#22909;&#34;&#10;&#125;</span><br></pre></td></tr></table></figure></p>
-<h3 id="u6D4B_u8BD5_u7ED3_u679C"><a href="#u6D4B_u8BD5_u7ED3_u679C" class="headerlink" title="测试结果"></a>测试结果</h3><p>在中文下<br><img src="https://1csh1.github.io/img/angular-add-ngx-translate/angular-i18n-result-zh.png" alt="angular-i18n-result-zh"></p>
-<p>在英文下<br><img src="https://1csh1.github.io/img/angular-add-ngx-translate/angular-i18n-result-en.png" alt="angular-i18n-result-en"></p>
-<h3 id="u793A_u4F8B_u4EE3_u7801"><a href="#u793A_u4F8B_u4EE3_u7801" class="headerlink" title="示例代码"></a>示例代码</h3><p><a href="https://github.com/1CSH1/james-blog-ui/tree/7d2a64c3bc97d33e1b696019536f7627bcc3f3c4" target="_blank" rel="external">angular + ngx-translate</a></p>
-<h3 id="u53C2_u8003_u6587_u7AE0"><a href="#u53C2_u8003_u6587_u7AE0" class="headerlink" title="参考文章"></a>参考文章</h3><p><a href="https://github.com/ngx-translate/core" target="_blank" rel="external">ngx-translate core</a></p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1036,7 +1022,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">59</span>
+              <span class="site-state-item-count">60</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -1053,7 +1039,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">54</span>
+                <span class="site-state-item-count">55</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

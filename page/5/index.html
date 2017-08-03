@@ -225,6 +225,234 @@
             
               
                 
+                <a class="post-title-link" href="/2017/02/21/Thrift IDL基本语法/" itemprop="url">
+                  Thrift IDL基本语法
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-02-21T20:30:00+08:00" content="2017-02-21">
+              2017-02-21
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Thrift/" itemprop="url" rel="index">
+                    <span itemprop="name">Thrift</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2017/02/21/Thrift IDL基本语法/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/02/21/Thrift IDL基本语法/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2017/02/21/Thrift IDL基本语法/" class="leancloud_visitors" data-flag-title="Thrift IDL基本语法">
+               &nbsp; | &nbsp;
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote>
+<p>摘要：本文介绍Thrift的IDL基本语法</p>
+</blockquote>
+<h1 id="IDL"><a href="#IDL" class="headerlink" title="IDL"></a>IDL</h1><blockquote>
+<p>Thrift 采用IDL（Interface Definition Language）来定义通用的服务接口，然后通过Thrift提供的编译器，可以将服务接口编译成不同语言编写的代码，通过这个方式来实现跨语言的功能。</p>
+</blockquote>
+<h1 id="u57FA_u672C_u7C7B_u578B"><a href="#u57FA_u672C_u7C7B_u578B" class="headerlink" title="基本类型"></a>基本类型</h1><blockquote>
+<p>bool: 布尔值          对应Java中的boolean<br>byte: 有符号字节      对应Java中的byte<br>i16: 16位有符号整型   对应Java中的short<br>i32: 32位有符号整型   对应Java中的int<br>i64: 64位有符号整型   对应Java中的long<br>double: 64位浮点型    对应Java中的double<br>string: 字符串        对应Java中的String<br>binary: Blob 类型     对应Java中的byte[]</p>
+</blockquote>
+<h1 id="struct__u7ED3_u6784_u4F53"><a href="#struct__u7ED3_u6784_u4F53" class="headerlink" title="struct 结构体"></a>struct 结构体</h1><p>struct有以下一些约束：</p>
+<blockquote>
+<p>1.struct不能继承，但是可以嵌套，不能嵌套自己。<br>2.其成员都是有明确类型<br>3.成员是被正整数编号过的，其中的编号使不能重复的，这个是为了在传输过程中编码使用。<br>4.成员分割符可以是逗号（,）或是分号（;），而且可以混用<br>5.字段会有optional和required之分和protobuf一样，但是如果不指定则为无类型–可以不填充该值，但是在序列化传输的时候也会序列化进去，optional是不填充则部序列化，required是必须填充也必须序列化。<br>6.每个字段可以设置默认值<br>7.同一文件可以定义多个struct，也可以定义在不同的文件，进行include引入。</p>
+</blockquote>
+<p>例子：</p>
+<pre><code>struct User{
+  1: required string name, //改字段必须填写
+  2: optional i32 age = 0; //默认值
+  3: bool gender //默认字段类型为optional
+}
+</code></pre><p>规则：</p>
+<blockquote>
+<p>如果required标识的域没有赋值，Thrift将给予提示；<br>如果optional标识的域没有赋值，该域将不会被序列化传输；<br>如果某个optional标识域有缺省值而用户没有重新赋值，则该域的值一直为缺省值；<br>如果某个optional标识域有缺省值或者用户已经重新赋值，而不设置它的__isset为true，也不会被序列化传输。</p>
+</blockquote>
+<h1 id="Container__28_u5BB9_u5668_29"><a href="#Container__28_u5BB9_u5668_29" class="headerlink" title="Container (容器)"></a>Container (容器)</h1><p>有3种可用容器类型：</p>
+<blockquote>
+<p>list&lt;t&gt;:  元素类型为t的有序表，容许元素重复。对应c++的vector，java的ArrayList或者其他语言的数组<br>set&lt;t&gt;:   元素类型为t的无序表，不容许元素重复。对应c++中的set，java中的HashSet,python中的set，php中没有set，则转换为list类型了<br>map&lt;t, t&gt;: 键类型为t，值类型为t的kv对，键不容许重复。对用c++中的map, Java的HashMap, PHP 对应 array, Python/Ruby 的dictionary</p>
+</blockquote>
+<p>例子</p>
+<pre><code>struct Test {
+  1: map&lt;string, User&gt; usermap,
+  2: set&lt;i32&gt; intset,
+  3: list&lt;double&gt; doublelist
+}
+</code></pre><h1 id="enum__28_u679A_u4E3E_29"><a href="#enum__28_u679A_u4E3E_29" class="headerlink" title="enum (枚举)"></a>enum (枚举)</h1><p>约束：</p>
+<blockquote>
+<p>1.编译器默认从0开始赋值<br>2.可以赋予某个常量某个整数<br>3.允许常量是十六进制整数<br>4.末尾没有分号<br>5.给常量赋缺省值时，使用常量的全称</p>
+</blockquote>
+<p>规则：</p>
+<blockquote>
+<p>Thrift不支持枚举类嵌套，枚举常量必须是32位的正整数</p>
+</blockquote>
+<p>例子：</p>
+<pre><code>enum HttpStatus {
+  OK = 200,
+  NOTFOUND=404
+}
+</code></pre><h1 id="u5E38_u91CF_u5B9A_u4E49"><a href="#u5E38_u91CF_u5B9A_u4E49" class="headerlink" title="常量定义"></a>常量定义</h1><p>使用方法：在变量前面加上const</p>
+<p>例子：</p>
+<pre><code>const i32 const_int = 1;
+</code></pre><h1 id="u7C7B_u578B_u5B9A_u4E49"><a href="#u7C7B_u578B_u5B9A_u4E49" class="headerlink" title="类型定义"></a>类型定义</h1><p>Thrift支持C/C++类型定义</p>
+<p>例子：</p>
+<pre><code>typedef i32 myint
+typedef i64 usernumber
+</code></pre><p>规则：</p>
+<blockquote>
+<p>末尾没有逗号</p>
+</blockquote>
+<h1 id="Exception__28_u5F02_u5E38_29"><a href="#Exception__28_u5F02_u5E38_29" class="headerlink" title="Exception (异常)"></a>Exception (异常)</h1><p>异常在语法和功能上类似于结构体，差别是异常使用关键字exception，而且异常是继承每种语言的基础异常类。</p>
+<p>例子：</p>
+<pre><code>exception MyException {
+    1: i32 errorCode,
+    2: string message
+}
+</code></pre><h1 id="Service__28_u670D_u52A1_u5B9A_u4E49_u7C7B_u578B_29"><a href="#Service__28_u670D_u52A1_u5B9A_u4E49_u7C7B_u578B_29" class="headerlink" title="Service (服务定义类型)"></a>Service (服务定义类型)</h1><p>服务的定义方法在语义上等同于面向对象语言中的接口。</p>
+<pre><code>service HelloService {
+    i32 sayInt(1:i32 param)
+    string sayString(1:string param)
+    bool sayBoolean(1:bool param)
+    void sayVoid()
+}
+</code></pre><p>编译后的Java代码</p>
+<pre><code>public class HelloService {
+  public interface Iface {
+    public int sayInt(int param) throws org.apache.thrift.TException;
+    public java.lang.String sayString(java.lang.String param) throws org.apache.thrift.TException;
+    public boolean sayBoolean(boolean param) throws org.apache.thrift.TException;
+    public void sayVoid() throws org.apache.thrift.TException;
+  }
+  // ... 省略很多代码
+}
+</code></pre><h1 id="Namespace__28_u540D_u5B57_u7A7A_u95F4_29"><a href="#Namespace__28_u540D_u5B57_u7A7A_u95F4_29" class="headerlink" title="Namespace (名字空间)"></a>Namespace (名字空间)</h1><blockquote>
+<p>Thrift中的命名空间类似于C++中的namespace和java中的package，它们提供了一种组织（隔离）代码的简便方式。名字空间也可以用于解决类型定义中的名字冲突。<br>由于每种语言均有自己的命名空间定义方式（如python中有module）, thrift允许开发者针对特定语言定义namespace：</p>
+</blockquote>
+<p>例子：</p>
+<pre><code>namespace java com.example.test
+</code></pre><p>转化成</p>
+<pre><code>package com.example.test
+</code></pre><h1 id="Comment__28_u6CE8_u91CA_29"><a href="#Comment__28_u6CE8_u91CA_29" class="headerlink" title="Comment (注释)"></a>Comment (注释)</h1><p>Thrift支持C多行风格和Java/C++单行风格。<br>例子：</p>
+<pre><code>/** 
+ * This is a multi-line comment. 
+ * Just like in C. 
+ */
+ // C++/Java style single-line comments work just as well.
+</code></pre><h1 id="Include"><a href="#Include" class="headerlink" title="Include"></a>Include</h1><blockquote>
+<p>便于管理、重用和提高模块性/组织性，我们常常分割Thrift定义在不同的文件中。包含文件搜索方式与c++一样。Thrift允许文件包含其它thrift文件，用户需要使用thrift文件名作为前缀访问被包含的对象，</p>
+</blockquote>
+<p>如：</p>
+<pre><code>include &quot;test.thrift&quot;   
+...
+struct StSearchResult {
+    1: in32 uid;
+     ...
+}
+</code></pre><p>thrift文件名要用双引号包含，末尾没有逗号或者分号</p>
+<h1 id="u53C2_u8003_u6587_u7AE0"><a href="#u53C2_u8003_u6587_u7AE0" class="headerlink" title="参考文章"></a>参考文章</h1><p><a href="https://www.ibm.com/developerworks/cn/java/j-lo-apachethrift/" target="_blank" rel="external">Apache Thrift - 可伸缩的跨语言服务开发框架</a></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2017/02/21/Thrift 入门介绍/" itemprop="url">
                   Thrift 入门技术
                 </a>
@@ -769,141 +997,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2017/01/24/搭建RabbitMQ集群/" itemprop="url">
-                  搭建RabbitMQ集群
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-01-24T21:32:00+08:00" content="2017-01-24">
-              2017-01-24
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/RabbitMQ/" itemprop="url" rel="index">
-                    <span itemprop="name">RabbitMQ</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2017/01/24/搭建RabbitMQ集群/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/01/24/搭建RabbitMQ集群/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-             <span id="/2017/01/24/搭建RabbitMQ集群/" class="leancloud_visitors" data-flag-title="搭建RabbitMQ集群">
-               &nbsp; | &nbsp;
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               <span class="post-meta-item-text">阅读次数 </span>
-               <span class="leancloud-visitors-count"></span>
-              </span>
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h3 id="u95F2_u8BDD"><a href="#u95F2_u8BDD" class="headerlink" title="闲话"></a>闲话</h3><p>&emsp;&emsp;本文讲述搭建RabbitMQ集群，文中总共用了3个节点node6,node7,node8。</p>
-<h3 id="u73AF_u5883_u51C6_u5907"><a href="#u73AF_u5883_u51C6_u5907" class="headerlink" title="环境准备"></a>环境准备</h3><p>将node6,node7,node8的.erlang.cookie文件内容设置为一样的<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">//&#22312;node6&#33410;&#28857;&#19978;&#10;cat /var/lib/rabbitmq/.erlang.cookie&#10;//&#23558;&#20869;&#23481;&#22797;&#21046;&#21040;node7,node8&#33410;&#28857;&#19978;&#65292;&#21487;&#33021;&#38656;&#35201;&#20462;&#25913;&#25991;&#20214;&#30340;&#26435;&#38480;&#10;&#10;//&#32467;&#26524;&#65306;&#27604;&#22914;&#25105;&#33258;&#24049;&#30340;&#26426;&#22120;&#19978;&#30340;.erlang.cookie&#25991;&#20214;&#20869;&#23481;&#10;rabbit6  ETIEGPLEHVXLJDVZGLMF&#10;rabbit7  ETIEGPLEHVXLJDVZGLMF&#10;rabbit8  ETIEGPLEHVXLJDVZGLMF</span><br></pre></td></tr></table></figure></p>
-<h3 id="u542F_u52A8RabbitMQ"><a href="#u542F_u52A8RabbitMQ" class="headerlink" title="启动RabbitMQ"></a>启动RabbitMQ</h3><p>在node6上运行<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">RABBITMQ_NODE_PORT=5672 RABBITMQ_NODENAME=rabbit6 \rabbitmq-server -detached</span><br></pre></td></tr></table></figure></p>
-<p>在node7上运行<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">RABBITMQ_NODE_PORT=5672 RABBITMQ_NODENAME=rabbit7 \rabbitmq-server -detached</span><br></pre></td></tr></table></figure></p>
-<p>在node8上运行<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">RABBITMQ_NODE_PORT=5672 RABBITMQ_NODENAME=rabbit8 \rabbitmq-server -detached</span><br></pre></td></tr></table></figure></p>
-<h3 id="u5C06node7_u8282_u70B9_u52A0_u5165_u5230_u96C6_u7FA4_u4E2D"><a href="#u5C06node7_u8282_u70B9_u52A0_u5165_u5230_u96C6_u7FA4_u4E2D" class="headerlink" title="将node7节点加入到集群中"></a>将node7节点加入到集群中</h3><p>在node7机器上运行如下命令<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">//&#20572;&#27490;rabbit7&#33410;&#28857;&#19978;&#30340;RabbitMQ&#24212;&#29992;&#31243;&#24207;&#10;rabbitmqctl -n rabbit7@csh07 stop_app&#10;&#10;//&#37325;&#35774;rabbit7&#33410;&#28857;&#30340;&#20803;&#25968;&#25454;&#21644;&#29366;&#24577;&#20026;&#28165;&#31354;&#10;rabbitmqctl -n rabbit7@csh07 reset&#10;&#10;//&#23558;rabbit7&#21152;&#20837;&#21040;rabbit6&#38598;&#32676;&#20013;&#10;rabbitmqctl -n rabbit7@csh07 join_cluster rabbit6@csh06 \ rabbit7@csh07&#10;&#10;//&#37325;&#26032;&#21551;&#21160;rabbit7&#33410;&#28857;&#30340;&#24212;&#29992;&#31243;&#24207;&#10;rabbitmqctl -n rabbit7@csh07 start_app</span><br></pre></td></tr></table></figure></p>
-<h3 id="u5C06node8_u8282_u70B9_u52A0_u5165_u5230_u96C6_u7FA4_u4E2D"><a href="#u5C06node8_u8282_u70B9_u52A0_u5165_u5230_u96C6_u7FA4_u4E2D" class="headerlink" title="将node8节点加入到集群中"></a>将node8节点加入到集群中</h3><p>在node8机器上运行如下命令<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rabbitmqctl -n rabbit8@csh08 stop_app&#10;rabbitmqctl -n rabbit8@csh08 reset&#10;rabbitmqctl -n rabbit8@csh08 join_cluster rabbit6@csh06&#10;rabbitmqctl -n rabbit8@csh08 start_app</span><br></pre></td></tr></table></figure></p>
-<h3 id="u67E5_u770B_u96C6_u7FA4_u72B6_u6001"><a href="#u67E5_u770B_u96C6_u7FA4_u72B6_u6001" class="headerlink" title="查看集群状态"></a>查看集群状态</h3><p>命令如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rabbitmqctl cluster_status</span><br></pre></td></tr></table></figure></p>
-<p>结果：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@csh08 ~]# rabbitmqctl -n rabbit8@csh08 cluster_status&#10;Cluster status of node &#39;rabbit8@csh08&#39; ...&#10;[&#123;nodes,[&#123;disc,[&#39;rabbit7@csh07&#39;,&#39;rabbit6@csh06&#39;]&#125;,&#10;         &#123;ram,[&#39;rabbit8@csh08&#39;]&#125;]&#125;,&#10; &#123;running_nodes,[&#39;rabbit6@csh06&#39;,&#39;rabbit7@csh07&#39;,&#10;                 &#39;rabbit8@csh08&#39;]&#125;,&#10; &#123;cluster_name,&#60;&#60;&#34;rabbit6@csh06.itc.cmbchina.cn&#34;&#62;&#62;&#125;,&#10; &#123;partitions,[]&#125;,&#10; &#123;alarms,[&#123;&#39;rabbit6@csh06&#39;,[]&#125;,&#10;          &#123;&#39;rabbit7@csh07&#39;,[]&#125;,&#10;          &#123;&#39;rabbit8@csh08&#39;,[]&#125;]&#125;]</span><br></pre></td></tr></table></figure></p>
-<h3 id="u5C06_u8282_u70B9_u4ECE_u96C6_u7FA4_u4E2D_u79FB_u9664"><a href="#u5C06_u8282_u70B9_u4ECE_u96C6_u7FA4_u4E2D_u79FB_u9664" class="headerlink" title="将节点从集群中移除"></a>将节点从集群中移除</h3><p>命令如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rabbitmqctl -n rabbit8@csh08 stop_app&#10;rabbitmqctl -n rabbit8@csh08 reset&#10;rabbitmqctl -n rabbit8@csh08 start_app</span><br></pre></td></tr></table></figure></p>
-<h3 id="u53EF_u80FD_u9047_u5230_u95EE_u9898"><a href="#u53EF_u80FD_u9047_u5230_u95EE_u9898" class="headerlink" title="可能遇到问题"></a>可能遇到问题</h3><p>在添加节点node7到node6上时，遇到连接不上node6节点机器<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@csh07 ~]# rabbitmqctl -n rabbit7@csh07 join_cluster rabbit6@csh06&#10;Clustering node &#39;rabbit7@csh07&#39; with &#39;rabbit6@csh06&#39; ...&#10;Error: unable to connect to nodes [&#39;rabbit6@csh06&#39;]: nodedown&#10;&#10;DIAGNOSTICS&#10;===========&#10;&#10;attempted to contact: [&#39;rabbit6@csh06&#39;]&#10;&#10;rabbit6@csh06:&#10;  * unable to connect to epmd (port 4369) on csh06: nxdomain (non-existing domain)&#10;&#10;&#10;current node details:&#10;- node name: &#39;rabbitmq-cli-45@csh07&#39;&#10;- home dir: /var/lib/rabbitmq&#10;- cookie hash: a5xQrcy5rMqVgP/ZCwWUPA==</span><br></pre></td></tr></table></figure></p>
-<p>解决：<br>在所有机器上的/etc/hosts文件加上如下配置，主要是添加csh06,csh07,csh08映射<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">192.168.1.6 node6 csh06&#10;192.168.1.7 node7 csh07&#10;192.168.1.8 node8 csh08</span><br></pre></td></tr></table></figure></p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -949,7 +1042,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">59</span>
+              <span class="site-state-item-count">60</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -966,7 +1059,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">54</span>
+                <span class="site-state-item-count">55</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

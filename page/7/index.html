@@ -225,6 +225,162 @@
             
               
                 
+                <a class="post-title-link" href="/2017/01/19/Spring Boot 配置多个RabbitMQ/" itemprop="url">
+                  Spring Boot 配置多个RabbitMQ
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2017-01-19T19:53:14+08:00" content="2017-01-19">
+              2017-01-19
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/SpringBoot/" itemprop="url" rel="index">
+                    <span itemprop="name">SpringBoot</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/SpringBoot/RabbitMQ/" itemprop="url" rel="index">
+                    <span itemprop="name">RabbitMQ</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2017/01/19/Spring Boot 配置多个RabbitMQ/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/01/19/Spring Boot 配置多个RabbitMQ/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2017/01/19/Spring Boot 配置多个RabbitMQ/" class="leancloud_visitors" data-flag-title="Spring Boot 配置多个RabbitMQ">
+               &nbsp; | &nbsp;
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="u95F2_u8BDD"><a href="#u95F2_u8BDD" class="headerlink" title="闲话"></a>闲话</h3><p>&emsp;&emsp;好久没有写博客了，6月份毕业，因为工作原因，公司上网受限，一直没能把学到的知识点写下来，工作了半年，其实学到的东西也不少，但是现在回忆起来的东西少之又少，有时甚至能在同个问题中踩了几次，越来越觉得及时记录一下学到的东西很重要。<br>&emsp;&emsp;好了，闲话少说，写下这段时间学习的东西，先记录一下用Spring Boot配置多个RabbitMQ的情况。。。<br>&emsp;&emsp;最近公司新启动一个新平台的项目，需要用微服务这个这几年很火的概念来做，所以就学习了Spring Boot方面的知识，给同事展示Spring Boot的一些小事例的时候，同事提出了可不可以配置多个RabbitMQ？下面就是在Spring Boot配置多个RabbitMQ的例子。是自己摸索搭建的，也不知道对不对，有其他好的实现方法的网友可以互相交流一下。</p>
+<h3 id="u9879_u76EE_u4EE3_u7801_u6784_u9020"><a href="#u9879_u76EE_u4EE3_u7801_u6784_u9020" class="headerlink" title="项目代码构造"></a>项目代码构造</h3><p><img src="https://1csh1.github.io/img/Spring Boot 配置多个RabbitMQ/项目代码结构.jpg" alt="项目代码构造"></p>
+<p>关注点在红框的代码。。。</p>
+<h3 id="u4EE3_u7801"><a href="#u4EE3_u7801" class="headerlink" title="代码"></a>代码</h3><p>下面就把项目的代码展示下来</p>
+<h4 id="application-properties"><a href="#application-properties" class="headerlink" title="application.properties"></a>application.properties</h4><p>配置文件<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">spring.application.name=rabbitmq-hello&#10;&#10;# RabbitMQ&#10;spring.rabbitmq.first.host=node9&#10;spring.rabbitmq.first.port=5670&#10;spring.rabbitmq.first.username=guest&#10;spring.rabbitmq.first.password=guest&#10;&#10;spring.rabbitmq.second.host=localhost&#10;spring.rabbitmq.second.port=5672&#10;spring.rabbitmq.second.username=guest&#10;spring.rabbitmq.second.password=guest&#10;&#10;&#10;# MySQL&#10;spring.datasource.url = jdbc:mysql://localhost:3306/cloudtest&#10;spring.datasource.username = root&#10;spring.datasource.password = root&#10;spring.datasource.driverClassName = com.mysql.jdbc.Driver</span><br></pre></td></tr></table></figure></p>
+<h4 id="HelloApplication-java"><a href="#HelloApplication-java" class="headerlink" title="HelloApplication.java"></a>HelloApplication.java</h4><p>程序入口</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">package com.paas.springboot.demo01;&#10;&#10;import org.springframework.boot.SpringApplication;&#10;import org.springframework.boot.autoconfigure.SpringBootApplication;&#10;&#10;@SpringBootApplication&#10;public class HelloApplication &#123;&#10;&#10;    public static void main(String[] args) &#123;&#10;        SpringApplication.run(HelloApplication.class, args);&#10;    &#125;&#10;&#10;&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="RabbitConfig-java"><a href="#RabbitConfig-java" class="headerlink" title="RabbitConfig.java"></a>RabbitConfig.java</h4><p>RabbitMQ配置类</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">package com.paas.springboot.demo01;&#10;&#10;import org.springframework.amqp.core.Queue;&#10;import org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFactory;&#10;import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;&#10;import org.springframework.amqp.rabbit.connection.ConnectionFactory;&#10;import org.springframework.amqp.rabbit.core.RabbitTemplate;&#10;import org.springframework.beans.factory.annotation.Qualifier;&#10;import org.springframework.beans.factory.annotation.Value;&#10;import org.springframework.boot.autoconfigure.amqp.SimpleRabbitListenerContainerFactoryConfigurer;&#10;import org.springframework.context.annotation.Bean;&#10;import org.springframework.context.annotation.Configuration;&#10;import org.springframework.context.annotation.Primary;&#10;&#10;@Configuration&#10;public class RabbitConfig &#123;&#10;&#10;&#9;@Bean(name=&#34;firstConnectionFactory&#34;)&#10;&#9;@Primary&#10;    public ConnectionFactory firstConnectionFactory(&#10;    &#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;@Value(&#34;$&#123;spring.rabbitmq.first.host&#125;&#34;) String host, &#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;@Value(&#34;$&#123;spring.rabbitmq.first.port&#125;&#34;) int port,&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;@Value(&#34;$&#123;spring.rabbitmq.first.username&#125;&#34;) String username,&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;@Value(&#34;$&#123;spring.rabbitmq.first.password&#125;&#34;) String password&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;)&#123;&#10;&#9;&#9;CachingConnectionFactory connectionFactory = new CachingConnectionFactory();&#10;&#9;&#9;connectionFactory.setHost(host);&#10;&#9;&#9;connectionFactory.setPort(port);&#10;&#9;&#9;connectionFactory.setUsername(username);&#10;&#9;&#9;connectionFactory.setPassword(password);&#10;&#9;&#9;return connectionFactory;&#10;    &#125;&#10;&#9;&#10;&#9;@Bean(name=&#34;secondConnectionFactory&#34;)&#10;&#9;public ConnectionFactory secondConnectionFactory(&#10;  &#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;@Value(&#34;$&#123;spring.rabbitmq.second.host&#125;&#34;) String host, &#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;@Value(&#34;$&#123;spring.rabbitmq.second.port&#125;&#34;) int port,&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;@Value(&#34;$&#123;spring.rabbitmq.second.username&#125;&#34;) String username,&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;@Value(&#34;$&#123;spring.rabbitmq.second.password&#125;&#34;) String password&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;)&#123;&#10;&#9;&#9;CachingConnectionFactory connectionFactory = new CachingConnectionFactory();&#10;&#9;&#9;connectionFactory.setHost(host);&#10;&#9;&#9;connectionFactory.setPort(port);&#10;&#9;&#9;connectionFactory.setUsername(username);&#10;&#9;&#9;connectionFactory.setPassword(password);&#10;&#9;&#9;return connectionFactory;&#10;&#9;&#125;&#10;&#9;&#10;&#9;@Bean(name=&#34;firstRabbitTemplate&#34;)&#10;&#9;@Primary&#10;&#9;public RabbitTemplate firstRabbitTemplate(&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;@Qualifier(&#34;firstConnectionFactory&#34;) ConnectionFactory connectionFactory&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;)&#123;&#10;&#9;&#9;RabbitTemplate firstRabbitTemplate = new RabbitTemplate(connectionFactory);&#10;&#9;&#9;return firstRabbitTemplate;&#10;&#9;&#125;&#10;&#9;&#10;&#9;@Bean(name=&#34;secondRabbitTemplate&#34;)&#10;&#9;public RabbitTemplate secondRabbitTemplate(&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;@Qualifier(&#34;secondConnectionFactory&#34;) ConnectionFactory connectionFactory&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;)&#123;&#10;&#9;&#9;RabbitTemplate secondRabbitTemplate = new RabbitTemplate(connectionFactory);&#10;&#9;&#9;return secondRabbitTemplate;&#10;&#9;&#125;&#10;&#9;&#10;&#9;@Bean(name=&#34;firstFactory&#34;)&#10;&#9;public SimpleRabbitListenerContainerFactory firstFactory(&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;SimpleRabbitListenerContainerFactoryConfigurer configurer,&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;@Qualifier(&#34;firstConnectionFactory&#34;) ConnectionFactory connectionFactory&#9;&#9;&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;) &#123;&#10;&#9;&#9;SimpleRabbitListenerContainerFactory factory = new SimpleRabbitListenerContainerFactory();&#10;&#9;&#9;configurer.configure(factory, connectionFactory);&#10;&#9;&#9;return factory;&#10;&#9;&#125;&#10;&#9;&#10;&#9;@Bean(name=&#34;secondFactory&#34;)&#10;&#9;public SimpleRabbitListenerContainerFactory secondFactory(&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;SimpleRabbitListenerContainerFactoryConfigurer configurer,&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;@Qualifier(&#34;secondConnectionFactory&#34;) ConnectionFactory connectionFactory&#9;&#9;&#9;&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;) &#123;&#10;&#9;&#9;SimpleRabbitListenerContainerFactory factory = new SimpleRabbitListenerContainerFactory();&#10;&#9;&#9;configurer.configure(factory, connectionFactory);&#10;&#9;&#9;return factory;&#10;&#9;&#125;&#10;&#9;&#10;    @Bean&#10;    public Queue firstQueue() &#123;&#10;    &#9;System.out.println(&#34;configuration firstQueue ........................&#34;);&#10;        return new Queue(&#34;hello1&#34;);&#10;    &#125;&#10;    &#10;    @Bean&#10;    public Object secondQueue() &#123;&#10;    &#9;System.out.println(&#34;configuration secondQueue ........................&#34;);&#10;    &#9;return new Queue(&#34;hello2&#34;);&#10;    &#125;&#10;&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="Receiver-java"><a href="#Receiver-java" class="headerlink" title="Receiver.java"></a>Receiver.java</h4><p>RabbitMQ中的消费者，接收first RabbitMQ中的队列hello1的数据</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">package com.paas.springboot.demo01;&#10;&#10;import org.springframework.amqp.rabbit.annotation.RabbitHandler;&#10;import org.springframework.amqp.rabbit.annotation.RabbitListener;&#10;import org.springframework.stereotype.Component;&#10;&#10;@Component&#10;@RabbitListener(queues = &#34;hello1&#34;, containerFactory=&#34;firstFactory&#34;)&#10;public class Receiver &#123;&#10;&#10;    @RabbitHandler&#10;    public void process(String hello) &#123;&#10;        System.out.println(&#34;Receiver : &#34; + hello);&#10;    &#125;&#10;&#10;&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="Receiver2-java"><a href="#Receiver2-java" class="headerlink" title="Receiver2.java"></a>Receiver2.java</h4><p>RabbitMQ中的消费者，接收second RabbitMQ中的队列hello2的数据</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">package com.paas.springboot.demo01;&#10;&#10;import org.springframework.amqp.rabbit.annotation.RabbitHandler;&#10;import org.springframework.amqp.rabbit.annotation.RabbitListener;&#10;import org.springframework.stereotype.Component;&#10;&#10;@Component&#10;@RabbitListener(queues = &#34;hello2&#34;, containerFactory=&#34;secondFactory&#34; )&#10;public class Receiver2 &#123;&#10;   &#10;&#9;@RabbitHandler&#10;    public void process(String hello) &#123;&#10;        System.out.println(&#34;Receiver : &#34; + hello);&#10;    &#125;&#10;&#10;&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="Sender-java"><a href="#Sender-java" class="headerlink" title="Sender.java"></a>Sender.java</h4><p>RabbitMQ中的生产者，发送消息到first RabbitMQ中的队列hello1和hello2</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">package com.paas.springboot.demo01;&#10;&#10;import java.util.Date;&#10;import javax.annotation.Resource;&#10;import org.springframework.amqp.rabbit.core.RabbitTemplate;&#10;import org.springframework.stereotype.Component;&#10;&#10;@Component&#10;public class Sender &#123;&#10;&#10;&#9;@Resource(name=&#34;firstRabbitTemplate&#34;)&#10;    private RabbitTemplate firstRabbitTemplate;&#10;&#10;    public void send1() &#123;&#10;        String context = &#34;hello1 &#34; + new Date();&#10;        System.out.println(&#34;Sender : &#34; + context);&#10;        this.firstRabbitTemplate.convertAndSend(&#34;hello1&#34;, context);&#10;    &#125;&#10;    &#10;    public void send2() &#123;&#10;        String context = &#34;hello2 &#34; + new Date();&#10;        System.out.println(&#34;Sender : &#34; + context);&#10;        this.firstRabbitTemplate.convertAndSend(&#34;hello2&#34;, context);&#10;    &#125;&#10;&#10;&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="Sender2-java"><a href="#Sender2-java" class="headerlink" title="Sender2.java"></a>Sender2.java</h4><p>RabbitMQ中的生产者，发送消息到second RabbitMQ中的队列hello1和hello2</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">package com.paas.springboot.demo01;&#10;&#10;import java.util.Date;&#10;import javax.annotation.Resource;&#10;import org.springframework.amqp.rabbit.core.RabbitTemplate;&#10;import org.springframework.stereotype.Component;&#10;&#10;@Component&#10;public class Sender &#123;&#10;&#10;&#9;@Resource(name=&#34;firstRabbitTemplate&#34;)&#10;    private RabbitTemplate firstRabbitTemplate;&#10;&#10;    public void send1() &#123;&#10;        String context = &#34;hello1 &#34; + new Date();&#10;        System.out.println(&#34;Sender : &#34; + context);&#10;        this.firstRabbitTemplate.convertAndSend(&#34;hello1&#34;, context);&#10;    &#125;&#10;    &#10;    public void send2() &#123;&#10;        String context = &#34;hello2 &#34; + new Date();&#10;        System.out.println(&#34;Sender : &#34; + context);&#10;        this.firstRabbitTemplate.convertAndSend(&#34;hello2&#34;, context);&#10;    &#125;&#10;&#10;&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="TestDemo01-java"><a href="#TestDemo01-java" class="headerlink" title="TestDemo01.java"></a>TestDemo01.java</h4><p>测试类，调用Sender发送消息</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">package com.paas.springboot.demo01;&#10;&#10;import org.junit.Test;&#10;import org.junit.runner.RunWith;&#10;import org.springframework.beans.factory.annotation.Autowired;&#10;import org.springframework.boot.test.SpringApplicationConfiguration;&#10;import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;&#10;&#10;@RunWith(SpringJUnit4ClassRunner.class)&#10;@SpringApplicationConfiguration(classes = HelloApplication.class)&#10;public class TestDemo01 &#123;&#10;&#10;    @Autowired&#10;    private Sender sender;&#10;    &#10;    @Autowired&#10;    private Sender2 sender2;&#10;&#10;    @Test&#10;    public void hello() throws Exception &#123;&#10;&#9;&#9;sender.send1();&#10;&#9;&#9;sender.send2();&#10;    &#125;&#10;    &#10;    @Test&#10;    public void hello2() throws Exception &#123;&#10;&#9;&#9;sender2.send1();&#10;&#9;&#9;sender2.send2();&#10;    &#125;&#10;&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="pom-xml"><a href="#pom-xml" class="headerlink" title="pom.xml"></a>pom.xml</h4><p>Maven项目中最重要的一个配置文件<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#60;project xmlns=&#34;http://maven.apache.org/POM/4.0.0&#34; xmlns:xsi=&#34;http://www.w3.org/2001/XMLSchema-instance&#34;&#10;&#9;xsi:schemaLocation=&#34;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd&#34;&#62;&#10;&#9;&#60;modelVersion&#62;4.0.0&#60;/modelVersion&#62;&#10;&#9;&#60;groupId&#62;com.paas.springboot.demo&#60;/groupId&#62;&#10;&#9;&#60;artifactId&#62;springboot&#60;/artifactId&#62;&#10;&#9;&#60;packaging&#62;war&#60;/packaging&#62;&#10;&#9;&#60;version&#62;0.0.1-SNAPSHOT&#60;/version&#62;&#10;&#9;&#60;name&#62;springboot Maven Webapp&#60;/name&#62;&#10;&#9;&#60;url&#62;http://maven.apache.org&#60;/url&#62;&#10;&#10;&#9;&#60;parent&#62;&#10;&#9;&#9;&#60;groupId&#62;org.springframework.boot&#60;/groupId&#62;&#10;&#9;&#9;&#60;artifactId&#62;spring-boot-starter-parent&#60;/artifactId&#62;&#10;&#9;&#9;&#60;version&#62;1.4.3.RELEASE&#60;/version&#62;&#10;&#9;&#9;&#60;relativePath /&#62; &#60;!-- lookup parent from repository --&#62;&#10;&#9;&#60;/parent&#62;&#10;&#10;&#9;&#60;dependencies&#62;&#10;&#9;&#9;&#60;dependency&#62;&#10;&#9;&#9;&#9;&#60;groupId&#62;junit&#60;/groupId&#62;&#10;&#9;&#9;&#9;&#60;artifactId&#62;junit&#60;/artifactId&#62;&#10;&#9;&#9;&#9;&#60;scope&#62;test&#60;/scope&#62;&#10;&#9;&#9;&#60;/dependency&#62;&#10;&#9;&#9;&#60;dependency&#62;&#10;&#9;&#9;&#9;&#60;groupId&#62;org.springframework.boot&#60;/groupId&#62;&#10;&#9;&#9;&#9;&#60;artifactId&#62;spring-boot-starter-amqp&#60;/artifactId&#62;&#10;&#9;&#9;&#60;/dependency&#62;&#10;&#9;&#9;&#60;dependency&#62;&#10;&#9;&#9;&#9;&#60;groupId&#62;org.springframework.boot&#60;/groupId&#62;&#10;&#9;&#9;&#9;&#60;artifactId&#62;spring-boot-starter-actuator&#60;/artifactId&#62;&#10;&#9;&#9;&#60;/dependency&#62;&#10;&#9;&#9; &#60;dependency&#62;&#10;            &#60;groupId&#62;org.springframework.boot&#60;/groupId&#62;&#10;            &#60;artifactId&#62;spring-boot-starter-web&#60;/artifactId&#62;&#10;        &#60;/dependency&#62;&#10;        &#60;dependency&#62;&#10;            &#60;groupId&#62;org.springframework.boot&#60;/groupId&#62;&#10;            &#60;artifactId&#62;spring-boot-starter-jdbc&#60;/artifactId&#62;&#10;        &#60;/dependency&#62;&#10;&#9;&#9;&#60;dependency&#62;&#10;&#9;&#9;&#9;&#60;groupId&#62;org.springframework.boot&#60;/groupId&#62;&#10;&#9;&#9;&#9;&#60;artifactId&#62;spring-boot-starter-test&#60;/artifactId&#62;&#10;&#9;&#9;&#9;&#60;scope&#62;test&#60;/scope&#62;&#10;&#9;&#9;&#60;/dependency&#62;&#10;&#9;&#9;&#60;dependency&#62;&#10;&#9;&#9;&#9;&#60;groupId&#62;com.jayway.jsonpath&#60;/groupId&#62;&#10;&#9;&#9;&#9;&#60;artifactId&#62;json-path&#60;/artifactId&#62;&#10;&#9;&#9;&#9;&#60;scope&#62;test&#60;/scope&#62;&#10;&#9;&#9;&#60;/dependency&#62;&#10;&#9;&#9;&#60;dependency&#62;&#10;&#9;&#9;    &#60;groupId&#62;mysql&#60;/groupId&#62;&#10;&#9;&#9;    &#60;artifactId&#62;mysql-connector-java&#60;/artifactId&#62;&#10;&#9;&#9;&#60;/dependency&#62;&#10;&#9;&#60;/dependencies&#62;&#10;&#10;&#9;&#60;build&#62;&#10;&#9;&#9;&#60;finalName&#62;springboot&#60;/finalName&#62;&#10;        &#60;plugins&#62;&#10;            &#60;plugin&#62;&#10;                &#60;groupId&#62;org.springframework.boot&#60;/groupId&#62;&#10;                &#60;artifactId&#62;spring-boot-maven-plugin&#60;/artifactId&#62;&#10;            &#60;/plugin&#62;&#10;        &#60;/plugins&#62;&#10;    &#60;/build&#62;&#10;&#9;&#10;&#9;&#60;repositories&#62;&#10;        &#60;repository&#62;&#10;            &#60;id&#62;spring-releases&#60;/id&#62;&#10;            &#60;url&#62;https://repo.spring.io/libs-release&#60;/url&#62;&#10;        &#60;/repository&#62;&#10;    &#60;/repositories&#62;&#10;    &#60;pluginRepositories&#62;&#10;        &#60;pluginRepository&#62;&#10;            &#60;id&#62;spring-releases&#60;/id&#62;&#10;            &#60;url&#62;https://repo.spring.io/libs-release&#60;/url&#62;&#10;        &#60;/pluginRepository&#62;&#10;    &#60;/pluginRepositories&#62;&#10;    &#10;&#60;/project&#62;</span><br></pre></td></tr></table></figure></p>
+<h3 id="u8FD0_u884C_26amp_3B_u6D4B_u8BD5"><a href="#u8FD0_u884C_26amp_3B_u6D4B_u8BD5" class="headerlink" title="运行&amp;测试"></a>运行&amp;测试</h3><p>通过运行HelloApplication.java，将程序中的Receiver启动一直监控着队列，然后通过运行TestDemo01.java中的测试案例，发送消息到队列中，这时可以发现运行HelloApplication的程序控制台将刚刚发送的消息打印出来</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2017/01/19/maven集成tomcat插件/" itemprop="url">
                   Maven集成Tomcat插件
                 </a>
@@ -725,146 +881,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/04/21/Flume集群搭建/" itemprop="url">
-                  Flume集群搭建
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-04-21T18:20:43+08:00" content="2016-04-21">
-              2016-04-21
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/Flume/" itemprop="url" rel="index">
-                    <span itemprop="name">Flume</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/04/21/Flume集群搭建/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/04/21/Flume集群搭建/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-             <span id="/2016/04/21/Flume集群搭建/" class="leancloud_visitors" data-flag-title="Flume集群搭建">
-               &nbsp; | &nbsp;
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               <span class="post-meta-item-text">阅读次数 </span>
-               <span class="leancloud-visitors-count"></span>
-              </span>
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h3 id="u6982_u5FF5"><a href="#u6982_u5FF5" class="headerlink" title="概念"></a>概念</h3><p>集群的意思是多台机器，最少有2台机器，一台机器从数据源中获取数据，将数据传送到另一台机器上，然后输出。接下来就要实现Flume集群搭建。文中的集群如下图所示。<br><img src="https://1csh1.github.io/img/Flume集群搭建/架构.jpg" alt="架构"><br>这里我们需要2台机器，node1作为push推送数据，node2作为pull获取数据后显示出来。</p>
-<h3 id="u914D_u7F6Epull-conf"><a href="#u914D_u7F6Epull-conf" class="headerlink" title="配置pull.conf"></a>配置pull.conf</h3><p>【在node2机器上操作】<br>在conf目录下创建pull.conf文件<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">touch pull.conf</span><br></pre></td></tr></table></figure></p>
-<p>编辑pull.conf<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">#&#27719;&#24635;&#25968;&#25454;&#20195;&#29702;&#30340;&#37197;&#32622;&#25991;&#20214;pull.conf&#10;#Name the components on this agent&#10;a1.sources= r1&#10;a1.sinks= k1&#10;a1.channels= c1&#10; &#10;#Describe/configure the source&#10;a1.sources.r1.type= avro&#10;a1.sources.r1.channels= c1&#10;a1.sources.r1.bind= node2&#10;a1.sources.r1.port= 44444&#10; &#10;#Describe the sink&#10;a1.sinks.k1.type= logger&#10;a1.sinks.k1.channel = c1&#10; &#10;#Use a channel which buffers events in memory&#10;a1.channels.c1.type= memory&#10;a1.channels.c1.keep-alive= 10&#10;a1.channels.c1.capacity= 100000&#10;a1.channels.c1.transactionCapacity= 100000</span><br></pre></td></tr></table></figure></p>
-<h3 id="u914D_u7F6Epush-conf"><a href="#u914D_u7F6Epush-conf" class="headerlink" title="配置push.conf"></a>配置push.conf</h3><p>【在node1机器上操作】<br>在conf目录下创建push.conf文件<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">touch push.conf</span><br></pre></td></tr></table></figure></p>
-<p>编辑push.conf<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">#&#25512;&#25968;&#25454;&#20195;&#29702;&#30340;&#37197;&#32622;&#25991;&#20214;push.conf&#10;#Name the components on this agent&#10;a2.sources= r1&#10;a2.sinks= k1&#10;a2.channels= c1&#10; &#10;#Describe/configure the source&#10;a2.sources.r1.type= spooldir&#10;a2.sources.r1.spoolDir= /csh/hadoop/flume/logs&#10;a2.sources.r1.channels= c1&#10; &#10;#Use a channel which buffers events in memory&#10;a2.channels.c1.type= memory&#10;a2.channels.c1.keep-alive= 10&#10;a2.channels.c1.capacity= 100000&#10;a2.channels.c1.transactionCapacity= 100000&#10; &#10;#Describe/configure the source&#10;a2.sinks.k1.type= avro&#10;a2.sinks.k1.channel= c1&#10;a2.sinks.k1.hostname= node2&#10;a2.sinks.k1.port= 44444</span><br></pre></td></tr></table></figure></p>
-<h3 id="u521B_u5EFAspoolDir_u76EE_u5F55"><a href="#u521B_u5EFAspoolDir_u76EE_u5F55" class="headerlink" title="创建spoolDir目录"></a>创建spoolDir目录</h3><p>【在node1中进行该操作】<br>根据push.conf中的配置 a2.sources.r1.spoolDir参数，创建目录，如果不先创建目录，则启动时会报错<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mkdir -p /csh/hadoop/flume/logs</span><br></pre></td></tr></table></figure></p>
-<h3 id="u542F_u52A8_u4F5C_u4E3Apull_u7684_u4E3B_u673A"><a href="#u542F_u52A8_u4F5C_u4E3Apull_u7684_u4E3B_u673A" class="headerlink" title="启动作为pull的主机"></a>启动作为pull的主机</h3><p>【本文为node2主机】<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@node2 flume]# flume-ng agent -c conf -f conf/pull.conf -n a1 -Dflume.root.logger=INFO,console</span><br></pre></td></tr></table></figure></p>
-<p>显示如下信息则为启动成功</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">2016-04-20 00:08:15,550 (conf-file-poller-0) [INFO - org.apache.flume.node.PollingPropertiesFileConfigurationProvider$FileWatcherRunnable.run(PollingPropertiesFileConfigurationProvider.java:133)] Reloading configuration file:conf/pull.conf&#10;2016-04-20 00:08:15,573 (conf-file-poller-0) [INFO - org.apache.flume.conf.FlumeConfiguration$AgentConfiguration.addProperty(FlumeConfiguration.java:931)] Added sinks: k1 Agent: a1&#10;2016-04-20 00:08:15,573 (conf-file-poller-0) [INFO - org.apache.flume.conf.FlumeConfiguration$AgentConfiguration.addProperty(FlumeConfiguration.java:1017)] Processing:k1&#10;2016-04-20 00:08:15,574 (conf-file-poller-0) [INFO - org.apache.flume.conf.FlumeConfiguration$AgentConfiguration.addProperty(FlumeConfiguration.java:1017)] Processing:k1&#10;2016-04-20 00:08:15,621 (conf-file-poller-0) [INFO - org.apache.flume.conf.FlumeConfiguration.validateConfiguration(FlumeConfiguration.java:141)] Post-validation flume configuration contains configuration for agents: [a1]&#10;2016-04-20 00:08:15,622 (conf-file-poller-0) [INFO - org.apache.flume.node.AbstractConfigurationProvider.loadChannels(AbstractConfigurationProvider.java:145)] Creating channels&#10;2016-04-20 00:08:15,658 (conf-file-poller-0) [INFO - org.apache.flume.channel.DefaultChannelFactory.create(DefaultChannelFactory.java:42)] Creating instance of channel c1 type memory&#10;2016-04-20 00:08:15,672 (conf-file-poller-0) [INFO - org.apache.flume.node.AbstractConfigurationProvider.loadChannels(AbstractConfigurationProvider.java:200)] Created channel c1&#10;2016-04-20 00:08:15,677 (conf-file-poller-0) [INFO - org.apache.flume.source.DefaultSourceFactory.create(DefaultSourceFactory.java:41)] Creating instance of source r1, type avro&#10;2016-04-20 00:08:15,732 (conf-file-poller-0) [INFO - org.apache.flume.sink.DefaultSinkFactory.create(DefaultSinkFactory.java:42)] Creating instance of sink: k1, type: logger&#10;2016-04-20 00:08:15,735 (conf-file-poller-0) [INFO - org.apache.flume.node.AbstractConfigurationProvider.getConfiguration(AbstractConfigurationProvider.java:114)] Channel c1 connected to [r1, k1]&#10;2016-04-20 00:08:15,750 (conf-file-poller-0) [INFO - org.apache.flume.node.Application.startAllComponents(Application.java:138)] Starting new configuration:&#123; sourceRunners:&#123;r1=EventDrivenSourceRunner: &#123; source:Avro source r1: &#123; bindAddress: node2, port: 44444 &#125; &#125;&#125; sinkRunners:&#123;k1=SinkRunner: &#123; policy:org.apache.flume.sink.DefaultSinkProcessor@ea5ba80 counterGroup:&#123; name:null counters:&#123;&#125; &#125; &#125;&#125; channels:&#123;c1=org.apache.flume.channel.MemoryChannel&#123;name: c1&#125;&#125; &#125;&#10;2016-04-20 00:08:15,782 (conf-file-poller-0) [INFO - org.apache.flume.node.Application.startAllComponents(Application.java:145)] Starting Channel c1&#10;2016-04-20 00:08:15,784 (conf-file-poller-0) [INFO - org.apache.flume.node.Application.startAllComponents(Application.java:160)] Waiting for channel: c1 to start. Sleeping for 500 ms&#10;2016-04-20 00:08:15,897 (lifecycleSupervisor-1-2) [INFO - org.apache.flume.instrumentation.MonitoredCounterGroup.register(MonitoredCounterGroup.java:120)] Monitored counter group for type: CHANNEL, name: c1: Successfully registered new MBean.&#10;2016-04-20 00:08:15,901 (lifecycleSupervisor-1-2) [INFO - org.apache.flume.instrumentation.MonitoredCounterGroup.start(MonitoredCounterGroup.java:96)] Component type: CHANNEL, name: c1 started&#10;2016-04-20 00:08:16,285 (conf-file-poller-0) [INFO - org.apache.flume.node.Application.startAllComponents(Application.java:173)] Starting Sink k1&#10;2016-04-20 00:08:16,288 (conf-file-poller-0) [INFO - org.apache.flume.node.Application.startAllComponents(Application.java:184)] Starting Source r1&#10;2016-04-20 00:08:16,298 (lifecycleSupervisor-1-2) [INFO - org.apache.flume.source.AvroSource.start(AvroSource.java:228)] Starting Avro source r1: &#123; bindAddress: node2, port: 44444 &#125;...&#10;2016-04-20 00:08:16,951 (lifecycleSupervisor-1-2) [INFO - org.apache.flume.instrumentation.MonitoredCounterGroup.register(MonitoredCounterGroup.java:120)] Monitored counter group for type: SOURCE, name: r1: Successfully registered new MBean.&#10;2016-04-20 00:08:16,952 (lifecycleSupervisor-1-2) [INFO - org.apache.flume.instrumentation.MonitoredCounterGroup.start(MonitoredCounterGroup.java:96)] Component type: SOURCE, name: r1 started&#10;2016-04-20 00:08:16,959 (lifecycleSupervisor-1-2) [INFO - org.apache.flume.source.AvroSource.start(AvroSource.java:253)] Avro source r1 started.</span><br></pre></td></tr></table></figure>
-<h3 id="u542F_u52A8_u4F5C_u4E3Apush_u7684_u4E3B_u673A"><a href="#u542F_u52A8_u4F5C_u4E3Apush_u7684_u4E3B_u673A" class="headerlink" title="启动作为push的主机"></a>启动作为push的主机</h3><p>【本文为node1主机】<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@node1 flume]# flume-ng agent -n a2 -c conf -f conf/push.conf -Dflume.root.logger=INFO,console</span><br></pre></td></tr></table></figure></p>
-<p>显示如下信息则为启动成功<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">2016-04-20 00:11:58,196 (conf-file-poller-0) [INFO - org.apache.flume.node.AbstractConfigurationProvider.getConfiguration(AbstractConfigurationProvider.java:114)] Channel c1 connected to [r1, k1]&#10;2016-04-20 00:11:58,226 (conf-file-poller-0) [INFO - org.apache.flume.node.Application.startAllComponents(Application.java:138)] Starting new configuration:&#123; sourceRunners:&#123;r1=EventDrivenSourceRunner: &#123; source:Spool Directory source r1: &#123; spoolDir: /csh/hadoop/flume/logs &#125; &#125;&#125; sinkRunners:&#123;k1=SinkRunner: &#123; policy:org.apache.flume.sink.DefaultSinkProcessor@6b089e25 counterGroup:&#123; name:null counters:&#123;&#125; &#125; &#125;&#125; channels:&#123;c1=org.apache.flume.channel.MemoryChannel&#123;name: c1&#125;&#125; &#125;&#10;2016-04-20 00:11:58,236 (conf-file-poller-0) [INFO - org.apache.flume.node.Application.startAllComponents(Application.java:145)] Starting Channel c1&#10;2016-04-20 00:11:58,360 (lifecycleSupervisor-1-1) [INFO - org.apache.flume.instrumentation.MonitoredCounterGroup.register(MonitoredCounterGroup.java:120)] Monitored counter group for type: CHANNEL, name: c1: Successfully registered new MBean.&#10;2016-04-20 00:11:58,361 (lifecycleSupervisor-1-1) [INFO - org.apache.flume.instrumentation.MonitoredCounterGroup.start(MonitoredCounterGroup.java:96)] Component type: CHANNEL, name: c1 started&#10;2016-04-20 00:11:58,362 (conf-file-poller-0) [INFO - org.apache.flume.node.Application.startAllComponents(Application.java:173)] Starting Sink k1&#10;2016-04-20 00:11:58,369 (conf-file-poller-0) [INFO - org.apache.flume.node.Application.startAllComponents(Application.java:184)] Starting Source r1&#10;2016-04-20 00:11:58,372 (lifecycleSupervisor-1-4) [INFO - org.apache.flume.source.SpoolDirectorySource.start(SpoolDirectorySource.java:78)] SpoolDirectorySource source starting with directory: /csh/hadoop/flume/logs&#10;2016-04-20 00:11:58,388 (lifecycleSupervisor-1-0) [INFO - org.apache.flume.sink.AbstractRpcSink.start(AbstractRpcSink.java:289)] Starting RpcSink k1 &#123; host: node2, port: 44444 &#125;...&#10;2016-04-20 00:11:58,409 (lifecycleSupervisor-1-0) [INFO - org.apache.flume.instrumentation.MonitoredCounterGroup.register(MonitoredCounterGroup.java:120)] Monitored counter group for type: SINK, name: k1: Successfully registered new MBean.&#10;2016-04-20 00:11:58,409 (lifecycleSupervisor-1-0) [INFO - org.apache.flume.instrumentation.MonitoredCounterGroup.start(MonitoredCounterGroup.java:96)] Component type: SINK, name: k1 started&#10;2016-04-20 00:11:58,409 (lifecycleSupervisor-1-0) [INFO - org.apache.flume.sink.AbstractRpcSink.createConnection(AbstractRpcSink.java:206)] Rpc sink k1: Building RpcClient with hostname: node2, port: 44444&#10;2016-04-20 00:11:58,410 (lifecycleSupervisor-1-0) [INFO - org.apache.flume.sink.AvroSink.initializeRpcClient(AvroSink.java:126)] Attempting to create Avro Rpc client.&#10;2016-04-20 00:11:58,458 (lifecycleSupervisor-1-0) [WARN - org.apache.flume.api.NettyAvroRpcClient.configure(NettyAvroRpcClient.java:634)] Using default maxIOWorkers&#10;2016-04-20 00:11:58,536 (lifecycleSupervisor-1-4) [INFO - org.apache.flume.instrumentation.MonitoredCounterGroup.register(MonitoredCounterGroup.java:120)] Monitored counter group for type: SOURCE, name: r1: Successfully registered new MBean.&#10;2016-04-20 00:11:58,536 (lifecycleSupervisor-1-4) [INFO - org.apache.flume.instrumentation.MonitoredCounterGroup.start(MonitoredCounterGroup.java:96)] Component type: SOURCE, name: r1 started&#10;2016-04-20 00:11:59,263 (lifecycleSupervisor-1-0) [INFO - org.apache.flume.sink.AbstractRpcSink.start(AbstractRpcSink.java:303)] Rpc sink k1 started.</span><br></pre></td></tr></table></figure></p>
-<p>这时pull主机【本文为node2】输出信息表示连接成功<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">2016-04-20 00:11:58,875 (New I/O server boss #1 ([id: 0x71ba9ce2, /192.168.161.12:44444])) [INFO - org.apache.avro.ipc.NettyServer$NettyServerAvroHandler.handleUpstream(NettyServer.java:171)] [id: 0x7d9299a9, /192.168.161.11:44003 =&#62; /192.168.161.12:44444] OPEN&#10;2016-04-20 00:11:58,880 (New I/O  worker #1) [INFO - org.apache.avro.ipc.NettyServer$NettyServerAvroHandler.handleUpstream(NettyServer.java:171)] [id: 0x7d9299a9, /192.168.161.11:44003 =&#62; /192.168.161.12:44444] BOUND: /192.168.161.12:44444&#10;2016-04-20 00:11:58,884 (New I/O  worker #1) [INFO - org.apache.avro.ipc.NettyServer$NettyServerAvroHandler.handleUpstream(NettyServer.java:171)] [id: 0x7d9299a9, /192.168.161.11:44003 =&#62; /192.168.161.12:44444] CONNECTED: /192.168.161.11:44003</span><br></pre></td></tr></table></figure></p>
-<h3 id="u6D4B_u8BD5"><a href="#u6D4B_u8BD5" class="headerlink" title="测试"></a>测试</h3><p>在push主机中【本文为node1】的spoolDir目录【本文为/csh/hadoop/flume/logs】中创建test.log<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vi test.log&#10;# &#36755;&#20837;&#20869;&#23481; hello flume</span><br></pre></td></tr></table></figure></p>
-<p>这时push主机【本文为node1】中命令行输出如下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">2016-04-20 00:13:09,274 (pool-4-thread-1) [INFO - org.apache.flume.client.avro.ReliableSpoolingFileEventReader.readEvents(ReliableSpoolingFileEventReader.java:258)] Last read took us just up to a file boundary. Rolling to the next file, if there is one.&#10;2016-04-20 00:13:09,275 (pool-4-thread-1) [INFO - org.apache.flume.client.avro.ReliableSpoolingFileEventReader.rollCurrentFile(ReliableSpoolingFileEventReader.java:348)] Preparing to move file /csh/hadoop/flume/logs/test.log to /csh/hadoop/flume/logs/test.log.COMPLETED</span><br></pre></td></tr></table></figure></p>
-<p>pull主机【本文为node2】中命令行输出如下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">2016-04-20 00:13:21,344 (SinkRunner-PollingRunner-DefaultSinkProcessor) [INFO - org.apache.flume.sink.LoggerSink.process(LoggerSink.java:94)] Event: &#123; headers:&#123;&#125; body: 68 65 6C 6C 6F 20 66 6C 75 6D 65                hello flume &#125;</span><br></pre></td></tr></table></figure></p>
-<p>证明Flume集群搭建成功</p>
-<p>我们可以发现test.log被改名为test.log.COMPLETED</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -910,7 +926,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">59</span>
+              <span class="site-state-item-count">60</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -927,7 +943,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">54</span>
+                <span class="site-state-item-count">55</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
