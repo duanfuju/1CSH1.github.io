@@ -225,6 +225,180 @@
             
               
                 
+                <a class="post-title-link" href="/2016/03/25/配置Hadoop2-x的HDFS、MapReduce来运行WordCount程序/" itemprop="url">
+                  配置Hadoop2.x的HDFS、MapReduce来运行WordCount程序
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-03-25T12:53:14+08:00" content="2016-03-25">
+              2016-03-25
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Hadoop/" itemprop="url" rel="index">
+                    <span itemprop="name">Hadoop</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/03/25/配置Hadoop2-x的HDFS、MapReduce来运行WordCount程序/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/03/25/配置Hadoop2-x的HDFS、MapReduce来运行WordCount程序/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+             <span id="/2016/03/25/配置Hadoop2-x的HDFS、MapReduce来运行WordCount程序/" class="leancloud_visitors" data-flag-title="配置Hadoop2.x的HDFS、MapReduce来运行WordCount程序">
+               &nbsp; | &nbsp;
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+               <span class="leancloud-visitors-count"></span>
+              </span>
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <table>
+<thead>
+<tr>
+<th style="text-align:center">主机</th>
+<th style="text-align:center">HDFS</th>
+<th style="text-align:center">MapReduce</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">node1</td>
+<td style="text-align:center">NameNode</td>
+<td style="text-align:center">ResourceManager</td>
+</tr>
+<tr>
+<td style="text-align:center">node2</td>
+<td style="text-align:center">SecondaryNameNode &amp; DataNode</td>
+<td style="text-align:center">NodeManager</td>
+</tr>
+<tr>
+<td style="text-align:center">node3</td>
+<td style="text-align:center">DataNode</td>
+<td style="text-align:center">NodeManager</td>
+</tr>
+<tr>
+<td style="text-align:center">node4</td>
+<td style="text-align:center">DataNode</td>
+<td style="text-align:center">NodeManager</td>
+</tr>
+</tbody>
+</table>
+<p>1.配置hadoop-env.sh</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">export JAVA_HOME=/csh/link/jdk</span><br></pre></td></tr></table></figure>
+<p>2.配置core-site.xml</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#60;property&#62;&#10;    &#60;name&#62;fs.defaultFS&#60;/name&#62;&#10;    &#60;value&#62;hdfs://node1:9000&#60;/value&#62;&#10;&#60;/property&#62;&#10;&#60;property&#62;&#10;    &#60;name&#62;hadoop.tmp.dir&#60;/name&#62;&#10;    &#60;value&#62;/csh/hadoop/hadoop2.7.2/tmp&#60;/value&#62;&#10;&#60;/property&#62;</span><br></pre></td></tr></table></figure>
+<p>3.配置hdfs-site.xml</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#60;property&#62;&#10;    &#60;name&#62;dfs.namenode.http-address&#60;/name&#62;&#10;    &#60;value&#62;node1:50070&#60;/value&#62;&#10;&#60;/property&#62;&#10;&#60;property&#62;&#10;    &#60;name&#62;dfs.namenode.secondary.http-address&#60;/name&#62;&#10;    &#60;value&#62;node2:50090&#60;/value&#62;&#10;&#60;/property&#62;&#10;&#60;property&#62;&#10;    &#60;name&#62;dfs.namenode.name.dir&#60;/name&#62;&#10;    &#60;value&#62;/csh/hadoop/hadoop2.7.2/name&#60;/value&#62;&#10;&#60;/property&#62;&#10;&#60;property&#62;&#10;    &#60;name&#62;dfs.datanode.data.dir&#60;/name&#62;&#10;    &#60;value&#62;/csh/hadoop/hadoop2.7.2/data&#60;/value&#62;&#10;&#60;/property&#62;&#10;&#60;property&#62;&#10;    &#60;name&#62;dfs.replication&#60;/name&#62;&#10;    &#60;value&#62;3&#60;/value&#62;&#10;&#60;/property&#62;</span><br></pre></td></tr></table></figure>
+<p>4.配置mapred-site.xml</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#60;property&#62;&#10;    &#60;name&#62;mapreduce.framework.name&#60;/name&#62;&#10;    &#60;value&#62;yarn&#60;/value&#62;&#10;&#60;/property&#62;</span><br></pre></td></tr></table></figure>
+<p>5.配置yarn-site.xml</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#60;property&#62;&#10;    &#60;name&#62;yarn.resourcemanager.hostname&#60;/name&#62;&#10;    &#60;value&#62;node1&#60;/value&#62;&#10;&#60;/property&#62;&#10;&#60;property&#62;&#10;    &#60;name&#62;yarn.nodemanager.aux-services&#60;/name&#62;&#10;    &#60;value&#62;mapreduce_shuffle&#60;/value&#62;&#10;&#60;/property&#62;&#10;&#60;property&#62;&#10;     &#60;name&#62;yarn.nodemanager.aux-services.mapreduce.shuffle.class&#60;/name&#62;&#10;     &#60;value&#62;org.apache.hadoop.mapred.ShuffleHandler&#60;/value&#62;&#10;&#60;/property&#62;</span><br></pre></td></tr></table></figure>
+<p>6.配置masters</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">node2</span><br></pre></td></tr></table></figure>
+<p>7.配置slaves</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">node2&#10;node3&#10;node4</span><br></pre></td></tr></table></figure>
+<p>8.启动Hadoop</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bin/hadoop namenode -format&#10;sbin/start-dfs.sh&#10;sbin/start-yarn.sh</span><br></pre></td></tr></table></figure>
+<p>9.运行WordCount程序</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">//&#21019;&#24314;&#25991;&#20214;wc.txt&#10;echo &#34;I love Java I love Hadoop I love BigData Good Good Study, Day Day Up&#34; &#62; wc.txt&#10;//&#21019;&#24314;HDFS&#20013;&#30340;&#25991;&#20214;&#10;hdfs dfs -mkdir -p /input/wordcount/&#10;//&#23558;wc.txt&#19978;&#20256;&#21040;HDFS&#20013;&#10;hdfs dfs -put wc.txt /input/wordcount&#10;//&#36816;&#34892;WordCount&#31243;&#24207;&#10;hadoop jar /csh/software/hadoop-2.7.2/share/hadoop/mapreduce/hadoop-mapreduce-examples-2.7.2.jar wordcount /input/wordcount/ /output/wordcount/</span><br></pre></td></tr></table></figure>
+<p>10.结果</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@node1 sbin]# hadoop jar /csh/software/hadoop-2.7.2/share/hadoop/mapreduce/hadoapreduce-examples-2.7.2.jar wordcount /input/wordcount/ /output/wordcount/&#10;16/03/24 19:26:48 INFO client.RMProxy: Connecting to ResourceManager at node1/192.161.11:8032&#10;16/03/24 19:26:56 INFO input.FileInputFormat: Total input paths to process : 1&#10;16/03/24 19:26:56 INFO mapreduce.JobSubmitter: number of splits:1&#10;16/03/24 19:26:57 INFO mapreduce.JobSubmitter: Submitting tokens for job: job_145887175_0001&#10;16/03/24 19:26:59 INFO impl.YarnClientImpl: Submitted application application_145887175_0001&#10;16/03/24 19:27:00 INFO mapreduce.Job: The url to track the job: http://node1:8088/prapplication_1458872237175_0001/&#10;16/03/24 19:27:00 INFO mapreduce.Job: Running job: job_1458872237175_0001&#10;16/03/24 19:28:13 INFO mapreduce.Job: Job job_1458872237175_0001 running in uber modfalse&#10;16/03/24 19:28:13 INFO mapreduce.Job:  map 0% reduce 0%&#10;16/03/24 19:30:07 INFO mapreduce.Job:  map 100% reduce 0%&#10;16/03/24 19:31:13 INFO mapreduce.Job:  map 100% reduce 33%&#10;16/03/24 19:31:16 INFO mapreduce.Job:  map 100% reduce 100%&#10;16/03/24 19:31:23 INFO mapreduce.Job: Job job_1458872237175_0001 completed successfu&#10;16/03/24 19:31:24 INFO mapreduce.Job: Counters: 49&#10;&#9;File System Counters&#10;&#9;&#9;FILE: Number of bytes read=106&#10;&#9;&#9;FILE: Number of bytes written=235387&#10;&#9;&#9;FILE: Number of read operations=0&#10;&#9;&#9;FILE: Number of large read operations=0&#10;&#9;&#9;FILE: Number of write operations=0&#10;&#9;&#9;HDFS: Number of bytes read=174&#10;&#9;&#9;HDFS: Number of bytes written=64&#10;&#9;&#9;HDFS: Number of read operations=6&#10;&#9;&#9;HDFS: Number of large read operations=0&#10;&#9;&#9;HDFS: Number of write operations=2&#10;&#9;Job Counters &#10;&#9;&#9;Launched map tasks=1&#10;&#9;&#9;Launched reduce tasks=1&#10;&#9;&#9;Data-local map tasks=1&#10;&#9;&#9;Total time spent by all maps in occupied slots (ms)=116501&#10;&#9;&#9;Total time spent by all reduces in occupied slots (ms)=53945&#10;&#9;&#9;Total time spent by all map tasks (ms)=116501&#10;&#9;&#9;Total time spent by all reduce tasks (ms)=53945&#10;&#9;&#9;Total vcore-milliseconds taken by all map tasks=116501&#10;&#9;&#9;Total vcore-milliseconds taken by all reduce tasks=53945&#10;&#9;&#9;Total megabyte-milliseconds taken by all map tasks=119297024&#10;&#9;&#9;Total megabyte-milliseconds taken by all reduce tasks=55239680&#10;&#9;Map-Reduce Framework&#10;&#9;&#9;Map input records=4&#10;&#9;&#9;Map output records=15&#10;&#9;&#9;Map output bytes=129&#10;&#9;&#9;Map output materialized bytes=106&#10;&#9;&#9;Input split bytes=105&#10;&#9;&#9;Combine input records=15&#10;&#9;&#9;Combine output records=9&#10;&#9;&#9;Reduce input groups=9&#10;&#9;&#9;Reduce shuffle bytes=106&#10;&#9;&#9;Reduce input records=9&#10;&#9;&#9;Reduce output records=9&#10;&#9;&#9;Spilled Records=18&#10;&#9;&#9;Shuffled Maps =1&#10;&#9;&#9;Failed Shuffles=0&#10;&#9;&#9;Merged Map outputs=1&#10;&#9;&#9;GC time elapsed (ms)=1468&#10;&#9;&#9;CPU time spent (ms)=6780&#10;&#9;&#9;Physical memory (bytes) snapshot=230531072&#10;&#9;&#9;Virtual memory (bytes) snapshot=4152713216&#10;&#9;&#9;Total committed heap usage (bytes)=134795264&#10;&#9;Shuffle Errors&#10;&#9;&#9;BAD_ID=0&#10;&#9;&#9;CONNECTION=0&#10;&#9;&#9;IO_ERROR=0&#10;&#9;&#9;WRONG_LENGTH=0&#10;&#9;&#9;WRONG_MAP=0&#10;&#9;&#9;WRONG_REDUCE=0&#10;&#9;File Input Format Counters &#10;&#9;&#9;Bytes Read=69&#10;&#9;File Output Format Counters &#10;&#9;&#9;Bytes Written=64&#10;[root@node1 sbin]# hdfs dfs -cat /output/wordcount/*&#10;BigData&#9;1&#10;Day&#9;2&#10;Good&#9;2&#10;Hadoop&#9;1&#10;I&#9;3&#10;Java&#9;1&#10;Study,&#9;1&#10;Up&#9;1&#10;love&#9;3</span><br></pre></td></tr></table></figure>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/03/24/Redis基本命令/" itemprop="url">
                   Redis基本命令
                 </a>
@@ -862,141 +1036,11 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/03/22/TUN（IP-Tunneling）介绍/" itemprop="url">
-                  TUN（IP Tunneling）介绍
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-03-22T22:11:19+08:00" content="2016-03-22">
-              2016-03-22
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/LVS/" itemprop="url" rel="index">
-                    <span itemprop="name">LVS</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/03/22/TUN（IP-Tunneling）介绍/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/03/22/TUN（IP-Tunneling）介绍/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-             <span id="/2016/03/22/TUN（IP-Tunneling）介绍/" class="leancloud_visitors" data-flag-title="TUN（IP Tunneling）介绍">
-               &nbsp; | &nbsp;
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               <span class="post-meta-item-text">阅读次数 </span>
-               <span class="leancloud-visitors-count"></span>
-              </span>
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><strong>通过IP隧道实现虚拟服务器（VS/TUN）</strong><br>&emsp;&emsp;在VS/NAT 的集群系统中，请求和响应的数据报文都需要通过负载调度器，当真实服务器的数目在10台和20台之间时，负载调度器将成为整个集群系统的新瓶颈。大多数 Internet服务都有这样的特点：请求报文较短而响应报文往往包含大量的数据。如果能将请求和响应分开处理，即在负载调度器中只负责调度请求而响应直 接返回给客户，将极大地提高整个集群系统的吞吐量。<br>&emsp;&emsp;IP隧道（IP tunneling）是将一个IP报文封装在另一个IP报文的技术，这可以使得目标为一个IP地址的数据报文能被封装和转发到另一个IP地址。IP隧道技 术亦称为IP封装技术（IP encapsulation）。IP隧道主要用于移动主机和虚拟私有网络（Virtual Private Network），在其中隧道都是静态建立的，隧道一端有一个IP地址，另一端也有唯一的IP地址。<br>&emsp;&emsp;我们利用IP隧道技术将请求报文封装转 发给后端服务器，响应报文能从后端服务器直接返回给客户。但在这里，后端服务器有一组而非一个，所以我们不可能静态地建立一一对应的隧道，而是动态地选择 一台服务器，将请求报文封装和转发给选出的服务器。这样，我们可以利用IP隧道的原理将一组服务器上的网络服务组成在一个IP地址上的虚拟网络服务。 VS/TUN的体系结构如下图所示，各个服务器将VIP地址配置在自己的IP隧道设备上。</p>
-<p><img src="https://1csh1.github.io/img/TUN（IP-Tunneling）介绍/TUN的体系结构.jpg" alt="TUN的体系结构"></p>
-<p>&emsp;&emsp;VS/TUN 的工作流程如下图所示：它的连接调度和管理与VS/NAT中的一样，只是它的报文转发方法不同。调度器根据各个服务器的负载情况，动态地选择一台服务器， 将请求报文封装在另一个IP报文中，再将封装后的IP报文转发给选出的服务器；服务器收到报文后，先将报文解封获得原来目标地址为VIP的报文，服务器发 现VIP地址被配置在本地的IP隧道设备上，所以就处理这个请求，然后根据路由表将响应报文直接返回给客户。</p>
-<p><img src="https://1csh1.github.io/img/TUN（IP-Tunneling）介绍/TUN的工作流程.jpg" alt="TUN的工作流程"></p>
-<p>&emsp;&emsp;在这里需要指出，根据缺省的TCP/IP协议栈处理，请求报文的目标地址为VIP，响应报文的源地址肯定也为VIP，所以响应报文不需要作任何修改，可以直接返回给客户，客户认为得到正常的服务，而不会知道究竟是哪一台服务器处理的。</p>
-<p><img src="https://1csh1.github.io/img/TUN（IP-Tunneling）介绍/半连接的TCP有限状态机.jpg" alt="半连接的TCP有限状态机"></p>
-<p>参考文章链接<br><a href="http://www.linuxvirtualserver.org/zh/lvs3.html" target="_blank" rel="external">Linux服务器集群系统（三）</a></p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/10/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/10/">10</a><span class="page-number current">11</span><a class="page-number" href="/page/12/">12</a><a class="extend next" rel="next" href="/page/12/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/10/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/10/">10</a><span class="page-number current">11</span><a class="page-number" href="/page/12/">12</a><a class="page-number" href="/page/13/">13</a><a class="extend next" rel="next" href="/page/12/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -1037,7 +1081,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">60</span>
+              <span class="site-state-item-count">61</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -1045,7 +1089,7 @@
           
             <div class="site-state-item site-state-categories">
               <a href="/categories">
-                <span class="site-state-item-count">34</span>
+                <span class="site-state-item-count">35</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -1054,7 +1098,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">55</span>
+                <span class="site-state-item-count">57</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
