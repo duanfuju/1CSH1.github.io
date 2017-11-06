@@ -60,7 +60,8 @@
 <meta name="description" content="摘要：本文简述了博主在开发过程中，需要跨域调试的时候，出现了 OPTIONS 请求 Forbidden 的问题，以及解决方法。
 
 问题
-&amp;emsp;&amp;emsp;在使用 Spring Cloud 的项目中，本地跨域调试发现 POST 请求转为了 OPTIONS 请求，并且服务端拒绝访问，其实是 CORS 请求的问题。&amp;emsp;&amp;emsp;CORS 请求分为2类： 简单请求 和 非简单请求。两者主要">
+&amp;emsp;&amp;emsp;在使用 Spring Cloud 的项目中，本地跨域调试发现 POST 请求转为了 OPTIONS 请求，并且服务端拒绝访问，其实是 CORS 请求的问题。
+&amp;emsp;&amp;emsp;CORS 请求分为2类： 简单请求 和 非简单请求。两者主">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Spring Cloud 项目出现 Options Forbidden 403 问题解决">
 <meta property="og:url" content="https://1csh1.github.io/2017/11/06/spring-cloud-options-forbidden/index.html">
@@ -68,15 +69,17 @@
 <meta property="og:description" content="摘要：本文简述了博主在开发过程中，需要跨域调试的时候，出现了 OPTIONS 请求 Forbidden 的问题，以及解决方法。
 
 问题
-&amp;emsp;&amp;emsp;在使用 Spring Cloud 的项目中，本地跨域调试发现 POST 请求转为了 OPTIONS 请求，并且服务端拒绝访问，其实是 CORS 请求的问题。&amp;emsp;&amp;emsp;CORS 请求分为2类： 简单请求 和 非简单请求。两者主要">
+&amp;emsp;&amp;emsp;在使用 Spring Cloud 的项目中，本地跨域调试发现 POST 请求转为了 OPTIONS 请求，并且服务端拒绝访问，其实是 CORS 请求的问题。
+&amp;emsp;&amp;emsp;CORS 请求分为2类： 简单请求 和 非简单请求。两者主">
 <meta property="og:image" content="https://1csh1.github.io/img/spring-cloud-options-forbidden/options-forbidden.png">
-<meta property="og:updated_time" content="2017-11-06T13:15:36.978Z">
+<meta property="og:updated_time" content="2017-11-06T13:19:10.434Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Spring Cloud 项目出现 Options Forbidden 403 问题解决">
 <meta name="twitter:description" content="摘要：本文简述了博主在开发过程中，需要跨域调试的时候，出现了 OPTIONS 请求 Forbidden 的问题，以及解决方法。
 
 问题
-&amp;emsp;&amp;emsp;在使用 Spring Cloud 的项目中，本地跨域调试发现 POST 请求转为了 OPTIONS 请求，并且服务端拒绝访问，其实是 CORS 请求的问题。&amp;emsp;&amp;emsp;CORS 请求分为2类： 简单请求 和 非简单请求。两者主要">
+&amp;emsp;&amp;emsp;在使用 Spring Cloud 的项目中，本地跨域调试发现 POST 请求转为了 OPTIONS 请求，并且服务端拒绝访问，其实是 CORS 请求的问题。
+&amp;emsp;&amp;emsp;CORS 请求分为2类： 简单请求 和 非简单请求。两者主">
 
 
 
@@ -323,11 +326,14 @@
 <p>摘要：本文简述了博主在开发过程中，需要跨域调试的时候，出现了 OPTIONS 请求 Forbidden 的问题，以及解决方法。</p>
 </blockquote>
 <h3 id="u95EE_u9898"><a href="#u95EE_u9898" class="headerlink" title="问题"></a>问题</h3><p><img src="https://1csh1.github.io/img/spring-cloud-options-forbidden/options-forbidden.png" alt="options-forbidden"></p>
-<p>&emsp;&emsp;在使用 Spring Cloud 的项目中，本地跨域调试发现 POST 请求转为了 OPTIONS 请求，并且服务端拒绝访问，其实是 CORS 请求的问题。<br>&emsp;&emsp;CORS 请求分为2类： 简单请求 和 非简单请求。两者主要的区分点在于：</p>
+<p>&emsp;&emsp;在使用 Spring Cloud 的项目中，本地跨域调试发现 POST 请求转为了 OPTIONS 请求，并且服务端拒绝访问，其实是 CORS 请求的问题。</p>
+<p>&emsp;&emsp;CORS 请求分为2类： 简单请求 和 非简单请求。两者主要的区分点在于：</p>
 <ul>
 <li>1: 请求方法为 HEAD, GET, POST; </li>
-<li>2: HTTP 头信息为以下几个： Accept， Accept-Language，Content-Language， Last-Event-ID，Content-Type （值为 application/x-www-form-urlencoded、multipart/form-data、text/plain）。<br>&emsp;&emsp;只要满足以上两点，则为简单请求；否则为非简单请求。<br>&emsp;&emsp;简单请求的处理方式是浏览器直接发送 CORS 请求。非简单请求的处理方式是浏览器发送预检请求，表示询问服务器当前的域名是否可以访问正常服务器，如果可以访问，则发送正常的请求到服务器；否则报错。</li>
+<li>2: HTTP 头信息为以下几个： Accept， Accept-Language，Content-Language， Last-Event-ID，Content-Type （值为 application/x-www-form-urlencoded、multipart/form-data、text/plain）。</li>
 </ul>
+<p>&emsp;&emsp;只要满足以上两点，则为简单请求；否则为非简单请求。</p>
+<p>&emsp;&emsp;简单请求的处理方式是浏览器直接发送 CORS 请求。非简单请求的处理方式是浏览器发送预检请求，表示询问服务器当前的域名是否可以访问正常服务器，如果可以访问，则发送正常的请求到服务器；否则报错。</p>
 <p>&emsp;&emsp;现在确定遇到的问题就是在 CORS 请求预检的时候发现域名不在服务器端的白名单里面，所以需要修改服务端的请求返回报文。</p>
 <h3 id="u89E3_u51B3_u65B9_u6848"><a href="#u89E3_u51B3_u65B9_u6848" class="headerlink" title="解决方案"></a>解决方案</h3><p>在网关中添加下面的过滤器，在每次请求返回报文中添加报文头，即可正常访问</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">@Component&#10;public class CorsFilter implements Filter &#123;&#10;&#10;    @Override&#10;    public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException &#123;&#10;        HttpServletResponse response = (HttpServletResponse) res;&#10;        response.setHeader(&#34;Access-Control-Allow-Origin&#34;, &#34;*&#34;);&#10;        response.setHeader(&#34;Access-Control-Allow-Methods&#34;, &#34;POST, GET, PUT, OPTIONS, DELETE, PATCH&#34;);&#10;        response.setHeader(&#34;Access-Control-Max-Age&#34;, &#34;3600&#34;);&#10;        response.setHeader(&#34;Access-Control-Allow-Headers&#34;, &#34;Origin, X-Requested-With, Content-Type, Accept&#34;);&#10;        response.setHeader(&#34;Access-Control-Expose-Headers&#34;, &#34;Location&#34;);&#10;        chain.doFilter(req, res);&#10;    &#125;&#10;&#10;    @Override&#10;    public void init(FilterConfig filterConfig) &#123;&#125;&#10;&#10;    @Override&#10;    public void destroy() &#123;&#125;&#10;&#10;&#125;</span><br></pre></td></tr></table></figure>
